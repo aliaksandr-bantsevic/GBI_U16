@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2020/10/16 12:34:25.000.776,=C:\Users\User\Documents\Embarcadero\Studio\Projects\Project1PCH1.h</Transaction>
+    <Transaction>2020/10/16 12:35:08.000.493,=C:\Users\User\Documents\Embarcadero\Studio\Projects\Unit1.cpp</Transaction>
+    <Transaction>2020/10/16 17:03:02.000.365,=C:\Users\User\Documents\Embarcadero\Studio\Projects\Project1PCH1.h</Transaction>
+    <Transaction>2020/10/16 17:03:08.000.379,=C:\Users\User\Documents\Embarcadero\Studio\Projects\Unit1.cpp</Transaction>
+    <Transaction>2020/10/18 12:21:19.000.929,=C:\Users\User\Documents\Embarcadero\Studio\Projects\Project1PCH1.h</Transaction>
+    <Transaction>2020/10/18 12:21:20.000.643,=C:\Users\User\Documents\Embarcadero\Studio\Projects\Unit1.cpp</Transaction>
+    <Transaction>2020/11/15 07:34:19.000.992,=C:\Users\User\Documents\Embarcadero\Studio\Projects\Project1PCH1.h</Transaction>
+    <Transaction>2020/11/15 07:34:20.000.087,=C:\Users\User\Documents\Embarcadero\Studio\Projects\Unit1.cpp</Transaction>
+    <Transaction>2020/11/24 06:30:17.000.728,=C:\Users\User\Documents\Embarcadero\Studio\Projects\Project1PCH1.h</Transaction>
+    <Transaction>2020/11/24 06:30:18.000.187,=C:\Users\User\Documents\Embarcadero\Studio\Projects\Unit1.cpp</Transaction>
+    <Transaction>2021/02/18 19:29:51.000.478,=C:\Users\User\Documents\Embarcadero\Studio\Projects\Project1PCH1.h</Transaction>
+    <Transaction>2021/02/18 19:29:51.000.962,=C:\Users\User\Documents\Embarcadero\Studio\Projects\Unit1.cpp</Transaction>
+    <Transaction>2021/02/18 19:41:37.000.870,=C:\Users\User\Documents\Embarcadero\Studio\Projects\Project1PCH1.h</Transaction>
+    <Transaction>2021/02/18 19:41:38.000.024,=C:\Users\User\Documents\Embarcadero\Studio\Projects\Unit1.cpp</Transaction>
+    <Transaction>2021/02/18 19:43:35.000.827,C:\Users\User\Documents\Embarcadero\Studio\Projects\Unit1.h=G:\IMSK\prj RAD Studio\GBI2\Main.h</Transaction>
+    <Transaction>2021/02/18 19:43:35.000.827,C:\Users\User\Documents\Embarcadero\Studio\Projects\Unit1.dfm=G:\IMSK\prj RAD Studio\GBI2\Main.dfm</Transaction>
+    <Transaction>2021/02/18 19:43:35.000.827,C:\Users\User\Documents\Embarcadero\Studio\Projects\Unit1.cpp=G:\IMSK\prj RAD Studio\GBI2\Main.cpp</Transaction>
+    <Transaction>2021/02/18 19:43:57.000.158,C:\Users\User\Documents\Embarcadero\Studio\Projects\Project1PCH1.h=G:\IMSK\prj RAD Studio\GBI2\GBI.h</Transaction>
+    <Transaction>2021/02/18 19:44:27.000.506,C:\Users\User\Documents\Embarcadero\Studio\Projects\Project1.cbproj=G:\IMSK\prj RAD Studio\GBI2\ProjectGBI.cbproj</Transaction>
+  </Transactions>
+</BorlandProject>

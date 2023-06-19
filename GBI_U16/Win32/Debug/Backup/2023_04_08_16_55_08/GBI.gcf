@@ -1,0 +1,4 @@
+[GENERAL]
+CONFNAME=test_del_1
+[BACKUP]
+PERIOD=7

@@ -1,0 +1,57 @@
+object Form1: TForm1
+  Left = 0
+  Top = 0
+  Caption = 'Form_diagram'
+  ClientHeight = 500
+  ClientWidth = 628
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Panel1: TPanel
+    Left = 0
+    Top = 0
+    Width = 625
+    Height = 505
+    Caption = 'Panel_diagram'
+    TabOrder = 0
+    object Chart_diagram: TChart
+      Left = 1
+      Top = 1
+      Width = 623
+      Height = 503
+      AllowPanning = pmNone
+      Title.Text.Strings = (
+        'TChart')
+      BottomAxis.Automatic = False
+      BottomAxis.AutomaticMaximum = False
+      BottomAxis.AutomaticMinimum = False
+      BottomAxis.Maximum = 10.000000000000000000
+      BottomAxis.Minimum = -10.000000000000000000
+      LeftAxis.Automatic = False
+      LeftAxis.AutomaticMaximum = False
+      LeftAxis.AutomaticMinimum = False
+      LeftAxis.Maximum = 10.000000000000000000
+      LeftAxis.Minimum = -10.000000000000000000
+      Panning.MouseWheel = pmwNone
+      RightAxis.Visible = False
+      TopAxis.Visible = False
+      View3D = False
+      Zoom.Allow = False
+      Align = alClient
+      Color = clWhite
+      TabOrder = 0
+      ExplicitLeft = 16
+      ExplicitTop = 32
+      ExplicitWidth = 400
+      ExplicitHeight = 250
+      DefaultCanvas = 'TGDIPlusCanvas'
+      ColorPaletteIndex = 13
+    end
+  end
+end

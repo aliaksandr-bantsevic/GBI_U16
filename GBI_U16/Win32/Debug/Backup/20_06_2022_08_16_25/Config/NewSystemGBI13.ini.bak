@@ -1,0 +1,37 @@
+[SYSTEM]
+Name=Gorizont Borehole Inclinometer
+ASKPARAMSAVE=1
+SKOLIMIT=1
+askperiod=100
+MEXRECORDS=100
+DEFRECORDS=20
+last_place_idx=1
+last_drill_idx=1
+[PORT]
+ReadTimeOut=100
+WriteTimeOut=100
+PauseTransact=10
+BaudRate=9600
+Port=4
+Mark=Порт инклинометра
+[SENSOR]
+Addr=1
+Mark=Скважинный инклинометр
+Protocol=0
+[PLACE1]
+NAME=Площадка
+INDEX=1
+[DRILL1.1]
+NAME=Скважина
+INDEX=1
+PNDEX=1
+RECCNT=21
+ORIENT=0
+ASIMUT=0.0
+ZEROSHIFT=0.0
+SINGLEWAY=0
+[MEAS1.1.1]
+NAME=Измерение_1
+INDEX=1
+PNDEX=1
+DNDEX=1

@@ -1,0 +1,24 @@
+//---------------------------------------------------------------------------
+
+#ifndef DataEnterH
+#define DataEnterH
+//---------------------------------------------------------------------------
+#include <System.Classes.hpp>
+#include <Vcl.Controls.hpp>
+#include <Vcl.StdCtrls.hpp>
+#include <Vcl.Forms.hpp>
+//---------------------------------------------------------------------------
+class TForm_data_enter : public TForm
+{
+__published:	// IDE-managed Components
+	TButton *Button_apply;
+	TButton *Button_cancel;
+	TEdit *Edit_data;
+private:	// User declarations
+public:		// User declarations
+	__fastcall TForm_data_enter(TComponent* Owner);
+};
+//---------------------------------------------------------------------------
+extern PACKAGE TForm_data_enter *Form_data_enter;
+//---------------------------------------------------------------------------
+#endif

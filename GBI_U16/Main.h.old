@@ -1,0 +1,21 @@
+//---------------------------------------------------------------------------
+
+#ifndef MainH
+#define MainH
+//---------------------------------------------------------------------------
+#include <System.Classes.hpp>
+#include <Vcl.Controls.hpp>
+#include <Vcl.StdCtrls.hpp>
+#include <Vcl.Forms.hpp>
+//---------------------------------------------------------------------------
+class TFMain : public TForm
+{
+__published:	// IDE-managed Components
+private:	// User declarations
+public:		// User declarations
+	__fastcall TFMain(TComponent* Owner);
+};
+//---------------------------------------------------------------------------
+extern PACKAGE TFMain *FMain;
+//---------------------------------------------------------------------------
+#endif
