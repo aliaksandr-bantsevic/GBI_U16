@@ -27,7 +27,7 @@
 	   tree = t;
 	   this->sensor.SetChan(&this->port);
 	   run = false;
-	   name = "Gorizont Borehole Inclinpmeter System";
+	   name = L"Gorizont Borehole Inclinpmeter System";
 	   edit_meas_X = NULL;
 	   edit_meas_Y = NULL;
 
@@ -40,7 +40,7 @@
 
 	   place_list_idx = 0;
 
-	   system_ini=new TIniFile(ChangeFileExt(Application->ExeName,".ini"));
+	   system_ini=new TIniFile(ChangeFileExt(Application->ExeName,L".ini"));
 
 	   edit_SKO = NULL;
 	   sko_limit = 1;
@@ -75,47 +75,47 @@ void TGBISystem::SaveSysConf()
 {
 	SysConfMgr.SaveCurConf();
 
-	AnsiString sfold("");
-	AnsiString sfnew("");
+	WideString sfold(L"");
+	WideString sfnew(L"");
 
 	sfold =  SysConfMgr.GetCurIniPath();
-	sfnew = sfold+ ".bak";
+	sfnew = sfold+ L".bak";
 
 	DeleteFile(sfnew);
 	RenameFile(sfold,sfnew);
 
 	TIniFile *ini = SysConfMgr.GetIniFile();
 
-	ini->WriteString("SYSTEM","Name",this->name);
+	ini->WriteString(L"SYSTEM",L"Name",this->name);
 
-	ini->WriteBool("SYSTEM","ASKPARAMSAVE",*ask_save_conf);
+	ini->WriteBool(L"SYSTEM",L"ASKPARAMSAVE",*ask_save_conf);
 
-	ini->WriteInteger("SYSTEM","SKOLIMIT",sko_limit);
+	ini->WriteInteger(L"SYSTEM",L"SKOLIMIT",sko_limit);
 
-	ini->WriteInteger("SYSTEM","askperiod",ask_sensor_period);
+	ini->WriteInteger(L"SYSTEM",L"askperiod",ask_sensor_period);
 
 	max_records_meas = MAX_RECORDS_MEAS;
 
-	ini->WriteInteger("SYSTEM","MAXRECORDS",max_records_meas);
-	ini->WriteInteger("SYSTEM","DEFRECORDS",def_records_meas);
+	ini->WriteInteger(L"SYSTEM",L"MAXRECORDS",max_records_meas);
+	ini->WriteInteger(L"SYSTEM",L"DEFRECORDS",def_records_meas);
 
-	ini->WriteInteger("SYSTEM","last_place_idx",last_place_idx);
-	ini->WriteInteger("SYSTEM","last_drill_idx",last_drill_idx);
+	ini->WriteInteger(L"SYSTEM",L"last_place_idx",last_place_idx);
+	ini->WriteInteger(L"SYSTEM",L"last_drill_idx",last_drill_idx);
 
-	ini->WriteInteger("PORT","ReadTimeOut",GetPort()->tout_rx);
-	ini->WriteInteger("PORT","WriteTimeOut",GetPort()->tout_tx);
-	ini->WriteInteger("PORT","PauseTransact",GetPort()->pause_transact);
-	ini->WriteInteger("PORT","PauseReopen",GetPort()->pause_reopen);
+	ini->WriteInteger(L"PORT",L"ReadTimeOut",GetPort()->tout_rx);
+	ini->WriteInteger(L"PORT",L"WriteTimeOut",GetPort()->tout_tx);
+	ini->WriteInteger(L"PORT",L"PauseTransact",GetPort()->pause_transact);
+	ini->WriteInteger(L"PORT",L"PauseReopen",GetPort()->pause_reopen);
 
-	ini->WriteInteger("PORT","BaudRate",GetPort()->baud);
-	ini->WriteInteger("PORT","Port",GetPort()->port);
-	ini->WriteString("PORT","Mark",GetPort()->mark);
+	ini->WriteInteger(L"PORT",L"BaudRate",GetPort()->baud);
+	ini->WriteInteger(L"PORT",L"Port",GetPort()->port);
+	ini->WriteString(L"PORT",L"Mark",L"Порт инклинометра");
 
-	ini->WriteInteger("SENSOR","Addr",GetSensor()->addr);
-	ini->WriteString("SENSOR","Mark",GetSensor()->mark);
-	ini->WriteInteger("SENSOR","Protocol",GetSensor()->used_protocol);
+	ini->WriteInteger(L"SENSOR",L"Addr",GetSensor()->addr);
+	ini->WriteString(L"SENSOR",L"Mark",GetSensor()->mark);
+	ini->WriteInteger(L"SENSOR",L"Protocol",GetSensor()->used_protocol);
 
-	ini->WriteInteger("SYSTEM","SideVirtKbd",i_use_side_keyboard);
+	ini->WriteInteger(L"SYSTEM",L"SideVirtKbd",i_use_side_keyboard);
 
 	for (int i = 0; i < place_list_idx; i++) {
 
@@ -132,57 +132,57 @@ void TGBISystem::LoadSysConf()
 	SysConfMgr.GetCurConf();
 
 	system_ini = SysConfMgr.GetIniFile();
-	//TIniFile *ini=new TIniFile(ChangeFileExt(Application->ExeName,".ini"));
+	//TIniFile *ini=new TIniFile(ChangeFileExt(Application->ExeName,L".ini"));
 	TIniFile *ini =  SysConfMgr.GetIniFile();
 
 	TChannel* port = GetPort();
 	TSensor* sensor = GetSensor();
 
-	name = ini->ReadString("SYSTEM","Name","Gorizont Borehole Inclinometer");
+	name = ini->ReadString(L"SYSTEM",L"Name",L"Gorizont Borehole Inclinometer");
 
-	*ask_save_conf = ini->ReadBool("SYSTEM","ASKPARAMSAVE",true);
+	*ask_save_conf = ini->ReadBool(L"SYSTEM",L"ASKPARAMSAVE",true);
 
 	//b_MessageConfirmParamsetShow = ask_save_conf;
 
-	sko_limit = ini->ReadInteger("SYSTEM","SKOLIMIT",1);
+	sko_limit = ini->ReadInteger(L"SYSTEM",L"SKOLIMIT",1);
 
-	ask_sensor_period = ini->ReadInteger("SYSTEM","askperiod",100);
+	ask_sensor_period = ini->ReadInteger(L"SYSTEM",L"askperiod",100);
 
-	max_records_meas = ini->ReadInteger("SYSTEM","MEXRECORDS",100);
+	max_records_meas = ini->ReadInteger(L"SYSTEM",L"MEXRECORDS",100);
 
     max_records_meas = MAX_RECORDS_MEAS;
 
-	def_records_meas = ini->ReadInteger("SYSTEM","DEFRECORDS",20);
+	def_records_meas = ini->ReadInteger(L"SYSTEM",L"DEFRECORDS",20);
 
 
-	port->tout_rx = ini->ReadInteger("PORT","ReadTimeOut",5000);
-	port->tout_tx = ini->ReadInteger("PORT","WriteTimeOut",5000);
+	port->tout_rx = ini->ReadInteger(L"PORT",L"ReadTimeOut",5000);
+	port->tout_tx = ini->ReadInteger(L"PORT",L"WriteTimeOut",5000);
 
-	last_place_idx = ini->ReadInteger("SYSTEM","last_place_idx",-1);
-	last_drill_idx = ini->ReadInteger("SYSTEM","last_drill_idx",-1);
+	last_place_idx = ini->ReadInteger(L"SYSTEM",L"last_place_idx",-1);
+	last_drill_idx = ini->ReadInteger(L"SYSTEM",L"last_drill_idx",-1);
 
-	port->pause_transact = ini->ReadInteger("PORT","PauseTransact",10);
-	port->pause_reopen = ini->ReadInteger("PORT","PauseReopen",5000);
-	port->baud = (EBaudrate)ini->ReadInteger("PORT","BaudRate",EBaud9600);
-	port->port = ini->ReadInteger("PORT","Port",1);
-	port->mark = ini->ReadString("PORT","Mark","Порт инклинометра");
+	port->pause_transact = ini->ReadInteger(L"PORT",L"PauseTransact",10);
+	port->pause_reopen = ini->ReadInteger(L"PORT",L"PauseReopen",5000);
+	port->baud = (EBaudrate)ini->ReadInteger(L"PORT",L"BaudRate",EBaud9600);
+	port->port = ini->ReadInteger(L"PORT",L"Port",1);
+	port->mark = ini->ReadString(L"PORT",L"Mark",L"Порт инклинометра");
 
-	sensor->addr = ini->ReadInteger("SENSOR","Addr",1);
-	sensor->mark = ini->ReadString("SENSOR","Mark","Скважинный инклинометр");
-	sensor->used_protocol = ini->ReadInteger("SENSOR","Protocol",1);
+	sensor->addr = ini->ReadInteger(L"SENSOR",L"Addr",1);
+	sensor->mark = ini->ReadString(L"SENSOR",L"Mark",L"Скважинный инклинометр");
+	sensor->used_protocol = ini->ReadInteger(L"SENSOR",L"Protocol",1);
 
-	i_use_side_keyboard = ini->ReadInteger("SYSTEM","SideVirtKbd",1);
+	i_use_side_keyboard = ini->ReadInteger(L"SYSTEM",L"SideVirtKbd",1);
 
-	AnsiString section("");
-	AnsiString spar("");
+	WideString section(L"");
+	WideString spar(L"");
 	int ipar = 0;
 
 	for (int i = 0; i < SYSTEM_PLACES_MAX; i++) {
 
-		section.printf("PLACE%d",i+1);
+		section.printf(L"PLACE%d",i+1);
 		spar = ini->ReadString(section, "NAME", "");
 
-		if (spar != "") {
+		if (spar != L"") {
 
 			this->AddPlace(spar);
 			place_list[place_list_idx-1]->LoadDrillConfig(ini);
@@ -205,7 +205,7 @@ void TGBISystem::Start(TEdit* ex, TEdit* ey)
 		/*
 		if (port.Open() != 0) {
 
-			utils_ShowMessage("Не удалось открыть порт!");
+			utils_ShowMessage(L"Не удалось открыть порт!");
 			return;
 		}
 		*/
@@ -239,8 +239,8 @@ int TGBISystem::RunProc(void)
 			this->edit_meas_X->Font->Color = clGray;
 			this->edit_meas_Y->Font->Color = clGray;
 
-			this->edit_meas_X->Text = "ОШИБКА ПОРТА";
-			this->edit_meas_Y->Text = "ОШИБКА ПОРТА";
+			this->edit_meas_X->Text = L"ОШИБКА ПОРТА";
+			this->edit_meas_Y->Text = L"ОШИБКА ПОРТА";
 
 			return  -2;
 		}
@@ -251,7 +251,7 @@ int TGBISystem::RunProc(void)
 
 	if (sensor->GetMeasResult() == 0)
 	{
-		AnsiString s;
+		WideString s;
 
 		//sensor->curr_X = xx;
 		//sensor->curr_Y = yy;
@@ -276,12 +276,12 @@ int TGBISystem::RunProc(void)
 			this->edit_meas_Y->Font->Color = clRed;
 		}
 
-		if (sensor->curr_X>=0)  s.printf(" +%.1f (%.1f)",sensor->curr_X, sensor->sko_X);
-		else  					s.printf(" %.1f (%.1f)",sensor->curr_X, sensor->sko_X);
+		if (sensor->curr_X>=0)  s.printf(L" +%.1f (%.1f)",sensor->curr_X, sensor->sko_X);
+		else  					s.printf(L" %.1f (%.1f)",sensor->curr_X, sensor->sko_X);
 		this->edit_meas_X->Text = s;
 
-		if (sensor->curr_Y>=0)  s.printf(" +%.1f (%.1f)",sensor->curr_Y, sensor->sko_Y);
-		else  					s.printf(" %.1f (%.1f)",sensor->curr_Y, sensor->sko_Y);
+		if (sensor->curr_Y>=0)  s.printf(L" +%.1f (%.1f)",sensor->curr_Y, sensor->sko_Y);
+		else  					s.printf(L" %.1f (%.1f)",sensor->curr_Y, sensor->sko_Y);
 		this->edit_meas_Y->Text = s;
 	}
 	else
@@ -289,8 +289,8 @@ int TGBISystem::RunProc(void)
 		this->edit_meas_X->Font->Color = clGray;
 		this->edit_meas_Y->Font->Color = clGray;
 
-		this->edit_meas_X->Text = "ОШИБКА СВЯЗИ";
-		this->edit_meas_Y->Text = "ОШИБКА СВЯЗИ";
+		this->edit_meas_X->Text = L"ОШИБКА СВЯЗИ";
+		this->edit_meas_Y->Text = L"ОШИБКА СВЯЗИ";
 	}
 
 
@@ -329,10 +329,10 @@ int TGBISystem::Redraw (void)
 Вершина с именем системы
 */
 
-		AnsiString s("");
+		WideString s(L"");
 		TTreeNode* n = NULL;
 
-		s.printf("Система [%s]", name.c_str());
+		s.printf(L"Система [%s]", name.c_bstr());
 		n = this->tree->Items->Add(NULL, s);
 		this->node = n;
 
@@ -444,11 +444,11 @@ int TGBISystem::CheckTreeItemSelected(int* type, int* idx, void** obj)
 	return -1;
 }
 
-int TGBISystem::AddPlace(AnsiString name)
+int TGBISystem::AddPlace(WideString name)
 {
 	if (place_list_idx>=SYSTEM_PLACES_MAX) {
 
-		utils_ShowMessage("Список переполнен!");
+		utils_ShowMessage(L"Список переполнен!");
 		return -1;
 	}
 
@@ -457,7 +457,7 @@ int TGBISystem::AddPlace(AnsiString name)
 
 		if (place_list[i]->GetName() == name) {
 
-			utils_ShowMessage("Данное имя уже существует в системе!");
+			utils_ShowMessage(L"Данное имя уже существует в системе!");
 			return -2;
 		}
 
@@ -545,7 +545,7 @@ int TGBISystem::Reindex(void)
 				m->pnum = pndex;
 				m->dnum = dndex;
 
-				m->name.printf("Измерение_%d", index);
+				m->name.printf(L"Измерение_%d", index);
 				m->name_drill = d->name;
 				m->name_place = p->GetName();
 				m->type_drill = d->drill_orient;
@@ -569,14 +569,14 @@ void TGBISystem::ViewSKOlimit()
 	}
 
 
-	AnsiString s("");
-	s.printf("%.2f", sko_limit/100.);
+	WideString s(L"");
+	s.printf(L"%.2f", sko_limit/100.);
 	edit_SKO->Text = s;
 
 
 }
 
-bool TGBISystem::DeleteDir(AnsiString DirName)
+bool TGBISystem::DeleteDir(WideString DirName)
 {
 	TSearchRec sr;
 	if (DirName.Length())
@@ -641,62 +641,39 @@ int TGBISystem::ResaveData()
 
 int TGBISystem::KillBase()
 {
-	 /*
-	char dir[1024];
-	::GetCurrentDirectory(1024,dir);
-
-	char ndir[1024];
-	strcpy(ndir,SysConfMgr.GetCurBaseFoldPath());
-
-	::SetCurrentDirectory(ndir);
-	*/
-
-	/*
-	char cmd[1024];
-	strcpy(cmd,"rmdir //s //q \"");
-	strcat(cmd,SysConfMgr.GetCurBase());
-	strcat(cmd,"\"");
-	  */
-
-//	strcat(cmd,"\"");
-//	system(cmd);
-
-	/*
-	::SetCurrentDirectory(dir);
-	*/
-
 
 	TPlace* p = NULL;
 	TDrill* d = NULL;
 	TMeas* m = NULL;
 
-	char dir[1024];
-	strcpy(dir, SysConfMgr.GetCurBase());
+	TCHAR dir[1024];
 
-	char pdir[1024];
-	char ddir[1024];
-	char mdir[1024];
+	wcscpy(dir, SysConfMgr.GetCurBase());
+
+	TCHAR pdir[1024];
+	TCHAR ddir[1024];
+	TCHAR mdir[1024];
 
 	for (int i = 0; i < place_list_idx; i++) {
 
 		p = place_list[i];
-		strcpy(pdir,dir);
-		strcat(pdir,p->GetName().c_str());
-		strcat(pdir,"\\");
+		wcscpy(pdir,dir);
+		wcscat(pdir,p->GetName().c_bstr());
+		wcscat(pdir,L"\\");
 
 		for (int j = 0; j < p->drill_list_idx; j++) {
 
 			d = p->drill_list[j];
-			strcpy(ddir,pdir);
-			strcat(ddir,d->name.c_str());
-			strcat(ddir,"\\");
+			wcscpy(ddir,pdir);
+			wcscat(ddir,d->name.c_bstr());
+			wcscat(ddir,L"\\");
 
 			for (int k = 0; k < d->meas_list_idx; k++) {
 
 				m = d->meas_list[k];
-				strcpy(mdir,ddir);
-				strcat(mdir,m->name.c_str());
-				strcat(mdir,"\\");
+				wcscpy(mdir,ddir);
+				wcscat(mdir,m->name.c_bstr());
+				wcscat(mdir,L"\\");
 				this->DeleteDir(mdir);
 			}
 
@@ -745,34 +722,37 @@ int TGBISystem::CreateConf (TSaveDialog* dlg)
 
 	this->port.Close();
 
-	this->edit_meas_X->Text = "";
-	this->edit_meas_Y->Text = "";
+	this->edit_meas_X->Text = L"";
+	this->edit_meas_Y->Text = L"";
 
-	 AnsiString fres("");
-
+	wchar_t fres[1024];
+	wchar_t cres[1024];
+	
 	 dlg->InitialDir = SysConfMgr.GetCurConfFoldPath();
-	 dlg->Filter = "*.ini|*.ini";
-	 dlg->FileName = "NewSystemGBI";
-	 dlg->Title = "Cоздать новую систему";
+	 dlg->Filter = L"*.ini|*.ini";
+	 dlg->FileName = L"NewSystemGBI";
+	 dlg->Title = L"Cоздать новую систему";
 	 if (dlg->Execute()!=IDOK) return -1;
+	 
+	 wcscpy(fres, (wchar_t*)dlg->FileName.c_str());
 
-	 fres = dlg->FileName;
-	 char cres[1024];
-	 strcpy(cres,fres.c_str());
+	 
+
+	 wcscpy(cres, (wchar_t*)dlg->FileName.c_str());
 
 	 int i = 0;
 
-	 for (i = strlen(cres); i >=0 ; i--) {
+	 for (i = wcslen(cres); i >=0 ; i--) {
 
 		if (cres[i] == '\\') break;
 	 }
 
-	 char cnew [1024];
-	 strcpy(cnew, &cres[i+1]);
+	 TCHAR cnew [1024];
+	 wcscpy(cnew, &cres[i+1]);
 
 	 i = 0;
 
-	 for (i = strlen(cnew); i >=0 ; i--) {
+	 for (i = wcslen(cnew); i >=0 ; i--) {
 
 		if (cnew[i] == '.')
 		{
@@ -791,35 +771,39 @@ int TGBISystem::OpenConf (TOpenDialog* dlg)
 {
 	 this->port.Close();
 
-	 this->edit_meas_X->Text = "";
-	 this->edit_meas_Y->Text = "";
+	 this->edit_meas_X->Text = L"";
+	 this->edit_meas_Y->Text = L"";
 
-	 AnsiString fres("");
+	 WideString fres(L"");
 
 	 dlg->InitialDir = SysConfMgr.GetCurConfFoldPath();
-	 dlg->Filter = "*.ini|*.ini";
-	 dlg->FileName = SysConfMgr.cur_conf_name;
-     dlg->Title = "Открыть конфигурацию";
+	 dlg->Filter = L"*.ini|*.ini";
+	 
+	 wcscpy((TCHAR*)dlg->FileName.data(), SysConfMgr.cur_conf_name);
+
+	 dlg->FileName = L"Пока не работает!";
+
+	 dlg->Title = L"Открыть конфигурацию";
 	 if (dlg->Execute()!=IDOK) return -1;
 
 	 fres = dlg->FileName;
 
-	 char cres[1024];
-	 strcpy(cres,fres.c_str());
+	 TCHAR cres[1024];
+	 wcscpy(cres,fres.c_bstr());
 
 	 int i = 0;
 
-	 for (i = strlen(cres); i >=0 ; i--) {
+	 for (i = wcslen(cres); i >=0 ; i--) {
 
 		if (cres[i] == '\\') break;
 	 }
 
-	 char cnew [1024];
-	 strcpy(cnew, &cres[i+1]);
+	 TCHAR cnew [1024];
+	 wcscpy(cnew, &cres[i+1]);
 
 	 i = 0;
 
-	 for (i = strlen(cnew); i >=0 ; i--) {
+	 for (i = wcslen(cnew); i >=0 ; i--) {
 
 		if (cnew[i] == '.')
 		{
@@ -839,23 +823,28 @@ int TGBISystem::SaveConf (TSaveDialog* dlg)
 {
      this->port.Close();
 
-	 this->edit_meas_X->Text = "";
-	 this->edit_meas_Y->Text = "";
+	 this->edit_meas_X->Text = L"";
+	 this->edit_meas_Y->Text = L"";
 
-	 AnsiString fres("");
+	 WideString fres(L"");
 	 int i = 0;
 
 	 dlg->InitialDir = SysConfMgr.GetCurConfFoldPath();
-	 dlg->Filter = "*.ini|*.ini";
-	 dlg->FileName = SysConfMgr.cur_conf_name;
-	 dlg->Title = "Сохранить конфигурацию как ...";
+	 dlg->Filter = L"*.ini|*.ini";
+	 
+	 wcscpy((TCHAR*)dlg->FileName.data(), SysConfMgr.cur_conf_name);
+
+	 dlg->FileName = L"Пока не работает!";
+	 
+	 dlg->Title = L"Сохранить конфигурацию как ...";
 	 if (dlg->Execute()!=IDOK) return -1;
 
 	 fres = dlg->FileName;
-	 char cftmp[1024];
-	 strcpy(cftmp,fres.c_str());
+	 TCHAR cftmp[1024];
+	 
+	 wcscpy(cftmp,fres.c_bstr());
 
-	 for (i = strlen(cftmp); i>=0; i--)
+	 for (i = wcslen(cftmp); i>=0; i--)
 	 {
 		 if (cftmp[i] == '.')
 		 {
@@ -864,36 +853,37 @@ int TGBISystem::SaveConf (TSaveDialog* dlg)
 		 }
 	 }
 
-	 strcat(cftmp,".ini");
+	 wcscat(cftmp,L".ini");
 
 	 FILE* ftmp = NULL;
 
-	 ftmp = fopen(cftmp,"rb");
+	 ftmp = _wfopen(cftmp,L"rb");
 
 	 if (ftmp != NULL) {
 
 		fclose(ftmp);
-		Application->MessageBoxA(L"Данная конфигурация уже существует!",L"ВНИМАНИЕ!",0);
+		Application->MessageBoxW(L"Данная конфигурация уже существует!",L"ВНИМАНИЕ!",0);
 		return -1;
 	 }
 
 
-	 char cres[1024];
-	 strcpy(cres,fres.c_str());
+	 TCHAR cres[1024];
+	 
+	 wcscpy(cres,fres.c_bstr());
 
 
 
-	 for (i = strlen(cres); i >=0 ; i--) {
+	 for (i = wcslen(cres); i >=0 ; i--) {
 
 		if (cres[i] == '\\') break;
 	 }
 
-	 char cnew [1024];
-	 strcpy(cnew, &cres[i+1]);
+	 TCHAR cnew [1024];
+	 wcscpy(cnew, &cres[i+1]);
 
 	 i = 0;
 
-	 for (i = strlen(cnew); i >=0 ; i--) {
+	 for (i = wcslen(cnew); i >=0 ; i--) {
 
 		if (cnew[i] == '.')
 		{
@@ -903,44 +893,19 @@ int TGBISystem::SaveConf (TSaveDialog* dlg)
 	 }
 
 
-	 char cmd[1024];
+	 TCHAR cmd[1024];
 
-	 strcpy (cmd, "copy \"");
+	 wcscpy (cmd, L"copy \"");
 
-	 strcat(cmd,SysConfMgr.GetCurIniPath());
+	 wcscat(cmd,SysConfMgr.GetCurIniPath());
 
-	 strcat(cmd,"\" ");
+	 wcscat(cmd,L"\" ");
 
-	 char cpar[1024];
-	 strcpy(cpar,"\"");
-	 strcat(cpar,SysConfMgr.GetCurIniPath());
+	 TCHAR cpar[1024];
+	 wcscpy(cpar,L"\"");
+	 wcscat(cpar,SysConfMgr.GetCurIniPath());
 
-	 for (i = strlen(cpar); i >=0 ; i--) {
-
-		if (cpar[i] == '\\')
-		{
-			cpar[i+1] = '\0';
-			break;
-		}
-	 }
-
-	 strcat(cpar,cnew);
-	 strcat(cpar,".ini");
-	 strcat(cmd,cpar);
-	 strcat(cmd,"\"");
-
-	 system(cmd);
-
-
-	 strcpy (cmd, "xcopy /s /i \"");
-	 strcat(cmd,SysConfMgr.cur_base_path);
-	 cmd[strlen(cmd)-1] = '\0';
-	 strcat (cmd,"\" ");
-
-	 strcpy(cpar,"\"");
-	 strcat(cpar,SysConfMgr.GetCurBaseFoldPath());
-
-	 for (i = strlen(cpar)-1; i >=0 ; i--) {
+	 for (i = wcslen(cpar); i >=0 ; i--) {
 
 		if (cpar[i] == '\\')
 		{
@@ -949,12 +914,40 @@ int TGBISystem::SaveConf (TSaveDialog* dlg)
 		}
 	 }
 
-	 strcat(cpar,cnew);
-	 strcat(cpar,"\"");
-	 strcat(cmd,cpar);
+	 wcscat(cpar,cnew);
+	 wcscat(cpar,L".ini");
+	 wcscat(cmd,cpar);
+	 wcscat(cmd,L"\"");
 
-	 system(cmd);
+	 system((char*)cmd);
 
+
+	 wcscpy (cmd, L"xcopy /s /i \"");
+	 
+	 wcscat(cmd, SysConfMgr.cur_base_path);
+	 
+	 cmd[wcslen(cmd)-1] = '\0';
+	 
+	 wcscat (cmd,L"\" ");
+
+	 wcscpy(cpar,L"\"");
+	 wcscat(cpar,SysConfMgr.GetCurBaseFoldPath());
+
+	 for (i = wcslen(cpar)-1; i >=0 ; i--) {
+
+		if (cpar[i] == '\\')
+		{
+			cpar[i+1] = '\0';
+			break;
+		}
+	 }
+
+	 wcscat(cpar,cnew);
+	 wcscat(cpar,L"\"");
+	 wcscat(cmd,cpar);
+	 
+	 system((char*)cmd);
+	 
 	 SysConfMgr.Accept(cnew);
 
 	return 0;

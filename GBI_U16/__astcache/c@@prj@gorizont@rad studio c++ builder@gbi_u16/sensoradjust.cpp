@@ -58,8 +58,6 @@ void __fastcall TForm_SensorAdjust::Button_saveClick(TObject *Sender)
 
 	SetSensor();
 
-	//MessageBox(NULL,"Íàñòðîéêè ñîõðàíåíû","Äàò÷èê",0);
-
 	Button_exitClick(NULL);
 
 }
@@ -237,7 +235,7 @@ void __fastcall TForm_SensorAdjust::Button_port_openClick(TObject *Sender)
 	if (p->IsOpen() == true) {
 
 		p->Close();
-		this->Button_port_open->Caption = "Îòêðûòü ïîðò";
+		this->Button_port_open->Caption = L"Открыть порт";
 		this->Edit_port_prop->Color = clSilver;
 		this->Button_start->Enabled = true;
 	}
@@ -245,15 +243,15 @@ void __fastcall TForm_SensorAdjust::Button_port_openClick(TObject *Sender)
 	{
 		if (p->Open() == 0)
 		{
-			this->Button_port_open->Caption = "Çàêðûòü ïîðò";
+			this->Button_port_open->Caption = L"Закрыть порт";
 			this->Edit_port_prop->Color = clLime;
 			this->Button_start->Enabled = true;
 		}
 		else
 		{
-			this->Button_port_open->Caption = "Îòêðûòü ïîðò";
+			this->Button_port_open->Caption = L"Открыть порт";
 			this->Edit_port_prop->Color = clSilver;
-			Application->MessageBoxA(L"Íå óäàëîñü îòêðûòü ïîðò", L"Îøèáêà",0);
+			Application->MessageBoxW(L"Не удалось открыть порт", L"Ошибка",0);
 			this->Button_start->Enabled = false;
         }
 	}
@@ -326,7 +324,7 @@ void __fastcall TForm_SensorAdjust::Timer_scanTimer(TObject *Sender)
 
 				 if (system->GetSensor()->addr != StrToInt(this->ComboBox_addr_found->Text))
 				 {
-					if (Application->MessageBoxA(L"Àäðåñ ïåðâîãî îáíàðóæåííîãî äàò÷èêà îòëè÷àåòñÿ îò íàñòðîåê ñèñòåìû. Ñîõðàíèüò â íàñòðîéêàõ íîâîå çíà÷åíèå àäðåñà?",L"Âíèìàíèå!",1)==IDOK) {
+					if (Application->MessageBoxW(L"Адрес первого обнаруженного датчика отличается от настроек системы. Сохраниьт в настройках новое значение адреса?",L"Внимание!",1)==IDOK) {
 
 						system->GetSensor()->SetAddr(StrToInt(this->ComboBox_addr_found->Text));
 						this->SensorView();

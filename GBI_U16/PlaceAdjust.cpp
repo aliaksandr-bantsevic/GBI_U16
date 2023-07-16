@@ -1,4 +1,4 @@
-//---------------------------------------------------------------------------
+ï»¿//---------------------------------------------------------------------------
 
 #include <vcl.h>
 #pragma hdrstop
@@ -23,12 +23,15 @@ void __fastcall TForm_PlaceAdjust::Button_applyClick(TObject *Sender)
 {
 	if (mode ==0) {
 
-		*str =  Edit_name->Text;
+		place->name =  Edit_name->Text;
 	}
 	else
 	{
 		place->SetName(Edit_name->Text);
-    }
+	}
+
+    OK = true;
+
 	Close();
 }
 //---------------------------------------------------------------------------
@@ -38,13 +41,13 @@ void __fastcall TForm_PlaceAdjust::FormCreate(TObject *Sender)
 
 	if (mode == 1) {
 
-		Caption="Ðåäàêòèðîâàíèå ìåñòà";
-		this->Button_apply->Caption = "Ïðèìåíèòü";
+		Caption=L"Ð ÐµÐ´Ð°ÐºÑ‚Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ðµ Ð¼ÐµÑÑ‚Ð°";
+		this->Button_apply->Caption = L"ÐŸÑ€Ð¸Ð¼ÐµÐ½Ð¸Ñ‚ÑŒ";
 	}
 	else
 	{
-		Caption="Äîáàâèòü ìåñòî";
-		this->Button_apply->Caption = "Äîáàâèòü";
+		Caption=L"Ð”Ð¾Ð±Ð°Ð²Ð¸Ñ‚ÑŒ Ð¼ÐµÑÑ‚Ð¾";
+		this->Button_apply->Caption = L"Ð”Ð¾Ð±Ð°Ð²Ð¸Ñ‚ÑŒ";
 	}
 
 }
@@ -56,15 +59,15 @@ void __fastcall TForm_PlaceAdjust::Timer_startTimer(TObject *Sender)
 
 	if (mode == 1) {
 
-		Caption="Ðåäàêòèðîâàíèå ìåñòà";
-		this->Button_apply->Caption = "Ïðèìåíèòü";
+		Caption=L"Ð ÐµÐ´Ð°ÐºÑ‚Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ðµ Ð¼ÐµÑÑ‚Ð°";
+		this->Button_apply->Caption = L"ÐŸÑ€Ð¸Ð¼ÐµÐ½Ð¸Ñ‚ÑŒ";
 		this->Edit_name->Text= place->GetName();
 	}
 	else
 	{
-		Caption="Äîáàâèòü ìåñòî";
-		this->Edit_name->Text= "Ïëîùàäêà";
-		this->Button_apply->Caption = "Äîáàâèòü";
+		Caption=L"Ð”Ð¾Ð±Ð°Ð²Ð¸Ñ‚ÑŒ Ð¼ÐµÑÑ‚Ð¾";
+		this->Edit_name->Text= L"ÐŸÐ»Ð¾Ñ‰Ð°Ð´ÐºÐ°";
+		this->Button_apply->Caption =L"Ð”Ð¾Ð±Ð°Ð²Ð¸Ñ‚ÑŒ";
 	}
 
 }

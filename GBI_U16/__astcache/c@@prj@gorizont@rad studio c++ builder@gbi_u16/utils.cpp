@@ -1,4 +1,4 @@
-﻿//---------------------------------------------------------------------------
+//---------------------------------------------------------------------------
 
 #pragma hdrstop
 
@@ -11,7 +11,7 @@ void utils_ShowMessage(AnsiString s)
 {
    WideChar mes[1024];
    StringToWideChar(s.c_str(),mes,1024);
-   Application->MessageBoxA(mes,L"ÂÍÈÌÀÍÈÅ!", 0);
+   Application->MessageBoxW(mes,L"ВНИМАНИЕ!", 0);
 }
 
 AnsiString utils_int_to_str(int i, int d)
@@ -39,7 +39,7 @@ AnsiString utils_int_to_str(int i, int d)
 bool utils_confirm_operation_save_adjust(void)
 {
 
-	return (Application->MessageBoxA(L"Âû äåéñòâèòåëüíî õîòèòå ñîõðàíèòü íàñòðîéêè?",L"ÂÍÈÌÀÍÈÅ!",1) == IDOK);
+	return (Application->MessageBoxW(L"Вы хотите сохранить настройки?",L"ВНИМАНИЕ!",1) == IDOK);
 
 }
 
@@ -126,7 +126,7 @@ WORD Calc_CITT16(int n,BYTE *b) { return Calc_CRC(0xffff,0,n,b);}
 WORD Calc_CSum(int n,BYTE *b) { WORD res;int i;res=0;for(i=0;i<n;i++) res+=b[i];return res;}
 
 //-----------------------------------------------------------------------------
-WORD CRC16CCITT(WORD n,BYTE *b) // Ïðîâåðåíî, ñîâïàäàåò ñ Calc_CITT16
+WORD CRC16CCITT(WORD n,BYTE *b) // Calc_CITT16
 {
   WORD crc=0xFFFF;
   while (n--) crc=(crc<<8)^crc_16_table[(crc>>8)^*b++];
@@ -134,5 +134,36 @@ WORD CRC16CCITT(WORD n,BYTE *b) // Ïðîâåðåíî, ñîâïàäàåò ñ Cal
 }
 //-----------------------------------------------------------------------------
 
+int CreateTextFile_UTF16LEBOM (TCHAR* pszFilePath)
+{
 
+	int res = 0;
 
+	if (!::PathFileExists(pszFilePath))
+	{
+		 WORD wBOM = 0xFEFF;
+		 DWORD NumberOfBytesWritten;
+
+		 HANDLE hFile = ::CreateFile(pszFilePath,
+									 GENERIC_WRITE,
+									 0,
+									 NULL,
+									 CREATE_NEW,
+									 FILE_ATTRIBUTE_NORMAL,
+									 NULL);
+		 if (hFile != NULL)
+		 {
+			 ::WriteFile(hFile, &wBOM, sizeof(WORD), &NumberOfBytesWritten, NULL);
+			 ::CloseHandle(hFile);
+		 }
+		 else
+		 {
+			 res = -1; //Не удалось создать файл
+         }
+	}
+	else
+	{
+		res = -2; //Файл уже существует
+    }
+
+}

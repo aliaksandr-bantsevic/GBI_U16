@@ -42,12 +42,12 @@ void __fastcall TForm_DepthAdjust::Button_enterClick(TObject *Sender)
 
 	} catch (...) {
 
-		utils_ShowMessage("Íåïðàâèëüíûé ôîðìàò ââîäà!");
+		utils_ShowMessage(L"Неправильный формат ввода!");
 		return;
 	}
 
-	if (str) *str = this->Edit_depth->Text;
-	if (str1) *str1 = this->Edit_trerr->Text;
+	if (str) wcscpy(str, this->Edit_depth->Text.c_str());
+	if (str1) wcscpy(str1, this->Edit_trerr->Text.c_str());
 
     Close();
 }

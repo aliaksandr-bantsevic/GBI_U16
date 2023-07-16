@@ -21,7 +21,7 @@ void __fastcall TForm_data_enter::Button_cancelClick(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TForm_data_enter::Button_applyClick(TObject *Sender)
 {
-			*s = Edit_data->Text;
+			wcscpy(s, Edit_data->Text.c_str());
 			Close();
 }
 //---------------------------------------------------------------------------

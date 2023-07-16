@@ -46,7 +46,7 @@ public:		// User declarations
 
 
     TDrill* drill;
-	AnsiString* str;
+	TCHAR* str;
 	int mode;
 	void Start();
 

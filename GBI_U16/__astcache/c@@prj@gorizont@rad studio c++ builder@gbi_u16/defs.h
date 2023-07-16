@@ -8,8 +8,8 @@
 
 extern bool b_MessageConfirmParamsetShow;
 
-#define BUILD 			1
-#define VERSION         11
+#define BUILD           2
+#define VERSION         0
 #define SUBVERSION      0
 
 /*
@@ -18,6 +18,7 @@ extern bool b_MessageConfirmParamsetShow;
 
 #define 	MACRO_FORM_MOVE_TO_THE_CENTER 	this -> Position = poDesktopCenter;
 #define 	MACRO_FORM_CLOSE   this -> Close();
+/* Confirm of parameter saving is redundant */
 //#define     MACRO_IF_OPERATION_SAVE_PARAM_CONFIRMED     if (b_MessageConfirmParamsetShow) if (utils_confirm_operation_save_adjust() == false) return;
 #define     MACRO_IF_OPERATION_SAVE_PARAM_CONFIRMED        {;}
 

@@ -1,4 +1,4 @@
-//---------------------------------------------------------------------------
+ï»¿//---------------------------------------------------------------------------
 
 #pragma hdrstop
 
@@ -15,7 +15,7 @@
 		protocol_AND3 = new TProtocol_AND3();
 		serial = 0;
 		on = false;
-		mark = "Ãëóáèííûé èíêëèíîìåòð";
+		mark = L"Ð“Ð»ÑƒÐ±Ð¸Ð½Ð½Ñ‹Ð¹ Ð¸Ð½ÐºÐ»Ð¸Ð½Ð¾Ð¼ÐµÑ‚Ñ€";
 		port = NULL;
 		serial = 0;
 		soft_version = 0;
@@ -320,9 +320,9 @@ TTreeNode* TSensor::Redraw(TTreeView* t, TTreeNode* n)
 		return NULL;
 	}
 
-	AnsiString s("");
+	WideString s("");
 
-	s.printf("BIN-D3 [%d][%s]", this->addr, mark.c_str());
+	s.printf(L"BIN-D3 [%d][%s]", this->addr, mark.c_bstr());
 
 	node  =	t->Items->AddChild(n,s);
 	utils_set_tree_node_view(node, SYSTEM_NODE_SENSOR, SYSTEM_NODE_STATE_NORMAL);

@@ -6,8 +6,8 @@
 #include <IniFiles.hpp>
 //---------------------------------------------------------------------------
 USEFORM("PortAdjust.cpp", Form_PortAdjust);
-USEFORM("MeasAdjust.cpp", Form_MeasAdjust);
 USEFORM("PlaceAdjust.cpp", Form_PlaceAdjust);
+USEFORM("MeasAdjust.cpp", Form_MeasAdjust);
 USEFORM("SystemAdjust.cpp", Form_SystemAdjust);
 USEFORM("SensorAdjust.cpp", Form_SensorAdjust);
 USEFORM("DataEnter.cpp", Form_data_enter);
@@ -15,8 +15,8 @@ USEFORM("DepthAdjust.cpp", Form_DepthAdjust);
 USEFORM("Diagram.cpp", Form_diagram);
 USEFORM("About.cpp", Form_about);
 USEFORM("Main.cpp", FMain);
-USEFORM("DrillAdjust.cpp", Form_DrillAdjust);
 USEFORM("ExcelWait.cpp", Form_excel_progress);
+USEFORM("DrillAdjust.cpp", Form_DrillAdjust);
 //---------------------------------------------------------------------------
 int WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
 {

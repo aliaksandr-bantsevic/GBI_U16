@@ -20,7 +20,7 @@ void __fastcall TForm_DrillAdjust::Button_applyClick(TObject *Sender)
 
 	 if (mode == 0) {
 
-		 *str = this->Edit_name->Text;
+		 wcscpy(str, this->Edit_name->Text.c_str());
 		 *records_cnt = this->ComboBox_meas_cnt->Text.ToInt()+1;
 
 

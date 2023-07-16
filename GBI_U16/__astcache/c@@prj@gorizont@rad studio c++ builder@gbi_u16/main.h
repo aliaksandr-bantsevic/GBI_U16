@@ -247,19 +247,13 @@ __published:	// IDE-managed Components
 	void __fastcall TreeView_systemMouseMove(TObject *Sender, TShiftState Shift, int X,
           int Y);
 
-
-
-
-
-
-
 private:	// User declarations
 	void Test1();
 	void CurrentTimeView();
 	void ApplicationInit();
-	void Console(AnsiString obj, AnsiString msg);
+	void Console(WideString obj, WideString msg);
 	void SystemInit();
-	void SetMenuFont(TRect &ARect, TCanvas* ACanvas, AnsiString text);
+	void SetMenuFont(TRect &ARect, TCanvas* ACanvas, WideString text);
 public:		// User declarations
 	__fastcall TFMain(TComponent* Owner);
 

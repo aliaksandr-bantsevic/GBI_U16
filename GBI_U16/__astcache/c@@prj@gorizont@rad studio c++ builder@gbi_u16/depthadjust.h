@@ -37,8 +37,8 @@ private:	// User declarations
 public:		// User declarations
 	__fastcall TForm_DepthAdjust(TComponent* Owner);
 
-	AnsiString* str;
-	AnsiString* str1;
+	TCHAR* str;
+	TCHAR* str1;
 
 };
 //---------------------------------------------------------------------------

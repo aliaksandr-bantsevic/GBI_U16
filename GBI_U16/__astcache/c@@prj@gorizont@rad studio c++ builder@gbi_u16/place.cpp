@@ -10,11 +10,11 @@
 TPlace::TPlace()
 {
 	node = NULL;
-	name = "Ïëîùàäêà";
+	name = L"Площадка";
 	num = 0;
 }
 
-TPlace::TPlace(AnsiString n)
+TPlace::TPlace(WideString n)
 {
 	node = NULL;
 	name = n;
@@ -43,9 +43,9 @@ TTreeNode* TPlace::Redraw(TTreeView* t, TTreeNode* n)
 		return NULL;
 	}
 
-	AnsiString s("");
+	WideString s("");
 
-	s.printf("%d [%s]",  num, name.c_str());
+	s.printf(L"%d [%s]",  num, name.c_bstr());
 
 	node  =	t->Items->AddChild(n,s);
 	utils_set_tree_node_view(node, SYSTEM_NODE_PLACE, SYSTEM_NODE_STATE_NORMAL);
@@ -70,7 +70,7 @@ void TPlace::SetName(AnsiString n)
     name = n;
 }
 
-AnsiString TPlace::GetName()
+WideString TPlace::GetName()
 {
 	return name;
 }
@@ -100,7 +100,7 @@ int TPlace::AddDrill(AnsiString n, int cnt)
 
 		if (drill_list[i]->name == n) {
 
-            ShowMessage("Äàííîå èìÿ ñêâàæèíû óæå ñóùåñòâóåò!");
+			ShowMessage(L"Данное имя скважины уже существует!");
 			return -2;
 		}
 	}
@@ -189,7 +189,7 @@ int TPlace::DeleteDrill(TDrill* d, int idx)
 
 		if (d!=drill_list[idx]) {
 
-			return -1; //Îøèáêà ýëåìåíòà ñèñòåìû
+			return -1;
 		}
 
 		delete drill_list[idx];

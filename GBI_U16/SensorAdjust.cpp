@@ -1,4 +1,4 @@
-//---------------------------------------------------------------------------
+ï»¿//---------------------------------------------------------------------------
 
 #include <vcl.h>
 #pragma hdrstop
@@ -40,8 +40,8 @@ void __fastcall TForm_SensorAdjust::FormCreate(TObject *Sender)
 	}
 
 	this->ComboBox_protocol->Clear();
-	this->ComboBox_protocol->Items->Add("ÈÍ-Ä3");
-	this->ComboBox_protocol->Items->Add("ÀÍ-Ä3");
+	this->ComboBox_protocol->Items->Add("ÃˆÃ-Ã„3");
+	this->ComboBox_protocol->Items->Add("Ã€Ã-Ã„3");
 
 	this->SetFocusedControl(this->Button_exit);
 
@@ -57,8 +57,6 @@ void __fastcall TForm_SensorAdjust::Button_saveClick(TObject *Sender)
 	MACRO_IF_OPERATION_SAVE_PARAM_CONFIRMED
 
 	SetSensor();
-
-	//MessageBox(NULL,"Íàñòðîéêè ñîõðàíåíû","Äàò÷èê",0);
 
 	Button_exitClick(NULL);
 
@@ -78,10 +76,10 @@ void __fastcall TForm_SensorAdjust::Button_startClick(TObject *Sender)
 		this->ProgressBar_scan->Min = 0;
 		this->ProgressBar_scan->Max = 255;
 		this->ProgressBar_scan->Position = 0;
-		this->Button_start->Caption = "Ñòîï";
+		this->Button_start->Caption = "Ã‘Ã²Ã®Ã¯";
 		this->ComboBox_addr_found->Clear();
 		s_tmp->SetChan(system->GetPort());
-        this->Label_msg->Caption = "Èäåò ïîèñê äàò÷èêîâ ...";
+        this->Label_msg->Caption = "ÃˆÃ¤Ã¥Ã² Ã¯Ã®Ã¨Ã±Ãª Ã¤Ã Ã²Ã·Ã¨ÃªÃ®Ã¢ ...";
 		this->ComboBox_addr_found->Visible = false;
         this->Label_msg_sensors->Visible = false;
 
@@ -177,13 +175,13 @@ void TForm_SensorAdjust::Start()
 
 	if (p->IsOpen() == false) {
 
-		this->Button_port_open->Caption = "Îòêðûòü ïîðò";
+		this->Button_port_open->Caption = "ÃŽÃ²ÃªÃ°Ã»Ã²Ã¼ Ã¯Ã®Ã°Ã²";
 		this->Edit_port_prop->Color = clSilver;
 		this->Button_start->Enabled = false;
 	}
 	else  {
 
-		this->Button_port_open->Caption = "Çàêðûòü ïîðò";
+		this->Button_port_open->Caption = "Ã‡Ã ÃªÃ°Ã»Ã²Ã¼ Ã¯Ã®Ã°Ã²";
 		this->Edit_port_prop->Color = clLime;
         this->Button_start->Enabled = true;
     }
@@ -237,7 +235,7 @@ void __fastcall TForm_SensorAdjust::Button_port_openClick(TObject *Sender)
 	if (p->IsOpen() == true) {
 
 		p->Close();
-		this->Button_port_open->Caption = "Îòêðûòü ïîðò";
+		this->Button_port_open->Caption = L"ÐžÑ‚ÐºÑ€Ñ‹Ñ‚ÑŒ Ð¿Ð¾Ñ€Ñ‚";
 		this->Edit_port_prop->Color = clSilver;
 		this->Button_start->Enabled = true;
 	}
@@ -245,15 +243,15 @@ void __fastcall TForm_SensorAdjust::Button_port_openClick(TObject *Sender)
 	{
 		if (p->Open() == 0)
 		{
-			this->Button_port_open->Caption = "Çàêðûòü ïîðò";
+			this->Button_port_open->Caption = L"Ð—Ð°ÐºÑ€Ñ‹Ñ‚ÑŒ Ð¿Ð¾Ñ€Ñ‚";
 			this->Edit_port_prop->Color = clLime;
 			this->Button_start->Enabled = true;
 		}
 		else
 		{
-			this->Button_port_open->Caption = "Îòêðûòü ïîðò";
+			this->Button_port_open->Caption = L"ÐžÑ‚ÐºÑ€Ñ‹Ñ‚ÑŒ Ð¿Ð¾Ñ€Ñ‚";
 			this->Edit_port_prop->Color = clSilver;
-			Application->MessageBoxA(L"Íå óäàëîñü îòêðûòü ïîðò", L"Îøèáêà",0);
+			Application->MessageBoxW(L"ÐÐµ ÑƒÐ´Ð°Ð»Ð¾ÑÑŒ Ð¾Ñ‚ÐºÑ€Ñ‹Ñ‚ÑŒ Ð¿Ð¾Ñ€Ñ‚", L"ÐžÑˆÐ¸Ð±ÐºÐ°",0);
 			this->Button_start->Enabled = false;
         }
 	}
@@ -298,7 +296,7 @@ void __fastcall TForm_SensorAdjust::Timer_scanTimer(TObject *Sender)
 			total_sensors++;
 			this->ComboBox_addr_found->Items->Add(utils_int_to_str(scan_addr, 0));
 			AnsiString s;
-			s.printf("Íàéäåíî äàò÷èêîâ ... %d", total_sensors);
+			s.printf("ÃÃ Ã©Ã¤Ã¥Ã­Ã® Ã¤Ã Ã²Ã·Ã¨ÃªÃ®Ã¢ ... %d", total_sensors);
 			this->Label_msg->Caption = s;
 		}
 
@@ -309,7 +307,7 @@ void __fastcall TForm_SensorAdjust::Timer_scanTimer(TObject *Sender)
 		if (scan_addr>=254) {
 
 			AnsiString s("");
-			s.printf("Äàò÷èêîâ íà ëèíèè %d", total_sensors);
+			s.printf("Ã„Ã Ã²Ã·Ã¨ÃªÃ®Ã¢ Ã­Ã  Ã«Ã¨Ã­Ã¨Ã¨ %d", total_sensors);
 			this->Label_msg_sensors->Visible=true;
 			this->Label_msg_sensors->Caption=s;
 
@@ -318,7 +316,7 @@ void __fastcall TForm_SensorAdjust::Timer_scanTimer(TObject *Sender)
 
 			this->ProgressBar_scan->Visible = false;
             this->Label_msg->Visible = false;
-			this->Button_start->Caption = "Ñòàðò";
+			this->Button_start->Caption = "Ã‘Ã²Ã Ã°Ã²";
 
 			 if (total_sensors>0)
 			 {
@@ -326,7 +324,7 @@ void __fastcall TForm_SensorAdjust::Timer_scanTimer(TObject *Sender)
 
 				 if (system->GetSensor()->addr != StrToInt(this->ComboBox_addr_found->Text))
 				 {
-					if (Application->MessageBoxA(L"Àäðåñ ïåðâîãî îáíàðóæåííîãî äàò÷èêà îòëè÷àåòñÿ îò íàñòðîåê ñèñòåìû. Ñîõðàíèüò â íàñòðîéêàõ íîâîå çíà÷åíèå àäðåñà?",L"Âíèìàíèå!",1)==IDOK) {
+					if (Application->MessageBoxW(L"ÐÐ´Ñ€ÐµÑ Ð¿ÐµÑ€Ð²Ð¾Ð³Ð¾ Ð¾Ð±Ð½Ð°Ñ€ÑƒÐ¶ÐµÐ½Ð½Ð¾Ð³Ð¾ Ð´Ð°Ñ‚Ñ‡Ð¸ÐºÐ° Ð¾Ñ‚Ð»Ð¸Ñ‡Ð°ÐµÑ‚ÑÑ Ð¾Ñ‚ Ð½Ð°ÑÑ‚Ñ€Ð¾ÐµÐº ÑÐ¸ÑÑ‚ÐµÐ¼Ñ‹. Ð¡Ð¾Ñ…Ñ€Ð°Ð½Ð¸ÑŒÑ‚ Ð² Ð½Ð°ÑÑ‚Ñ€Ð¾Ð¹ÐºÐ°Ñ… Ð½Ð¾Ð²Ð¾Ðµ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ðµ Ð°Ð´Ñ€ÐµÑÐ°?",L"Ð’Ð½Ð¸Ð¼Ð°Ð½Ð¸Ðµ!",1)==IDOK) {
 
 						system->GetSensor()->SetAddr(StrToInt(this->ComboBox_addr_found->Text));
 						this->SensorView();

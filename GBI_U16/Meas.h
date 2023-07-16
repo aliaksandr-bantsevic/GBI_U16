@@ -47,7 +47,7 @@ class TMeas {
 public:
 
 TMeas();
-TMeas (TStringGrid* t, AnsiString n);
+TMeas (TStringGrid* t, WideString n);
 ~TMeas();
 
 meas_record records 	 [MAX_RECORDS_MEAS];
@@ -76,14 +76,14 @@ int pnum;
 
 TTreeNode* Redraw(TTreeView* t, TTreeNode* n);
 
-AnsiString name;
+WideString name;
 
 void Select();
 void Unselect();
 bool selected;
 
-AnsiString name_place;
-AnsiString name_drill;
+WideString name_place;
+WideString name_drill;
 
 int type_drill;
 int drill_start_point;
@@ -96,7 +96,7 @@ int SaveData(int par);
 int  records_cnt_def;
 int  records_cnt;
 int  ImportDepthTable(TMeas* m);
-bool DeleteDir(AnsiString DirName);
+bool DeleteDir(WideString DirName);
 
 TSysConfMgr* SysConfMgr;
 
@@ -106,7 +106,7 @@ int Sort (int par);
 
 double own_zero_shift;
 
-AnsiString mark;
+WideString mark;
 
 };
 

@@ -15,7 +15,7 @@ TMeas::TMeas ()
 }
 
 
-TMeas::TMeas (TStringGrid* t, AnsiString n)
+TMeas::TMeas (TStringGrid* t, WideString n)
 {
 	table = t;
 	finalized = false;
@@ -84,14 +84,14 @@ int PutIntCell(TStringGrid* table, int col, int row, int d)
 		return -1; //Нет указателя на таблицу
 	}
 
-		AnsiString s;
+		WideString s;
 
 		if ((d == 0)&&(row>1)) {
 			s = "";
 		}
 		else
 		{
-			s.printf("%d",d);
+			s.printf(L"%d",d);
 		}
 		table->Cells[col][row] = s;
 
@@ -105,7 +105,7 @@ int PutDblCell(TStringGrid* table, int col, int row, double d)
 		return -1; //Нет указателя на таблицу
 	}
 
-		AnsiString s;
+		WideString s;
 
 		//if (((d == 0)&&(row>1))||((d == 0)&&(col>3)))
 		if (d == 0)
@@ -115,7 +115,7 @@ int PutDblCell(TStringGrid* table, int col, int row, double d)
 		}
 		else
 		{
-			s.printf("%.1f",d);
+			s.printf(L"%.1f",d);
 		}
 		table->Cells[col][row] = s;
 
@@ -210,7 +210,7 @@ int GetIntCell(TStringGrid* table, int col, int row, int* d)
 		return -1; //Нет указателя на таблицу
 	}
 
-	AnsiString s;
+	WideString s;
 
 	s = table->Cells[col][row];
 
@@ -241,7 +241,7 @@ int GetDblCell(TStringGrid* table, int col, int row, double* d)
 		return -1; //Нет указателя на таблицу
 	}
 
-	AnsiString s;
+	WideString s;
 
 	s = table->Cells[col][row];
 
@@ -534,9 +534,9 @@ TTreeNode* TMeas::Redraw(TTreeView* t, TTreeNode* n)
 		return NULL;
 	}
 
-	AnsiString s("");
+	WideString s(L"");
 
-	s.printf("%d.%d.%d [%s]",  pnum, dnum, num, name.c_str());
+	s.printf(L"%d.%d.%d [%s]",  pnum, dnum, num, name.c_bstr());
 
 	node  =	t->Items->AddChild(n,s);
 
@@ -570,51 +570,51 @@ int TMeas::SaveData(int par)
 {
 	if (par) this->TableToData();
 
-	char dir[1024];
-	char tdir[1024];
+	TCHAR dir[1024];
+	TCHAR tdir[1024];
 
 	/*
 	GetCurrentDirectory(1024,dir);
-	strcat(dir,"\\");
-	strcat(dir,"Base");
+	wcscat(dir,L"\\");
+	wcscat(dir,L"Base");
 	*/
-	strcpy(dir,SysConfMgr->GetCurBase());
+	wcscpy(dir,SysConfMgr->GetCurBase());
 	if (!DirectoryExists(dir))  CreateDirectory(dir,0);
 
-	//strcat(dir,"\\");
-	strcat(dir,this->name_place.c_str());
+	//wcscat(dir,L"\\");
+	wcscat(dir,this->name_place.c_bstr());
 	if (!DirectoryExists(dir))  CreateDirectory(dir,0);
 
-	strcat(dir,"\\");
-	strcat(dir,this->name_drill.c_str());
+	wcscat(dir,L"\\");
+	wcscat(dir,this->name_drill.c_bstr());
 	if (!DirectoryExists(dir))  CreateDirectory(dir,0);
 
-	AnsiString s("");
-	s.printf("Измерение_%d", this->num);
+	WideString s(L"");
+	s.printf(L"Измерение_%d", this->num);
 
 	/*
 	if (finalized == true) {
 
-		AnsiString ss("");
-		ss = FormatDateTime("_dd_mm_yyyy_hh_nn_ss",this->finalize_time);
+		WideString ss(L"");
+		ss = FormatDateTime(L"_dd_mm_yyyy_hh_nn_ss",this->finalize_time);
 		s=s+ss;
 	}
 	*/
 
-	strcat(dir,"\\");
-	strcat(dir,s.c_str());
+	wcscat(dir,L"\\");
+	wcscat(dir,s.c_bstr());
 	if (!DirectoryExists(dir))  CreateDirectory(dir,0);
 
-	strcat(dir,"\\");
-	strcat(dir,s.c_str());
+	wcscat(dir,L"\\");
+	wcscat(dir,s.c_bstr());
 
-	strcpy(tdir,dir);
-	strcat(dir,".gms");
+	wcscpy(tdir,dir);
+	wcscat(dir,L".gms");
 
-	FILE* f = fopen(dir,"wb");
+	FILE* f = _wfopen(dir,L"wb");
 	if (f == NULL) {
 
-		ShowMessage("Не удалось открыть файл для сохранения данных измерения!");
+		ShowMessage(L"Не удалось открыть файл для сохранения данных измерения!");
 		return -1;
 	}
 
@@ -628,76 +628,76 @@ int TMeas::SaveData(int par)
 
 	fclose(f);
 
-	strcat(tdir,".txt");
-	FILE* ft = fopen(tdir,"wb");
+	wcscat(tdir,L".txt");
+	FILE* ft = _wfopen(tdir,L"wb");
 	if (ft == NULL) {
 
-		ShowMessage("Не удалось открыть файл для сохранения данных измерения!");
+		ShowMessage(L"Не удалось открыть файл для сохранения данных измерения!");
 		return -1;
 	}
 
 
-	AnsiString spar("");
-	char cpar[1024];
+	WideString spar(L"");
+	TCHAR cpar[1024];
 
-	spar.printf("Место:\t\t%s\r\n", name_place.c_str());
-	strcpy(cpar,spar.c_str());
-	fwrite(cpar,strlen(cpar),1,ft);
+	spar.printf(L"Место:\t\t%s\r\n", name_place.c_bstr());
+	wcscpy(cpar,spar.c_bstr());
+	fwrite(cpar,wcslen(cpar),1,ft);
 
-	spar.printf("Скважина:\t%s\r\n", name_drill.c_str());
-	strcpy(cpar,spar.c_str());
-	fwrite(cpar,strlen(cpar),1,ft);
+	spar.printf(L"Скважина:\t%s\r\n", name_drill.c_bstr());
+	wcscpy(cpar,spar.c_bstr());
+	fwrite(cpar,wcslen(cpar),1,ft);
 
 	if (type_drill == 0)
 	{
-		spar.printf("Направление:\tГОРИЗОНТАЛЬНАЯ\r\n");
+		spar.printf(L"Направление:\tГОРИЗОНТАЛЬНАЯ\r\n");
 	}
 	else
 	{
-		spar.printf("Направление:\tВЕРТИКАЛЬНАЯ\r\n");
+		spar.printf(L"Направление:\tВЕРТИКАЛЬНАЯ\r\n");
 	}
-	strcpy(cpar,spar.c_str());
-	fwrite(cpar,strlen(cpar),1,ft);
+	wcscpy(cpar,spar.c_bstr());
+	fwrite(cpar,wcslen(cpar),1,ft);
 
 	if (single_way == 0)
 	{
-		spar.printf("Один проход:\tНЕТ\r\n");
+		spar.printf(L"Один проход:\tНЕТ\r\n");
 	}
 	else
 	{
-		spar.printf("Один проход:\tДА\r\n");
+		spar.printf(L"Один проход:\tДА\r\n");
 	}
-	strcpy(cpar,spar.c_str());
-	fwrite(cpar,strlen(cpar),1,ft);
+	wcscpy(cpar,spar.c_bstr());
+	fwrite(cpar,wcslen(cpar),1,ft);
 
-	spar.printf("Измерение:\t%d\r\n", this->num);
-	strcpy(cpar,spar.c_str());
-	fwrite(cpar,strlen(cpar),1,ft);
+	spar.printf(L"Измерение:\t%d\r\n", this->num);
+	wcscpy(cpar,spar.c_bstr());
+	fwrite(cpar,wcslen(cpar),1,ft);
 
-	spar = FormatDateTime("Создано:\tdd-mm-yyyy hh:nn:ss\r\n",create_time);
-	strcpy(cpar,spar.c_str());
-	fwrite(cpar,strlen(cpar),1,ft);
+	spar = FormatDateTime(L"Создано:\tdd-mm-yyyy hh:nn:ss\r\n",create_time);
+	wcscpy(cpar,spar.c_bstr());
+	fwrite(cpar,wcslen(cpar),1,ft);
 
 	if (finalized == true) {
 
-		spar = FormatDateTime("Завершено:\tdd-mm-yyyy hh:nn:ss\r\n\r\n",finalize_time);
-		strcpy(cpar,spar.c_str());
+		spar = FormatDateTime(L"Завершено:\tdd-mm-yyyy hh:nn:ss\r\n\r\n",finalize_time);
+		wcscpy(cpar,spar.c_bstr());
 	}
 	else
 	{
 		spar = "Завершено:\tНЕТ\r\n\r\n";
 	}
 
-	strcpy(cpar,spar.c_str());
-	fwrite(cpar,strlen(cpar),1,ft);
+	wcscpy(cpar,spar.c_bstr());
+	fwrite(cpar,wcslen(cpar),1,ft);
 
 	spar = "Номер\tГлубина\t\tОшибка\t\tX1\t\tY1\t\tX2\t\tY2\t\tLX\t\tLY\t\tLR\t\tAR\r\n";
-	strcpy(cpar,spar.c_str());
-	fwrite(cpar,strlen(cpar),1,ft);
+	wcscpy(cpar,spar.c_bstr());
+	fwrite(cpar,wcslen(cpar),1,ft);
 
 	for (int i = 0; i < records_cnt; i++) {
 
-		spar.printf("%d\t%.1f\t\t%.1f\t\t%.1f\t\t%.1f\t\t%.1f\t\t%.1f\t\t%.1f\t\t%.1f\t\t%.1f\t\t%.1f\r\n",
+		spar.printf(L"%d\t%.1f\t\t%.1f\t\t%.1f\t\t%.1f\t\t%.1f\t\t%.1f\t\t%.1f\t\t%.1f\t\t%.1f\t\t%.1f\r\n",
 
 		i,
 		this->records[i].depth,
@@ -713,8 +713,8 @@ int TMeas::SaveData(int par)
 
 		);
 
-	strcpy(cpar,spar.c_str());
-	fwrite(cpar,strlen(cpar),1,ft);
+	wcscpy(cpar,spar.c_bstr());
+	fwrite(cpar,wcslen(cpar),1,ft);
 
 	}
 
@@ -727,48 +727,48 @@ int TMeas::SaveData(int par)
 int TMeas::LoadData()
 {
 
-	char dir[1024];
-	char tdir[1024];
+	TCHAR dir[1024];
+	TCHAR tdir[1024];
 
 	/*
 	GetCurrentDirectory(1024,dir);
-	strcat(dir,"\\");
-	strcat(dir,"Base");
+	wcscat(dir,L"\\");
+	wcscat(dir,L"Base");
 	*/
-    strcpy (dir, SysConfMgr->GetCurBase());
+    wcscpy (dir, SysConfMgr->GetCurBase());
 	if (!DirectoryExists(dir))  CreateDirectory(dir,0);
 
-	//strcat(dir,"\\");
-	strcat(dir,this->name_place.c_str());
+	//wcscat(dir,L"\\");
+	wcscat(dir,this->name_place.c_bstr());
 	if (!DirectoryExists(dir))  CreateDirectory(dir,0);
 
-	strcat(dir,"\\");
-	strcat(dir,this->name_drill.c_str());
+	wcscat(dir,L"\\");
+	wcscat(dir,this->name_drill.c_bstr());
 	if (!DirectoryExists(dir))  CreateDirectory(dir,0);
 
-	AnsiString s("");
-	s.printf("Измерение_%d", this->num);
+	WideString s(L"");
+	s.printf(L"Измерение_%d", this->num);
 
 	/*
 	if (finalized == true) {
 
-		AnsiString ss("");
-		ss = FormatDateTime("_dd_mm_yyyy_hh_nn_ss",this->finalize_time);
+		WideString ss(L"");
+		ss = FormatDateTime(L"_dd_mm_yyyy_hh_nn_ss",this->finalize_time);
 		s=s+ss;
 	}
 	*/
 
-	strcat(dir,"\\");
-	strcat(dir,s.c_str());
+	wcscat(dir,L"\\");
+	wcscat(dir,s.c_bstr());
 	if (!DirectoryExists(dir))  CreateDirectory(dir,0);
 
-	strcat(dir,"\\");
-	strcat(dir,s.c_str());
+	wcscat(dir,L"\\");
+	wcscat(dir,s.c_bstr());
 
-	strcpy(tdir,dir);
-	strcat(dir,".gms");
+	wcscpy(tdir,dir);
+	wcscat(dir,L".gms");
 
-	FILE* f = fopen(dir,"rb");
+	FILE* f = _wfopen(dir,L"rb");
 
 	if (f == NULL) {
 
@@ -809,7 +809,7 @@ int TMeas::ImportDepthTable(TMeas* m)
 }
 
 
-bool TMeas::DeleteDir(AnsiString DirName)
+bool TMeas::DeleteDir(WideString DirName)
 {
 	TSearchRec sr;
 	if (DirName.Length())
@@ -848,40 +848,40 @@ extern double excel_export_rate;
 int TMeas::Excel (int par)
 {
 
-	char tdir[1024];
+	TCHAR tdir[1024];
 
-	strcpy(tdir,SysConfMgr->GetCurBase());
+	wcscpy(tdir,SysConfMgr->GetCurBase());
 	if (!DirectoryExists(tdir))  CreateDirectory(tdir,0);
 
-	//strcat(dir,"\\");
-	strcat(tdir,this->name_place.c_str());
+	//wcscat(dir,L"\\");
+	wcscat(tdir,this->name_place.c_bstr());
 	if (!DirectoryExists(tdir))  CreateDirectory(tdir,0);
 
-	strcat(tdir,"\\");
-	strcat(tdir,this->name_drill.c_str());
+	wcscat(tdir,L"\\");
+	wcscat(tdir,this->name_drill.c_bstr());
 	if (!DirectoryExists(tdir))  CreateDirectory(tdir,0);
 
-	AnsiString s("");
-	s.printf("Измерение_%d", this->num);
+	WideString s(L"");
+	s.printf(L"Измерение_%d", this->num);
 
-	strcat(tdir,"\\");
-	strcat(tdir,s.c_str());
+	wcscat(tdir,L"\\");
+	wcscat(tdir,s.c_bstr());
 	if (!DirectoryExists(tdir))  CreateDirectory(tdir,0);
 
-	strcat(tdir,"\\");
-	strcat(tdir,s.c_str());
+	wcscat(tdir,L"\\");
+	wcscat(tdir,s.c_bstr());
 
-	strcat(tdir,".xlsx");
+	wcscat(tdir,L".xlsx");
 
-	char cmd[1024];
-	strcpy(cmd,"del ");
-	strcat(cmd,"\"");
-	strcat(cmd,tdir);
-	strcat(cmd,"\"");
+	TCHAR cmd[1024];
+	wcscpy(cmd,L"del ");
+	wcscat(cmd,L"\"");
+	wcscat(cmd,tdir);
+	wcscat(cmd,L"\"");
 
 	if (par)
 	{
-		system(cmd);
+		system((char*)cmd);
 	}
 
 
@@ -891,7 +891,7 @@ int TMeas::Excel (int par)
 		{
 			if (OpenExcelReportTable(1) == false)
 			{
-				MessageBox(NULL,"Не удалось создать таблицу!","ОШИБКА",0);
+				MessageBox(NULL,L"Не удалось создать таблицу!",L"ОШИБКА",0);
 				return -1;
 			}
 		}
@@ -900,7 +900,7 @@ int TMeas::Excel (int par)
 		{
 			if (OpenExcelReportSheet(name, 1) == false)
 			{
-				MessageBox(NULL,"Не удалось создать лист таблицы!","ОШИБКА",0);
+				MessageBox(NULL,L"Не удалось создать лист таблицы!",L"ОШИБКА",0);
 				return -1;
 			}
 		}
@@ -908,7 +908,7 @@ int TMeas::Excel (int par)
 		{
 			if (OpenExcelReportSheet(name, num) == false)
 			{
-				MessageBox(NULL,"Не удалось создать лист таблицы!","ОШИБКА",0);
+				MessageBox(NULL,L"Не удалось создать лист таблицы!",L"ОШИБКА",0);
 				return -1;
 			}
 		}
@@ -925,61 +925,61 @@ int TMeas::Excel (int par)
 
 	//if (par)
 
-	WriteExcelReportCell(irow,1,"Площадка:"); WriteExcelReportCell(irow,2,this->name_place); irow++;
-	WriteExcelReportCell(irow,1,"Скважина:"); WriteExcelReportCell(irow,2,name_drill); irow++;
+	WriteExcelReportCell(irow,1,L"Площадка:"); WriteExcelReportCell(irow,2,this->name_place); irow++;
+	WriteExcelReportCell(irow,1,L"Скважина:"); WriteExcelReportCell(irow,2,name_drill); irow++;
 
 	if (type_drill == 0)
 	{
-		WriteExcelReportCell(irow,1,"Направление:"); WriteExcelReportCell(irow,2,"ГОРИЗОНТАЛЬНАЯ"); irow++;
+		WriteExcelReportCell(irow,1,L"Направление:"); WriteExcelReportCell(irow,2,L"ГОРИЗОНТАЛЬНАЯ"); irow++;
 	}
 	else
 	{
-		WriteExcelReportCell(irow,1,"Направление:"); WriteExcelReportCell(irow,2,"ВЕРТИКАЛЬНАЯ"); irow++;
+		WriteExcelReportCell(irow,1,L"Направление:"); WriteExcelReportCell(irow,2,L"ВЕРТИКАЛЬНАЯ"); irow++;
 	}
 
 	if (single_way == 0)
 	{
-		WriteExcelReportCell(irow,1,"Один проход:"); WriteExcelReportCell(irow,2,"НЕТ"); irow++;
+		WriteExcelReportCell(irow,1,L"Один проход:"); WriteExcelReportCell(irow,2,L"НЕТ"); irow++;
 	}
 	else
 	{
-		WriteExcelReportCell(irow,1,"Один проход:"); WriteExcelReportCell(irow,2,"ДА"); irow++;
+		WriteExcelReportCell(irow,1,L"Один проход:"); WriteExcelReportCell(irow,2,L"ДА"); irow++;
 	}
 
-	WriteExcelReportCell(irow,1,"Измерение:"); WriteExcelReportCell(irow,2,name); irow++;
+	WriteExcelReportCell(irow,1,L"Измерение:"); WriteExcelReportCell(irow,2,name); irow++;
 
-	s = FormatDateTime("dd-mm-yyyy hh:nn:ss",create_time);
-	WriteExcelReportCell(irow,1,"Создано:"); WriteExcelReportCell(irow,2,s); irow++;
+	s = FormatDateTime(L"dd-mm-yyyy hh:nn:ss",create_time);
+	WriteExcelReportCell(irow,1,L"Создано:"); WriteExcelReportCell(irow,2,s); irow++;
 
 	if ((double) finalize_time > 0.0)
 	{
-		s = FormatDateTime("dd-mm-yyyy hh:nn:ss",finalize_time);
+		s = FormatDateTime(L"dd-mm-yyyy hh:nn:ss",finalize_time);
 	}
 	else
 	{
 		s = "НЕТ";
 	}
 
-	WriteExcelReportCell(irow,1,"Завершено:"); WriteExcelReportCell(irow,2,s); irow++;
+	WriteExcelReportCell(irow,1,L"Завершено:"); WriteExcelReportCell(irow,2,s); irow++;
 
 	icol = 1;
 
-	WriteExcelReportCell(irow,icol,"Глубина"); icol++;
-	WriteExcelReportCell(irow,icol,"Погр. тр."); icol++;
-	WriteExcelReportCell(irow,icol,"X1"); icol++;
-	WriteExcelReportCell(irow,icol,"Y1"); icol++;
-	WriteExcelReportCell(irow,icol,"X2"); icol++;
-	WriteExcelReportCell(irow,icol,"Y2"); icol++;
-	WriteExcelReportCell(irow,icol,"LX"); icol++;
-	WriteExcelReportCell(irow,icol,"LY"); icol++;
-	WriteExcelReportCell(irow,icol,"LR"); icol++;
-	WriteExcelReportCell(irow,icol,"AR"); icol++;
+	WriteExcelReportCell(irow,icol,L"Глубина"); icol++;
+	WriteExcelReportCell(irow,icol,L"Погр. тр."); icol++;
+	WriteExcelReportCell(irow,icol,L"X1"); icol++;
+	WriteExcelReportCell(irow,icol,L"Y1"); icol++;
+	WriteExcelReportCell(irow,icol,L"X2"); icol++;
+	WriteExcelReportCell(irow,icol,L"Y2"); icol++;
+	WriteExcelReportCell(irow,icol,L"LX"); icol++;
+	WriteExcelReportCell(irow,icol,L"LY"); icol++;
+	WriteExcelReportCell(irow,icol,L"LR"); icol++;
+	WriteExcelReportCell(irow,icol,L"AR"); icol++;
 
 	irow++;
 
 	meas_record* r = NULL;
 	double per = 0;
-	AnsiString sbar("");
+	WideString sbar(L"");
 
 	for (int i = 0; i < records_cnt; i++)
 	{

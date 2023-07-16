@@ -26,7 +26,7 @@ public:
 	int Run();
 	BYTE addr;
 
-    AnsiString mark;
+	WideString mark;
 	void SetChan(TChannel* c);
 	void SetAddr(BYTE a);
 

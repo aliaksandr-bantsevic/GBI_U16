@@ -26,7 +26,7 @@ class TDrill {
 public:
 
 	TDrill();
-	TDrill(AnsiString n);
+	TDrill(WideString n);
 	~TDrill();
 
 
@@ -41,7 +41,7 @@ public:
 
 TTreeNode* node;
 
-AnsiString name;
+WideString name;
 int pnum;
 int num;
 
@@ -51,7 +51,7 @@ int SaveConfig (TIniFile* ini);
 TMeas* meas_list[SYSTEM_MEAS_MAX];
 int    meas_list_idx;
 
-int AddMeas(TStringGrid* t, AnsiString n);
+int AddMeas(TStringGrid* t, WideString n);
 int LoadMeasConfig(TIniFile* ini);
 int DeleteMeas(TMeas* m, int idx);
 
@@ -66,7 +66,7 @@ bool selected;
 void Select();
 void Unselect();
 
-AnsiString pname;
+WideString pname;
 
 int single_way;
 

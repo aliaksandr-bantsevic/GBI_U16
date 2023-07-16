@@ -23,12 +23,15 @@ void __fastcall TForm_PlaceAdjust::Button_applyClick(TObject *Sender)
 {
 	if (mode ==0) {
 
-		*str =  Edit_name->Text;
+		place->name =  Edit_name->Text;
 	}
 	else
 	{
 		place->SetName(Edit_name->Text);
-    }
+	}
+
+    OK = true;
+
 	Close();
 }
 //---------------------------------------------------------------------------
@@ -38,13 +41,13 @@ void __fastcall TForm_PlaceAdjust::FormCreate(TObject *Sender)
 
 	if (mode == 1) {
 
-		Caption="Ðåäàêòèðîâàíèå ìåñòà";
-		this->Button_apply->Caption = "Ïðèìåíèòü";
+		Caption=L"Редактирование места";
+		this->Button_apply->Caption = L"Применить";
 	}
 	else
 	{
-		Caption="Äîáàâèòü ìåñòî";
-		this->Button_apply->Caption = "Äîáàâèòü";
+		Caption=L"Добавить место";
+		this->Button_apply->Caption = L"Добавить";
 	}
 
 }
@@ -56,15 +59,15 @@ void __fastcall TForm_PlaceAdjust::Timer_startTimer(TObject *Sender)
 
 	if (mode == 1) {
 
-		Caption="Ðåäàêòèðîâàíèå ìåñòà";
-		this->Button_apply->Caption = "Ïðèìåíèòü";
+		Caption=L"Редактирование места";
+		this->Button_apply->Caption = L"Применить";
 		this->Edit_name->Text= place->GetName();
 	}
 	else
 	{
-		Caption="Äîáàâèòü ìåñòî";
-		this->Edit_name->Text= "Ïëîùàäêà";
-		this->Button_apply->Caption = "Äîáàâèòü";
+		Caption=L"Добавить место";
+		this->Edit_name->Text= L"Площадка";
+		this->Button_apply->Caption =L"Добавить";
 	}
 
 }

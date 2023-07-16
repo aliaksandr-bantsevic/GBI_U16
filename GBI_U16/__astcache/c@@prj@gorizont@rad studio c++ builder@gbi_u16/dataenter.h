@@ -22,7 +22,7 @@ private:	// User declarations
 public:		// User declarations
 	__fastcall TForm_data_enter(TComponent* Owner);
 public:
-	AnsiString* s;
+	TCHAR* s;
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TForm_data_enter *Form_data_enter;

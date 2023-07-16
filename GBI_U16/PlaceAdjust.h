@@ -11,6 +11,8 @@
 #include "defs.h"
 #include "Place.h"
 #include <Vcl.ExtCtrls.hpp>
+
+#include "place.h"
 //---------------------------------------------------------------------------
 class TForm_PlaceAdjust : public TForm
 {
@@ -28,10 +30,12 @@ private:	// User declarations
 public:		// User declarations
 	__fastcall TForm_PlaceAdjust(TComponent* Owner);
 
-	AnsiString* str;
+	//WideString* str;
+
 	TPlace* place;
 	int mode;
 	void Start();
+    bool OK;
 
 };
 //---------------------------------------------------------------------------

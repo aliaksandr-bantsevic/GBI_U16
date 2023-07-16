@@ -3,17 +3,15 @@ object Form_data_enter: TForm_data_enter
   Top = 0
   BorderStyle = bsDialog
   Caption = #1042#1074#1077#1076#1080#1090#1077' '#1076#1072#1085#1085#1099#1077
-  ClientHeight = 91
-  ClientWidth = 203
+  ClientHeight = 90
+  ClientWidth = 199
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -13
   Font.Name = 'Tahoma'
   Font.Style = [fsBold]
-  OldCreateOrder = False
   OnCreate = FormCreate
-  PixelsPerInch = 96
   TextHeight = 16
   object Button_apply: TButton
     Left = 8

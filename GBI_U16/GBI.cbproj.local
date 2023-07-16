@@ -1,18 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <BorlandProject>
 	<Transactions>
-    <Transaction>1899.12.30 00:00:00.000.007,G:\IMSK\prj RAD Studio\GBI2\ExcelWait.dfm=G:\IMSK\prj RAD Studio\GBI2\Unit1.dfm</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.164,G:\IMSK\prj RAD Studio\GBI2\Unit1.h=G:\IMSK\prj RAD Studio\GBI2\Diagram.h</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.908,G:\IMSK\prj RAD Studio\GBI2\DataEnter.h=G:\IMSK\prj RAD Studio\GBI2\Unit1.h</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.908,G:\IMSK\prj RAD Studio\GBI2\DataEnter.dfm=G:\IMSK\prj RAD Studio\GBI2\Unit1.dfm</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.007,G:\IMSK\prj RAD Studio\GBI2\ExcelWait.h=G:\IMSK\prj RAD Studio\GBI2\Unit1.h</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.007,G:\IMSK\prj RAD Studio\GBI2\ExcelWait.cpp=G:\IMSK\prj RAD Studio\GBI2\Unit1.cpp</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.164,G:\IMSK\prj RAD Studio\GBI2\Diagram.cpp=G:\IMSK\prj RAD Studio\GBI2\Unit1.cpp</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.164,G:\IMSK\prj RAD Studio\GBI2\Diagram.h=G:\IMSK\prj RAD Studio\GBI2\Unit1.h</Transaction>
     <Transaction>1899.12.30 00:00:00.000.221,=D:\AB\Prj\RAD Studio C++ Builder\GBI_ALL\Common\Channel\Channel.cpp</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.972,=G:\IMSK\prj RAD Studio\GBI2\Unit1.cpp</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.164,G:\IMSK\prj RAD Studio\GBI2\Diagram.dfm=G:\IMSK\prj RAD Studio\GBI2\Unit1.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.007,G:\IMSK\prj RAD Studio\GBI2\Unit1.h=G:\IMSK\prj RAD Studio\GBI2\ExcelWait.h</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.908,G:\IMSK\prj RAD Studio\GBI2\Unit1.h=G:\IMSK\prj RAD Studio\GBI2\DataEnter.h</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.908,G:\IMSK\prj RAD Studio\GBI2\Unit1.dfm=G:\IMSK\prj RAD Studio\GBI2\DataEnter.dfm</Transaction>
     <Transaction>1899.12.30 00:00:00.000.674,=G:\IMSK\prj RAD Studio\GBI2\Unit1.cpp</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.164,G:\IMSK\prj RAD Studio\GBI2\Unit1.cpp=G:\IMSK\prj RAD Studio\GBI2\Diagram.cpp</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.164,G:\IMSK\prj RAD Studio\GBI2\Unit1.dfm=G:\IMSK\prj RAD Studio\GBI2\Diagram.dfm</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.908,G:\IMSK\prj RAD Studio\GBI2\DataEnter.cpp=G:\IMSK\prj RAD Studio\GBI2\Unit1.cpp</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.972,=G:\IMSK\prj RAD Studio\GBI2\Unit1.cpp</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.007,G:\IMSK\prj RAD Studio\GBI2\Unit1.cpp=G:\IMSK\prj RAD Studio\GBI2\ExcelWait.cpp</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.007,G:\IMSK\prj RAD Studio\GBI2\Unit1.dfm=G:\IMSK\prj RAD Studio\GBI2\ExcelWait.dfm</Transaction>
     <Transaction>1899.12.30 00:00:00.000.351,=G:\IMSK\prj RAD Studio\GBI2\Unit1.cpp</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.908,G:\IMSK\prj RAD Studio\GBI2\Unit1.cpp=G:\IMSK\prj RAD Studio\GBI2\DataEnter.cpp</Transaction>
   </Transactions>
 </BorlandProject>

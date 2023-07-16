@@ -15,8 +15,6 @@
 #include "SysConfMgr.h"
 
 #define SYSTEM_PLACES_MAX   100
-//#define SYSTEM_DRILLS_MAX   100
-
 
 #define TREE_ITEM_TYPE_SYSTEM 		0
 #define TREE_ITEM_TYPE_PORT 		1
@@ -34,7 +32,7 @@ public:
 	  ~TGBISystem();
 
 	  bool ask_save_par;
-	  AnsiString name;
+	  WideString name;
 
 private:
 
@@ -75,7 +73,7 @@ public:
 
 	int Redraw (void);
 	int CheckTreeItemSelected(int* type, int* idx, void** obj);
-	int AddPlace(AnsiString name);
+	int AddPlace(WideString name);
 	int DeletePlace(TPlace* p, int idx);
 	int Reindex(void);
 
@@ -93,7 +91,7 @@ public:
 	int last_place_idx;
 	int last_drill_idx;
 
-	bool DeleteDir(AnsiString DirName);
+	bool DeleteDir(WideString DirName);
 
 	int ResaveData();
 	int KillBase();

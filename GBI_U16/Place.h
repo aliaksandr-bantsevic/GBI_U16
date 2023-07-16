@@ -15,20 +15,20 @@ class TPlace {
 public:
 
 	TPlace();
-	TPlace(AnsiString n);
+	TPlace(WideString n);
 	~TPlace();
 
 public:
 
 	TTreeNode* node;
-	AnsiString name;
+	WideString name;
 
 public:
 
 	TTreeNode* Redraw(TTreeView* t, TTreeNode* n);
 	TTreeNode* GetNode();
 	void SetName(AnsiString n);
-	AnsiString GetName();
+	WideString GetName();
 
 	int num;
 

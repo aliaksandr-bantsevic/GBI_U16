@@ -16,7 +16,7 @@ TDrill::TDrill()
 }
 
 
-TDrill::TDrill(AnsiString n)
+TDrill::TDrill(WideString n)
 {
 //	place = NULL;
 	name = n;
@@ -58,7 +58,7 @@ TTreeNode* TDrill::Redraw(TTreeView* t, TTreeNode* n)
 
 	AnsiString s("");
 
-	s.printf("%d.%d [%s]",  pnum, num, name.c_str());
+	s.printf("%d.%d [%s]",  pnum, num, name.c_bstr());
 
 	node  =	t->Items->AddChild(n,s);
 
@@ -106,7 +106,7 @@ int TDrill::SaveConfig (TIniFile* ini)
 	s.printf("%.1f",this->own_zero_shift);
 	ini->WriteString(section, "ZEROSHIFT", s);
 
-	ini->WriteInteger(section,"SINGLEWAY", single_way);
+	ini->WriteInteger(section,L"SINGLEWAY", single_way);
 
 		for (int i = 0; i < meas_list_idx; i++) {
 
@@ -125,7 +125,7 @@ int TDrill::SaveConfig (TIniFile* ini)
 	return 0;
 }
 
-int TDrill::AddMeas(TStringGrid* t, AnsiString n)
+int TDrill::AddMeas(TStringGrid* t, WideString n)
 {
 	//TMeas* m = new TMeas(StringGrid_meas,n);
 
@@ -133,8 +133,8 @@ int TDrill::AddMeas(TStringGrid* t, AnsiString n)
 
 	m->num = meas_list_idx+1;
 
-	m->name.printf("Èçìåðåíèå_%d", meas_list_idx+1);
-	m->mark.printf("Ìàðêèðîâêà Èçìåðåíèå_%d", meas_list_idx+1);
+	m->name.printf(L"Измерение_%d", meas_list_idx+1);
+	m->mark.printf(L"Маркировка Измерение_%d", meas_list_idx+1);
 
 	m->pnum = this->pnum;
 	m->dnum = this->num;
@@ -215,7 +215,7 @@ int TDrill::DeleteMeas(TMeas* m, int idx)
 
 
 
-			rename("","");
+			//!!!rename(L"",L"");
 
 			meas_list[i-1]=meas_list[i];
 			meas_list[i-1]->num--;
@@ -243,29 +243,29 @@ void TDrill::Unselect()
 
 int TDrill::Excel(void)
 {
-	char dir[1024];
-	strcpy(dir,meas_list[0]->SysConfMgr->GetCurBase());
-	strcat(dir,pname.c_str());
-	strcat(dir,"\\");
-	strcat(dir,name.c_str());
-	strcat(dir,"\\");
+	TCHAR dir[1024];
+	wcscpy(dir,meas_list[0]->SysConfMgr->GetCurBase());
+	wcscat(dir,pname.c_bstr());
+	wcscat(dir,L"\\");
+	wcscat(dir,name.c_bstr());
+	wcscat(dir,L"\\");
 
 	//AnsiString nrep("");
 	//nrep = FormatDateTime("dd_mm_yyyy_hh_nn_ss",Now());
-	//strcat(dir,nrep.c_str());
-	strcat(dir,name.c_str());
-	strcat(dir,".xlsx");
+	//wcscat(dir,nrep.c_bstr());
+	wcscat(dir,name.c_bstr());
+	wcscat(dir,L".xlsx");
 
-	char cmd[1024];
-	strcpy(cmd,"del ");
-	strcat(cmd,"\"");
-	strcat(cmd,dir);
-	strcat(cmd,"\"");
-	system(cmd);
+	TCHAR cmd[1024];
+	wcscpy(cmd,L"del ");
+	wcscat(cmd,L"\"");
+	wcscat(cmd,dir);
+	wcscat(cmd,L"\"");
+	//!!!system(cmd);
 
 			if (OpenExcelReportTable(this->meas_list_idx) == false)
 			{
-				Application->MessageBoxA(L"Íå óäàëîñü ñîçäàòü òàáëèöó!",L"ÎØÈÁÊÀ",0);
+				Application->MessageBoxW(L"Не удалось создать таблицу!",L"ОШИБКА",0);
 				return -1;
 			}
 
@@ -275,7 +275,7 @@ int TDrill::Excel(void)
 
 			if (meas_list[i]->Excel(0) != 0)
 			{
-					Application->MessageBox(L"Íå óäàëîñü ýêñïîðòèðîâàòü èçìåðåíèå!",L"ÎØÈÁÊÀ",0);
+					Application->MessageBoxW(L"Не удалось экспортировать измерение!",L"ОШИБКА",0);
 				return -2;
 			}
 	}

@@ -1,4 +1,4 @@
-//---------------------------------------------------------------------------
+п»ї//---------------------------------------------------------------------------
 
 #pragma hdrstop
 
@@ -9,10 +9,38 @@
 
    TSysConfMgr::TSysConfMgr()
    {
-		ini = new TIniFile(ChangeFileExt(Application->ExeName,".gcf"));
-		strcpy(cur_conf_path,"");
-		strcpy(cur_base_path,"");
-		strcpy(cur_conf_fold_path,"");
+
+
+		TCHAR dirini [1024];
+
+		::GetCurrentDirectoryW(1024,dirini);
+
+		wcscat(dirini, L"\\Config");
+
+		CreateDirectoryW(dirini,0);
+
+		wcscat(dirini, L"\\gbi16.ini");
+
+		FILE* ftmp = NULL;
+		ftmp = _wfopen(dirini, L"rb");
+
+		if (ftmp == NULL)
+		{
+		   CreateTextFile_UTF16LEBOM (dirini);
+		}
+
+		fclose(ftmp);
+
+		ini = new TIniFile(dirini);
+
+		wcscpy(cur_conf_path,dirini);
+
+		wcscpy(cur_base_path,dirini);
+		wcscat(cur_base_path,L"\\BASE");
+
+		wcscpy(cur_conf_fold_path,L"dirini");
+		wcscat(cur_base_path,L"\\BASE\\GBI16");
+
 		backup_limit = 1.0;
 		auto_backup_flag = false;
 		auto_backup_flag_completed = false;
@@ -32,68 +60,95 @@
    void TSysConfMgr::GetCurConf(void)
    {
 
-		strcpy(cur_conf_path,"");
-		strcpy(cur_base_path,"");
-		strcpy(cur_conf_fold_path,"");
+		wcscpy(cur_conf_path,L"");
+		wcscpy(cur_base_path,L"");
+		wcscpy(cur_conf_fold_path,L"");
 
-		TIniFile *inigcf = new TIniFile(ChangeFileExt(Application->ExeName,".gcf"));
 
-		AnsiString sname("");
-		sname = inigcf ->ReadString("GENERAL","CONFNAME","GBI");
-		strcpy(cur_conf_name,sname.c_str());
+		TCHAR dirgcf [1024];
+		::GetCurrentDirectoryW(1024, dirgcf);
+		wcscat(dirgcf,L"\\gbi16.gcf");
+
+		FILE* ftmp = NULL;
+		ftmp = _wfopen(dirgcf,L"rb");
+
+		if (ftmp == NULL)
+		{
+
+			CreateTextFile_UTF16LEBOM (dirgcf);
+
+		}
+
+		fclose (ftmp);
+
+		TIniFile *inigcf = new TIniFile(dirgcf);
+
+		WideString sname(L"");
+		sname = inigcf ->ReadString(L"GENERAL",L"CONFNAME",L"GBI16");
+		wcscpy(cur_conf_name,sname.c_bstr());
 		sname = sname + ".ini";
 
-		backup_limit = (double) inigcf ->ReadInteger("BACKUP","PERIOD",7.0);
+		backup_limit = (double) inigcf ->ReadInteger(L"BACKUP",L"PERIOD",7.0);
 
-		::GetCurrentDirectory(1024,cur_conf_path);
-		::GetCurrentDirectory(1024,cur_base_path);
-		::GetCurrentDirectory(1024,cur_back_fold_path);
+		::GetCurrentDirectoryW(1024,cur_conf_path);
+		::GetCurrentDirectoryW(1024,cur_base_path);
+		::GetCurrentDirectoryW(1024,cur_back_fold_path);
 
-		strcat(cur_conf_path,"\\Config\\");
+		wcscat(cur_conf_path,L"\\Config\\");
 		if (!DirectoryExists(cur_conf_path))  CreateDirectory(cur_conf_path,0);
-		strcpy(cur_conf_fold_path,cur_conf_path);
+		wcscpy(cur_conf_fold_path,cur_conf_path);
 
-		strcat(cur_back_fold_path,"\\Backup\\");
+		wcscat(cur_back_fold_path,L"\\Backup\\");
 		if (!DirectoryExists(cur_back_fold_path))  CreateDirectory(cur_back_fold_path,0);
 
-		strcat(cur_base_path,"\\Base\\");
+		wcscat(cur_base_path,L"\\Base\\");
 		if (!DirectoryExists(cur_base_path))  CreateDirectory(cur_base_path,0);
-		strcpy(cur_base_fold_path,cur_base_path);
-		strcat(cur_base_path,cur_conf_name);
-		strcat(cur_base_path,"\\");
+		wcscpy(cur_base_fold_path,cur_base_path);
+		wcscat(cur_base_path,cur_conf_name);
+		wcscat(cur_base_path,L"\\");
 		if (!DirectoryExists(cur_base_path))  CreateDirectory(cur_base_path,0);
 
 
-		strcat(cur_conf_path,sname.c_str());
+		wcscat(cur_conf_path,sname.c_bstr());
 
 		if (ini != NULL) delete ini;
+
+		ftmp = _wfopen(cur_conf_path, L"rb");
+
+		if (ftmp == NULL)
+		{
+
+			CreateTextFile_UTF16LEBOM (cur_conf_path);
+		}
+
+		fclose (ftmp);
 
 		ini = new TIniFile (cur_conf_path);
 
 		AutoBackup();
    }
 
-   char* TSysConfMgr::GetCurBase(void)
+   TCHAR* TSysConfMgr::GetCurBase(void)
    {
 		return cur_base_path;
    }
 
-   char* TSysConfMgr::GetCurIniPath(void)
+   TCHAR* TSysConfMgr::GetCurIniPath(void)
    {
 		return cur_conf_path;
    }
 
-   char* TSysConfMgr::GetCurConfFoldPath(void)
+   TCHAR* TSysConfMgr::GetCurConfFoldPath(void)
    {
 		return cur_conf_fold_path;
    }
 
-   char* TSysConfMgr::GetCurBaseFoldPath(void)
+   TCHAR* TSysConfMgr::GetCurBaseFoldPath(void)
    {
 		return cur_base_fold_path;
    }
 
-   char* TSysConfMgr::GetCurBackFoldPath(void)
+   TCHAR* TSysConfMgr::GetCurBackFoldPath(void)
    {
 		return cur_back_fold_path;
    }
@@ -106,9 +161,9 @@
 		inigcf ->WriteInteger("BACKUP","PERIOD",(int)backup_limit);
    }
 
-   int TSysConfMgr::Accept(char* cnew)
+   int TSysConfMgr::Accept(TCHAR* cnew)
    {
-		strcpy(cur_conf_name,cnew);
+		wcscpy(cur_conf_name,cnew);
 		SaveCurConf();
 		return 0;
    }
@@ -136,61 +191,61 @@
 			{
 				if (backup_limit > GetBckTime()) {
 
-					return -1; //Период резервирования не истек
+					return -1;
 				}
 			}
 			else
 			{
-					return -2; //Авто бэкап отключен
+					return -2;
             }
 
 		}
 
 
 		TDateTime t = Now();
-		char cdir[1024];
-		GetCurrentDirectory(1024,cdir);
-		AnsiString sdir("");
+		TCHAR cdir[1024];
+		GetCurrentDirectoryW(1024,cdir);
+		WideString sdir(L"");
 		sdir = sdir + cdir;
 
-		AnsiString sgini = ChangeFileExt(Application->ExeName,".gcf");
-		AnsiString sapp = sdir;
-		AnsiString sconf = sdir+"\\Config";
-		AnsiString sbase = sdir+"\\Base";
-		AnsiString sback = sdir+"\\Backup\\";
+		WideString sgini = ChangeFileExt(Application->ExeName,".gcf");
+		WideString sapp = sdir;
+		WideString sconf = sdir+"\\Config";
+		WideString sbase = sdir+"\\Base";
+		WideString sback = sdir+"\\Backup\\";
 
-		//AnsiString sfold = FormatDateTime("dd_mm_yyyy_hh_nn_ss\\",t);
-		AnsiString sfold = FormatDateTime("yyyy_mm_dd_hh_nn_ss\\",t);
+		//WideString sfold = FormatDateTime("dd_mm_yyyy_hh_nn_ss\\",t);
+		WideString sfold = FormatDateTime("yyyy_mm_dd_hh_nn_ss\\",t);
 
 		sback = sback + sfold;
-		if (!DirectoryExists(sback.c_str()))  CreateDirectory(sback.c_str(),0);
+		if (!DirectoryExists(sback.c_bstr()))  CreateDirectoryW(sback.c_bstr(),0);
 
-		AnsiString cmd("copy ");
-		cmd.printf ("copy \"%s\" \"%sGBI.gcf\"",sgini.c_str(),sback.c_str());
-		system(cmd.c_str());
+		WideString cmd("copy ");
+		cmd.printf (L"copy \"%s\" \"%sGBI16.gcf\"",sgini.c_bstr(),sback.c_bstr());
+		system((char*)cmd.c_bstr());
 		//ShellExecute(0,"open",cmd.c_str(),0,0,SW_HIDE);
 
-		cmd.printf ("xcopy /s /i \"%s\" \"%sBase\"",sbase.c_str(),sback.c_str());
-		system(cmd.c_str());
+		cmd.printf (L"xcopy /s /i \"%s\" \"%sBase\"",sbase.c_bstr(),sback.c_bstr());
+		system((char*)cmd.c_bstr());
 		//ShellExecute(0,"open",cmd.c_str(),0,0,SW_HIDE);
 
-		cmd.printf ("xcopy /s /i \"%s\" \"%sConfig\"",sconf.c_str(),sback.c_str());
+		cmd.printf (L"xcopy /s /i \"%s\" \"%sConfig\"",sconf.c_bstr(),sback.c_bstr());
 
-		system(cmd.c_str());
+		system((char*)cmd.c_bstr());
 		//ShellExecute(0,"open",cmd.c_str(),0,0,SW_HIDE);
 
 		if (autobackup == 0)
 		{
-			AnsiString msg("");
-			sfold[strlen(sfold.c_str())] = '\0';
-			msg.printf("Резервная копия базы сохранена в папке ../Backup/%s",sfold.c_str());
-			if (showmsg) MessageBox(NULL,msg.c_str(),"РЕЗЕРВНОЕ КОПИРОВАНИЕ",0);
+			WideString msg(L"");
+			sfold[wcslen(sfold.c_bstr())] = '\0';
+			msg.printf(L"Р РµР·РµСЂРІРЅР°СЏ РєРѕРїРёСЏ Р±Р°Р·С‹ СЃРѕС…СЂР°РЅРµРЅР° РІ РїР°РїРєРµ ../Backup/%s",sfold.c_bstr());
+			if (showmsg) MessageBoxW(NULL,msg.c_bstr(),L"Р Р•Р—Р•Р Р’РќРћР• РљРћРџРР РћР’РђРќРР•",0);
 		}
 		else
 		{
 			//ShowMessage("Auto backup!");
 			auto_backup_flag_completed = true;
-        }
+		}
 
 		return 0;
    }
@@ -203,46 +258,46 @@
 #define T_ONE_MSEC      ((1./(24.*60.*60.))/1000)
 #define T_ONE_DSEC      ((1./(24.*60.*60.))/10)
 
-//Сколько дней прошло посе последнего бэкапа
+//Г‘ГЄГ®Г«ГјГЄГ® Г¤Г­ГҐГ© ГЇГ°Г®ГёГ«Г® ГЇГ®Г±ГҐ ГЇГ®Г±Г«ГҐГ¤Г­ГҐГЈГ® ГЎГЅГЄГ ГЇГ 
    double TSysConfMgr::GetBckTime (void)
    {
 
 		double dayage = 0.0;
 
-//Сюда будем читать атрибуты папки
+//Г‘ГѕГ¤Г  ГЎГіГ¤ГҐГ¬ Г·ГЁГІГ ГІГј Г ГІГ°ГЁГЎГіГІГ» ГЇГ ГЇГЄГЁ
 		WIN32_FIND_DATA FileDataAtr;
 
-		AnsiString fpath("");
+		WideString fpath(L"");
 		int idx=0;
 		LONGLONG T = 0;
 		LONGLONG Tmax = 0;
 
-//Хэндл для поиска файлов в папке
+//Г•ГЅГ­Г¤Г« Г¤Г«Гї ГЇГ®ГЁГ±ГЄГ  ГґГ Г©Г«Г®Гў Гў ГЇГ ГЇГЄГҐ
 		WIN32_FIND_DATA w32fd;
 		HANDLE hFind;
 
-//Путь к папке с файлами
-		char dbpath [1024];
-		strcpy(dbpath,GetCurBackFoldPath());
+//ГЏГіГІГј ГЄ ГЇГ ГЇГЄГҐ Г± ГґГ Г©Г«Г Г¬ГЁ
+		TCHAR dbpath [1024];
+		wcscpy(dbpath,GetCurBackFoldPath());
 
-//Маска
-		char cpar[1024];
-		sprintf(cpar,"*.*");
-		strcat(dbpath,cpar);
+//ГЊГ Г±ГЄГ 
+		TCHAR cpar[1024];
+		swprintf(cpar,L"*.*");
+		wcscat(dbpath,cpar);
 
-//Читаем первый файл в папке
+//Г—ГЁГІГ ГҐГ¬ ГЇГҐГ°ГўГ»Г© ГґГ Г©Г« Гў ГЇГ ГЇГЄГҐ
 		hFind=FindFirstFile(dbpath,&w32fd);
 
 		SYSTEMTIME sysTime;
 		FILETIME creationTime;
 		FILETIME localfiletime;
 
-//В папке нет файлов
+//Г‚ ГЇГ ГЇГЄГҐ Г­ГҐГІ ГґГ Г©Г«Г®Гў
 		if ((hFind==INVALID_HANDLE_VALUE)||(hFind==NULL))
 		{
 			return 0.0;
 		}
-//Если файлы есть читаем весь директорий
+//Г…Г±Г«ГЁ ГґГ Г©Г«Г» ГҐГ±ГІГј Г·ГЁГІГ ГҐГ¬ ГўГҐГ±Гј Г¤ГЁГ°ГҐГЄГІГ®Г°ГЁГ©
 		else
 		{
 				  FileDataAtr = w32fd;
