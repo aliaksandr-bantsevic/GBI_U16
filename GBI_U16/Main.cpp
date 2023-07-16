@@ -199,8 +199,8 @@ void __fastcall TFMain::ToolButton_StartClick(TObject *Sender)
 
 		Button_record->Enabled = true;
 
-		Console(L"Ñèñòåìà", "Çàïóñê èíêëèíîìåòðà");
-		this->MToolBar->Buttons[0]->Caption = "Ñòîï";
+		Console(L"Система", "Запуск инклинометра");
+		this->MToolBar->Buttons[0]->Caption = "Стоп";
 		MMFile->Enabled = false;
 
 
@@ -225,14 +225,14 @@ void __fastcall TFMain::ToolButton_StartClick(TObject *Sender)
 	else
 	{
 		this->MToolBar->Buttons[0]->ImageIndex = 9;
-		this->MToolBar->Buttons[0]->Caption = "Ñòàðò";
+		this->MToolBar->Buttons[0]->Caption = L"Старт";
 
 		this->GBISystem->Stop();
 		this->Timer_system_run->Enabled = false;
 
 		Button_record->Enabled = false;
 
-		Console(L"Ñèñòåìà", "Îñòàíîâ èíêëèíîìåòðà");
+		Console(L"Система", L"Останов инклинометра");
 		MMFile->Enabled = true;
 	}
 
@@ -241,7 +241,7 @@ void __fastcall TFMain::ToolButton_StartClick(TObject *Sender)
 
 void TFMain::SystemInit()
 {
-	Console(L"Ïðèëîæåíèå","Ñòàðò ñèñòåìû ...");
+	Console(L"Приложение","Старт системы ...");
 
 	GBISystem = new TGBISystem(this->TreeView_system);
 	scmgr = &GBISystem->SysConfMgr;
@@ -481,23 +481,23 @@ void __fastcall TFMain::StringGrid_measDrawCell(TObject *Sender, int ACol, int A
 
 			StringGrid_meas->Canvas->Font->Color = clBlack;
 
-			if (ACol == 0) StringGrid_meas->Canvas->TextOut(Rect.Left, Rect.Top, "Íîìåð");
-			if (ACol == 1) StringGrid_meas->Canvas->TextOut(Rect.Left, Rect.Top, "Óðîâåíü");
-			if (ACol == 2) StringGrid_meas->Canvas->TextOut(Rect.Left, Rect.Top, "Ïîãð.òðá.");
+			if (ACol == 0) StringGrid_meas->Canvas->TextOut(Rect.Left, Rect.Top, L"Номер");
+			if (ACol == 1) StringGrid_meas->Canvas->TextOut(Rect.Left, Rect.Top, L"Уровень");
+			if (ACol == 2) StringGrid_meas->Canvas->TextOut(Rect.Left, Rect.Top, L"Погр.трб.");
 
-			if (ACol == 3) StringGrid_meas->Canvas->TextOut(Rect.Left, Rect.Top, "X1");
-			if (ACol == 4) StringGrid_meas->Canvas->TextOut(Rect.Left, Rect.Top, "Y1");
+			if (ACol == 3) StringGrid_meas->Canvas->TextOut(Rect.Left, Rect.Top, L"X1");
+			if (ACol == 4) StringGrid_meas->Canvas->TextOut(Rect.Left, Rect.Top, L"Y1");
 
-			if (ACol == 5) StringGrid_meas->Canvas->TextOut(Rect.Left, Rect.Top, "X2");
-			if (ACol == 6) StringGrid_meas->Canvas->TextOut(Rect.Left, Rect.Top, "Y2");
+			if (ACol == 5) StringGrid_meas->Canvas->TextOut(Rect.Left, Rect.Top, L"X2");
+			if (ACol == 6) StringGrid_meas->Canvas->TextOut(Rect.Left, Rect.Top, L"Y2");
 
-			if (ACol == 7) StringGrid_meas->Canvas->TextOut(Rect.Left, Rect.Top, "Xðåç");
-			if (ACol == 8) StringGrid_meas->Canvas->TextOut(Rect.Left, Rect.Top, "Yðåç");
+			if (ACol == 7) StringGrid_meas->Canvas->TextOut(Rect.Left, Rect.Top, L"Xрез");
+			if (ACol == 8) StringGrid_meas->Canvas->TextOut(Rect.Left, Rect.Top, L"Yрез");
 
-			if (ACol == 9) StringGrid_meas->Canvas->TextOut(Rect.Left, Rect.Top, "LX");
-			if (ACol == 10) StringGrid_meas->Canvas->TextOut(Rect.Left, Rect.Top, "LY");
-			if (ACol == 11) StringGrid_meas->Canvas->TextOut(Rect.Left, Rect.Top, "Ðåç.ñì.");
-			if (ACol == 12) StringGrid_meas->Canvas->TextOut(Rect.Left, Rect.Top, "Ðåç.óã.");
+			if (ACol == 9) StringGrid_meas->Canvas->TextOut(Rect.Left, Rect.Top, L"LX");
+			if (ACol == 10) StringGrid_meas->Canvas->TextOut(Rect.Left, Rect.Top, L"LY");
+			if (ACol == 11) StringGrid_meas->Canvas->TextOut(Rect.Left, Rect.Top, L"Рез.см.");
+			if (ACol == 12) StringGrid_meas->Canvas->TextOut(Rect.Left, Rect.Top, L"Рез.уг.");
 
 		}
 
@@ -983,16 +983,21 @@ void __fastcall TFMain::N_sensor_adjustClick(TObject *Sender)
 
 void __fastcall TFMain::N_place_adjustClick(TObject *Sender)
 {
+
 	Form_PlaceAdjust->place = current_place;
 	Form_PlaceAdjust->mode = 1;
+	Form_PlaceAdjust->OK = false;
 	Form_PlaceAdjust->Start();
+
 	Form_PlaceAdjust->ShowModal();
 
-	GBISystem->KillBase();
+	if (Form_PlaceAdjust->OK == true)
+	{
+		GBISystem->KillBase();
+		GBISystem->Redraw();
+		GBISystem->ResaveData();
+	}
 
-	GBISystem->Redraw();
-
-	GBISystem->ResaveData();
 }
 //---------------------------------------------------------------------------
 
@@ -1078,7 +1083,7 @@ void __fastcall TFMain::MMAboutClick(TObject *Sender)
 	sprintf(cdate,"%s",__DATE__);
 	strcpy(cdate,&cdate[strlen(cdate)-4]);
 	sd=sd+cdate;
-	sdate="ã. Ìîñêâà, "+sd;
+	sdate="ã. Ìîñêâà, L"+sd;
 
 	Form_about->Label_year->Caption = sdate;
 
@@ -1099,28 +1104,43 @@ void __fastcall TFMain::N1Click(TObject *Sender)
 void __fastcall TFMain::N_drill_addClick(TObject *Sender)
 {
 	TPlace* p = current_place;
-	WideString s(L"");
+	TDrill* d = new TDrill();
 	int cnt = 21;
+
+	/*
+	WideString s(L"");
+
 	double asimut = 0;
 	int sway = 0;
 	int startpoint = 0;
 	int orient = 0;
 	int start_request = 0;
 
-	Form_DrillAdjust->records_cnt = &cnt;
+
 	Form_DrillAdjust->str = s.c_bstr();
 	Form_DrillAdjust->single_way = &sway;
 	Form_DrillAdjust->start_point = &startpoint;
 	Form_DrillAdjust->as = &asimut;
-    Form_DrillAdjust->ori = &orient;
-	Form_DrillAdjust->mode = 0;
-    Form_DrillAdjust->start_request =  &start_request;
-
+	Form_DrillAdjust->ori = &orient;
+	Form_DrillAdjust->start_request =  &start_request;
 	Form_DrillAdjust->records_cnt_def = GBISystem->def_records_meas;
+	*/
+
+	Form_DrillAdjust->records_cnt = &cnt;
+	Form_DrillAdjust->mode = 0;
+
+	Form_DrillAdjust->OK = false;
+	Form_DrillAdjust->drill = d;
 	Form_DrillAdjust->Start();
 	Form_DrillAdjust->ShowModal();
 
+	if (Form_DrillAdjust->OK == true )
+	{
+		p->AddDrill(d);
+		GBISystem->Redraw();
+	}
 
+	/*
 	if (s!="") {
 
 		if (p->AddDrill(s,cnt) == 0) {
@@ -1141,46 +1161,61 @@ void __fastcall TFMain::N_drill_addClick(TObject *Sender)
      }
 
 	}
+	*/
 
-	GBISystem->Redraw();
+	delete d;
 	current_place = NULL;
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TFMain::N_drill_adjustClick(TObject *Sender)
 {
-	TDrill* d = current_drill;
+
+	TDrill* d = new TDrill();
 	WideString s(L"");
+	int records_cnt = 0;
 
 	int init_start = current_drill->start_point;
 
+	current_place->UpdateDrill(d, current_drill);
+
+	records_cnt = d->records_cnt;
+	Form_DrillAdjust->records_cnt = &records_cnt;
+
 	Form_DrillAdjust->drill = d;
-	Form_DrillAdjust->str = s.c_bstr();
 	Form_DrillAdjust->mode = 1;
+
+
 	Form_DrillAdjust->Start();
 
-	//current_drill->node->Expand(true);
-
+	Form_DrillAdjust->OK = false;
+	Form_DrillAdjust->Start();
 	Form_DrillAdjust->ShowModal();
 
-	GBISystem->KillBase();
-
-	GBISystem->Reindex();
-	GBISystem->Redraw();
-	GBISystem->ResaveData();
-
-	if (init_start != current_drill->start_point)
+	if (Form_DrillAdjust->OK == true)
 	{
-		if(Application->MessageBoxW(L"Параметры скважины изменились. Выполнить перерасчет всех измерений?",L"ВНИМАНИЕ!",1) == IDOK )
+
+		current_place->UpdateDrill(current_drill, d);
+
+		GBISystem->KillBase();
+
+		GBISystem->Reindex();
+		GBISystem->Redraw();
+		GBISystem->ResaveData();
+
+		if (init_start != current_drill->start_point)
 		{
-		   current_drill->ReCalc();
+			if(Application->MessageBoxW(L"Параметры скважины изменились. Выполнить перерасчет всех измерений?",L"ВНИМАНИЕ!",1) == IDOK )
+			{
+			   current_drill->ReCalc();
+			}
 		}
-	}
 
-   this->ViewSelectedDrill();
+	   this->ViewSelectedDrill();
+   }
 
+   delete d;
    current_drill = NULL;
-
 }
 //---------------------------------------------------------------------------
 
@@ -1491,7 +1526,7 @@ void __fastcall TFMain::Button_finishClick(TObject *Sender)
 {
 	if (selected_meas == NULL) {
 
-		utils_ShowMessage(L"Âûáåðèòå èçìðåíèå â äåðåâå ñèñòåìû!");
+		utils_ShowMessage(L"Выберите измрение в дереве системы!");
 		return;
 	}
 
@@ -2317,7 +2352,7 @@ void TFMain::VirtKey_TouchIn_On(void)
    {
 		TCHAR dir[1024];
 		GetCurrentDirectoryW(1024,dir);
-		//strcat(dir, "\\Utils\\Touch-It\\");
+		//strcat(dir, L"\\Utils\\Touch-It\\");
 		//ShellExecute(NULL,NULL,"TouchIt.exe","",dir,0);
 		wcscat(dir, L"\\Utils\\FreeVK\\");
 		ShellExecuteW(NULL,NULL,L"FreeVK.exe",L"",dir,0);

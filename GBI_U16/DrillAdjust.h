@@ -45,18 +45,24 @@ public:		// User declarations
 	__fastcall TForm_DrillAdjust(TComponent* Owner);
 
 
-    TDrill* drill;
-	TCHAR* str;
-	int mode;
+    int mode;
 	void Start();
-
-	int records_cnt_def;
+	TDrill* drill;
 	int* records_cnt;
+	int records_cnt_def;
+
+	/*
+	TCHAR* str;
+
+
 	double* as;
 	int* single_way;
 	int* start_point;
 	int* ori;
-    int* start_request;
+	int* start_request;
+	*/
+
+	bool OK;
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TForm_DrillAdjust *Form_DrillAdjust;

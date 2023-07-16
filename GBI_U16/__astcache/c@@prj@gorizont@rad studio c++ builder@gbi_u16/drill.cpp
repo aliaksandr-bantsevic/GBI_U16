@@ -56,9 +56,9 @@ TTreeNode* TDrill::Redraw(TTreeView* t, TTreeNode* n)
 		return NULL;
 	}
 
-	AnsiString s("");
+	WideString s(L"");
 
-	s.printf("%d.%d [%s]",  pnum, num, name.c_bstr());
+	s.printf(L"%d.%d [%s]",  pnum, num, name.c_bstr());
 
 	node  =	t->Items->AddChild(n,s);
 
@@ -86,25 +86,25 @@ TTreeNode* TDrill::Redraw(TTreeView* t, TTreeNode* n)
 
 int TDrill::SaveConfig (TIniFile* ini)
 {
-	AnsiString section("");
-	AnsiString value("");
-	AnsiString s("");
+	WideString section(L"");
+	WideString value(L"");
+	WideString s(L"");
 
-	section.printf("DRILL%d.%d", this->pnum, this->num);
-	ini->WriteString(section, "NAME", this->name);
-	ini->WriteInteger(section, "INDEX", this->num);
-	ini->WriteInteger(section, "PNDEX", this->pnum);
-	ini->WriteInteger(section, "RECCNT", this->records_cnt);
+	section.printf(L"DRILL%d.%d", this->pnum, this->num);
+	ini->WriteString(section, L"NAME", this->name);
+	ini->WriteInteger(section, L"INDEX", this->num);
+	ini->WriteInteger(section, L"PNDEX", this->pnum);
+	ini->WriteInteger(section, L"RECCNT", this->records_cnt);
 
-	ini->WriteInteger(section, "ORIENT", this->drill_orient);
-	ini->WriteInteger(section, "STARTPOINT", this->start_point);
-    ini->WriteInteger(section, "STARTREQUEST", this->i_first_request_point);
+	ini->WriteInteger(section, L"ORIENT", this->drill_orient);
+	ini->WriteInteger(section, L"STARTPOINT", this->start_point);
+    ini->WriteInteger(section, L"STARTREQUEST", this->i_first_request_point);
 
-	s.printf("%.1f",this->drill_asimut);
-	ini->WriteString(section, "ASIMUT", s);
+	s.printf(L"%.1f",this->drill_asimut);
+	ini->WriteString(section, L"ASIMUT", s);
 
-	s.printf("%.1f",this->own_zero_shift);
-	ini->WriteString(section, "ZEROSHIFT", s);
+	s.printf(L"%.1f",this->own_zero_shift);
+	ini->WriteString(section, L"ZEROSHIFT", s);
 
 	ini->WriteInteger(section,L"SINGLEWAY", single_way);
 
@@ -112,12 +112,12 @@ int TDrill::SaveConfig (TIniFile* ini)
 
 			TMeas* m = meas_list[i];
 
-			section.printf("MEAS%d.%d.%d", m->pnum, m->dnum, m->num);
-			ini->WriteString(section, "NAME", m->name);
-			ini->WriteString(section, "MARK", m->mark);
-			ini->WriteInteger(section, "INDEX", m->num);
-			ini->WriteInteger(section, "PNDEX", m->pnum);
-			ini->WriteInteger(section, "DNDEX", m->dnum);
+			section.printf(L"MEAS%d.%d.%d", m->pnum, m->dnum, m->num);
+			ini->WriteString(section, L"NAME", m->name);
+			ini->WriteString(section, L"MARK", m->mark);
+			ini->WriteInteger(section, L"INDEX", m->num);
+			ini->WriteInteger(section, L"PNDEX", m->pnum);
+			ini->WriteInteger(section, L"DNDEX", m->dnum);
 
 		}
 
@@ -166,25 +166,25 @@ int TDrill::AddMeas(TStringGrid* t, WideString n)
 
 int TDrill::LoadMeasConfig(TIniFile* ini)
 {
-	AnsiString section("");
-	AnsiString spar("");
-	AnsiString mmark("");
+	WideString section(L"");
+	WideString spar(L"");
+	WideString mmark(L"");
 
 	for (int i = 0; i < SYSTEM_MEAS_MAX; i++) {
 
-		section.printf("MEAS%d.%d.%d",pnum,num,i+1);
-		spar = ini->ReadString(section, "NAME", "endoflist");
+		section.printf(L"MEAS%d.%d.%d",pnum,num,i+1);
+		spar = ini->ReadString(section, L"NAME", L"endoflist");
 
 			if (spar!="endoflist") {
 
-				AddMeas(global_meas_table, "Èçìåðåíèå");
+				AddMeas(global_meas_table, L"Èçìåðåíèå");
 				meas_list[meas_list_idx-1]->type_drill = this->drill_orient;
 				meas_list[meas_list_idx-1]->drill_start_point = this->start_point;
 				meas_list[meas_list_idx-1]->single_way = this->single_way;
 				meas_list[meas_list_idx-1]->own_zero_shift = this->own_zero_shift;
 
 				mmark = meas_list[meas_list_idx-1]->mark;
-				spar = ini->ReadString(section, "MARK", mmark);
+				spar = ini->ReadString(section, L"MARK", mmark);
 				meas_list[meas_list_idx-1]->mark = spar;
 			}
 			else
@@ -250,9 +250,6 @@ int TDrill::Excel(void)
 	wcscat(dir,name.c_bstr());
 	wcscat(dir,L"\\");
 
-	//AnsiString nrep("");
-	//nrep = FormatDateTime("dd_mm_yyyy_hh_nn_ss",Now());
-	//wcscat(dir,nrep.c_bstr());
 	wcscat(dir,name.c_bstr());
 	wcscat(dir,L".xlsx");
 
@@ -261,7 +258,7 @@ int TDrill::Excel(void)
 	wcscat(cmd,L"\"");
 	wcscat(cmd,dir);
 	wcscat(cmd,L"\"");
-	//!!!system(cmd);
+	system((char*)cmd);
 
 			if (OpenExcelReportTable(this->meas_list_idx) == false)
 			{

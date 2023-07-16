@@ -20,11 +20,20 @@ void __fastcall TForm_DrillAdjust::Button_applyClick(TObject *Sender)
 
 	 if (mode == 0) {
 
-		 *str = this->Edit_name->Text;
+		 wcscpy(str, this->Edit_name->Text.c_str());
 		 *records_cnt = this->ComboBox_meas_cnt->Text.ToInt()+1;
+
+
+			if (MAX_RECORDS_MEAS  < *records_cnt) {
+
+				utils_ShowMessage("Превышен лимит числа уровней!");
+				return;
+
+			}
+
 		 *single_way = (int) CheckBox_single->Checked;
 
-        *or = this->ComboBox_orient->ItemIndex;
+        *ori = this->ComboBox_orient->ItemIndex;
 
 		if (this->RadioButton_top->Checked)
 		{
@@ -35,6 +44,41 @@ void __fastcall TForm_DrillAdjust::Button_applyClick(TObject *Sender)
 		{
 			*start_point = 1;
 		}
+
+		if (this->RadioButton_start_first->Checked)
+		{
+			*start_request = 0;
+		}
+
+		if (this->RadioButton_start_last->Checked)
+		{
+			*start_request = 1;
+		}
+
+		if (this->RadioButton_start_first->Checked)
+		{
+			*start_request = 0;
+		}
+
+		if (this->RadioButton_start_last->Checked)
+		{
+			*start_request = 1;
+		}
+
+		if (this->ComboBox_orient->ItemIndex == 0) {
+
+			this->RadioGroup1->Visible = false;
+			this->RadioButton_top->Visible = false;
+			this->RadioButton_bot->Visible = false;
+
+		}
+		else
+		{
+			this->RadioGroup1->Visible = true;
+			this->RadioButton_top->Visible = true;
+			this->RadioButton_bot->Visible = true;
+		}
+
 	 }
 	 else
 	 {
@@ -46,6 +90,7 @@ void __fastcall TForm_DrillAdjust::Button_applyClick(TObject *Sender)
 		 drill->drill_orient = this->ComboBox_orient->ItemIndex;
 		 drill->drill_asimut = this->Edit_asimut->Text.ToDouble();
 		 drill->own_zero_shift = this->Edit_zshift->Text.ToDouble();
+		 drill->records_cnt = this->ComboBox_meas_cnt->Text.ToDouble()+1;
 
 		 if (CheckBox_single->Checked)
 		 {
@@ -66,9 +111,18 @@ void __fastcall TForm_DrillAdjust::Button_applyClick(TObject *Sender)
 			drill->start_point = 1;
 		}
 
+		if (this->RadioButton_start_first->Checked)
+		{
+			drill->i_first_request_point = 0;
+		}
+
+		if (this->RadioButton_start_last->Checked)
+		{
+			drill->i_first_request_point = 1;
+		}
+
+
 	 }
-
-
 
 	Close();
 }
@@ -107,6 +161,18 @@ void __fastcall TForm_DrillAdjust::Timer_startTimer(TObject *Sender)
 		this->Button_apply->Caption = "Применить";
 		Caption = "Настроить скважину";
 		this->Edit_name->Text = drill->name;
+
+		if (drill->i_first_request_point == 0) {
+
+			this->RadioButton_start_first->Checked = true;
+			this->RadioButton_start_last->Checked = false;
+		}
+		else
+		{
+			this->RadioButton_start_first->Checked = false;
+			this->RadioButton_start_last->Checked = true;
+        }
+
 
 		if (drill->meas_list_idx>0) {
 
@@ -154,7 +220,7 @@ void __fastcall TForm_DrillAdjust::Timer_startTimer(TObject *Sender)
 
 	 AnsiString s("");
 
-	 for (int i = 10; i <= 100; i+=10) {
+	 for (int i = 10; i <= MAX_RECORDS_MEAS; i+=10) {
 
 		s.printf("%d",i);
 		this->ComboBox_meas_cnt->Items->Add(s);
@@ -225,6 +291,8 @@ void __fastcall TForm_DrillAdjust::FormCreate(TObject *Sender)
 	this->ComboBox_orient->Clear();
 	this->ComboBox_orient->Items->Add("Горизонтальная");
 	this->ComboBox_orient->Items->Add("Вертикальная");
+
+	this->RadioButton_start_first->Checked = true;
 
 }
 //---------------------------------------------------------------------------

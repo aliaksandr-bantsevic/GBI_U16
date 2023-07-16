@@ -43,7 +43,7 @@ TTreeNode* TPlace::Redraw(TTreeView* t, TTreeNode* n)
 		return NULL;
 	}
 
-	WideString s("");
+	WideString s(L"");
 
 	s.printf(L"%d [%s]",  num, name.c_bstr());
 
@@ -65,7 +65,7 @@ TTreeNode* TPlace::GetNode()
 	return node;
 }
 
-void TPlace::SetName(AnsiString n)
+void TPlace::SetName(WideString n)
 {
     name = n;
 }
@@ -77,12 +77,12 @@ WideString TPlace::GetName()
 
 int TPlace::SaveConfig (TIniFile* ini)
 {
-	AnsiString section("");
-	AnsiString value("");
+	WideString section(L"");
+	WideString value(L"");
 
-	section.printf("PLACE%d", this->num);
-	ini->WriteString(section, "NAME", this->name);
-	ini->WriteInteger(section, "INDEX", this->num);
+	section.printf(L"PLACE%d", this->num);
+	ini->WriteString(section, L"NAME", this->name);
+	ini->WriteInteger(section, L"INDEX", this->num);
 
 		for (int i = 0; i < drill_list_idx; i++) {
 
@@ -93,7 +93,7 @@ int TPlace::SaveConfig (TIniFile* ini)
 	return 0;
 }
 
-int TPlace::AddDrill(AnsiString n, int cnt)
+int TPlace::AddDrill(WideString n, int cnt)
 {
 
 	for (int i = 0; i < drill_list_idx; i++) {
@@ -117,34 +117,68 @@ int TPlace::AddDrill(AnsiString n, int cnt)
 	return 0;
 }
 
+int TPlace::AddDrill(TDrill* drill)
+{
+
+	TDrill* d = new TDrill();
+
+	d->name = drill->name;
+	d->num = drill_list_idx+1;
+	d->pnum = this->num;
+	d->records_cnt = drill->records_cnt;
+	d->i_first_request_point = drill->i_first_request_point;
+	d->start_point = drill->start_point;
+	d->single_way = drill->single_way;
+
+
+	drill_list[drill_list_idx] = d;
+	drill_list_idx++;
+
+	return 0;
+
+}
+
+int TPlace::UpdateDrill(TDrill* d, TDrill* drill)
+{
+
+	d->name = drill->name;
+	d->records_cnt = drill->records_cnt;
+	d->i_first_request_point = drill->i_first_request_point;
+	d->start_point = drill->start_point;
+	d->single_way = drill->single_way;
+
+	return 0;
+
+}
+
 int TPlace::LoadDrillConfig(TIniFile* ini)
 {
-	AnsiString section("");
-	AnsiString spar("");
+	WideString section(L"");
+	WideString spar(L"");
 	int ipar = -1;
 
 	for (int i = 0; i < SYSTEM_DRILLS_MAX; i++) {
 
-		section.printf("DRILL%d.%d",num,i+1);
-		spar = ini->ReadString(section, "NAME", "endoflist");
+		section.printf(L"DRILL%d.%d",num,i+1);
+		spar = ini->ReadString(section, L"NAME", L"endoflist");
 
 
-			if (spar!="endoflist") {
+			if (spar!=L"endoflist") {
 
-				ipar = ini->ReadInteger(section, "RECCNT", MAX_RECORDS_MEAS);
+				ipar = ini->ReadInteger(section, L"RECCNT", MAX_RECORDS_MEAS);
 				AddDrill(spar,ipar);
 
-				ipar = ini->ReadInteger(section, "ORIENT", 0);
+				ipar = ini->ReadInteger(section, L"ORIENT", 0);
 				drill_list[drill_list_idx-1]->drill_orient = ipar;
 
-				ipar = ini->ReadInteger(section, "STARTPOINT", 0);
+				ipar = ini->ReadInteger(section, L"STARTPOINT", 0);
 				drill_list[drill_list_idx-1]->start_point = ipar;
 
-				ipar = ini->ReadInteger(section, "STARTREQUEST", 0);
+				ipar = ini->ReadInteger(section, L"STARTREQUEST", 0);
 				drill_list[drill_list_idx-1]->i_first_request_point = ipar;
 
 
-				spar =  ini->ReadString(section, "ASIMUT", "0.0");
+				spar =  ini->ReadString(section, L"ASIMUT", L"0.0");
 
 				try
 				{
@@ -155,7 +189,7 @@ int TPlace::LoadDrillConfig(TIniFile* ini)
 
                 }
 
-				spar =  ini->ReadString(section, "ZEROSHIFT", "0.0");
+				spar =  ini->ReadString(section, L"ZEROSHIFT", L"0.0");
 
 				try
 				{
@@ -166,7 +200,7 @@ int TPlace::LoadDrillConfig(TIniFile* ini)
 
                 }
 
-				drill_list[drill_list_idx-1]->single_way =  ini->ReadInteger(section, "SINGLEWAY", 0);
+				drill_list[drill_list_idx-1]->single_way =  ini->ReadInteger(section, L"SINGLEWAY", 0);
 				drill_list[drill_list_idx-1]->LoadMeasConfig(ini);
   				drill_list[drill_list_idx-1]->pname = this->name;
 			}

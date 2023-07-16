@@ -27,7 +27,7 @@ void __fastcall TForm_PlaceAdjust::Button_applyClick(TObject *Sender)
 	}
 	else
 	{
-		place->SetName(Edit_name->Text);
+		place->name =  Edit_name->Text;
 	}
 
     OK = true;

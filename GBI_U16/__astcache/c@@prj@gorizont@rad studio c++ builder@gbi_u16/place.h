@@ -27,7 +27,7 @@ public:
 
 	TTreeNode* Redraw(TTreeView* t, TTreeNode* n);
 	TTreeNode* GetNode();
-	void SetName(AnsiString n);
+	void SetName(WideString n);
 	WideString GetName();
 
 	int num;
@@ -36,9 +36,11 @@ public:
 	int drill_list_idx;
 
 	int SaveConfig (TIniFile* ini);
-	int AddDrill(AnsiString n, int cnt);
+	int AddDrill(WideString n, int cnt);
+	int TPlace::AddDrill(TDrill* drill);
 	int LoadDrillConfig(TIniFile* ini);
 	int DeleteDrill(TDrill* d, int idx);
+    int UpdateDrill(TDrill* d, TDrill* drill);
 };
 
 
