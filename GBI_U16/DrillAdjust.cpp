@@ -29,7 +29,7 @@ void __fastcall TForm_DrillAdjust::Button_applyClick(TObject *Sender)
 		 drill->single_way = (int) CheckBox_single->Checked;
 		 drill->drill_orient = this->ComboBox_orient->ItemIndex;
 		 drill->start_point = (this->RadioButton_top->Checked)?0:1;
-		 drill->i_first_request_point = (this->RadioButton_start_first->Checked)?1:0;
+		 drill->i_first_request_point = (this->RadioButton_start_first->Checked)?0:1;
 
 		 drill->drill_asimut = this->Edit_asimut->Text.ToDouble();
 		 drill->own_zero_shift = this->Edit_zshift->Text.ToDouble();

@@ -1,4 +1,4 @@
-//---------------------------------------------------------------------------
+п»ї//---------------------------------------------------------------------------
 
 #include <System.hpp>
 #pragma hdrstop
@@ -56,7 +56,7 @@ __fastcall TChartThread::TChartThread(bool CreateSuspended, TChart* c, int ds, i
 
 	unsigned char r,g,b = 0;
 
-	r = 255;
+	r = 85;
 
 	for (int i = 0; i < 100; i++) {
 
@@ -64,34 +64,58 @@ __fastcall TChartThread::TChartThread(bool CreateSuspended, TChart* c, int ds, i
 
 		Ser->Pointer->Style = psRectangle;
 
-		//Ser->Legend->Clipbox;
+		Ser->DrawStyle = dsSegments;
+		Ser->Active = true;
 
-		Ser->Legend->Text = " ";
+		//Ser->SortByLabels(0);
+		//Ser->
+
+		Ser->Pointer->Visible = true;
+
+		Ser->Legend->Text = L" ";
 		Ser->Legend->Visible = false;
 		Ser->Pen->Width = 1;
 
-		Ser->Color =  (TColor)(RGB(r,g,b));
+		//Ser->YValues->Order = loAscending;
+		//Ser->YValues->Order = loDescending;
+		//Ser->XValues->Order = loNone;
+
+		Ser->YValues->Order = loDescending;
+		Ser->XValues->Order = loNone;
+
+		//Ser->Color =  (TColor)(RGB(r,g,b));
+
+		Ser->Color = ChartColorsTable[i%20];
 
 		chart->AddSeries(Ser);
 
+
+
 		if (r == 255) {
 
-			b = 255;
+			//b = 255;
+			b+=85;
 			r = 0;
 			g = 0;
 		}
 		else if (b == 255) {
 
 				b = 0;
-				g = 255;
+				//g = 255;
+				g+=85;
 				r  = 0;
 
 			 }
 			 else if (g == 255) {
 					  g = 0;
-					  r = 255;
+					  //r = 255;
+					  r+=85;
 					  b = 0;
 				  }
+				  else
+				  {
+					 r+=85;
+                  }
 
 	}
 
@@ -129,34 +153,34 @@ void __fastcall TChartThread::StartRedraw(void)
 
 	if (drill != NULL) {
 
-		AnsiString ss("");
+		WideString ss(L"");
 
 		if (data_source == DATA_SOURCE_X)
 		{
-		 ss.printf("Смещение X, мм [%s][%s]", drill->pname.c_str(), drill->name.c_str());
+		 ss.printf(L"РЎРјРµС‰РµРЅРёРµ X, РјРј [%s][%s]", drill->pname.c_bstr(), drill->name.c_bstr());
 		}
 
 		if (data_source == DATA_SOURCE_Y)
 		{
-		 ss.printf("Смещение Y, мм [%s][%s]", drill->pname.c_str(), drill->name.c_str());
+		 ss.printf(L"РЎРјРµС‰РµРЅРёРµ Y, РјРј [%s][%s]", drill->pname.c_bstr(), drill->name.c_bstr());
 		}
 
 		if (data_source == DATA_SOURCE_R)
 		{
-		 ss.printf("Смещение Res, мм [%s][%s]", drill->pname.c_str(), drill->name.c_str());
+		 ss.printf(L"РЎРјРµС‰РµРЅРёРµ Res, РјРј [%s][%s]", drill->pname.c_bstr(), drill->name.c_bstr());
 		}
 
-		chart->Title->Caption = ss.c_str();
+		chart->Title->Caption = ss.c_bstr();
 
 	}
 
 
-	AnsiString s("");
+	WideString s(L"");
 
 	for (int i = 0 ; i < 100; i++)
 	{
 		chart->Series[i]->Clear();
-		chart->Series[i]->Legend->Text = " ";
+		chart->Series[i]->Legend->Text = L" ";
 		chart->Series[i]->Legend->Visible = false;
 		chart->Series[i]->Pen->Width = 1;
 
@@ -171,21 +195,22 @@ void __fastcall TChartThread::StartRedraw(void)
 				if (m->finalized == true)
 				{
 
-					s = FormatDateTime("dd-mm-yyyy hh:nn:ss", m->finalize_time);
+					s = FormatDateTime(L"dd-mm-yyyy hh:nn:ss", m->finalize_time);
 
 				}
 				else
 				{
-				  s.printf("Измерение_%d", i+1);
+				  s.printf(L"РР·РјРµСЂРµРЅРёРµ_%d", i+1);
 				}
 
 				chart->Series[i]->Legend->Text = s;
-				//chart->Series[i+1]->Legend->Text = " ";
+				chart->Series[i]->Visible = true;
+				//chart->Series[i+1]->Legend->Text = L" ";
 				//chart->Series[i+1]->Color = clWhite;
 			}
 			else
 			{
-			   	chart->Series[i]->Legend->Text = " ";
+			   	chart->Series[i]->Legend->Text = L" ";
 			}
 		}
 	}
@@ -196,11 +221,11 @@ void __fastcall TChartThread::StartRedraw(void)
 
 			if (drill->meas_list_idx < 2) {
 
-		chart->Series[2]->Legend->Text = " ";
+		chart->Series[2]->Legend->Text = L" ";
 		chart->Series[2]->Color = clWhite;
 		chart->Series[2]->Legend->Visible = false;
 
-		chart->Series[3]->Legend->Text = " ";
+		chart->Series[3]->Legend->Text = L" ";
 		chart->Series[3]->Color = clWhite;
 		chart->Series[3]->Legend->Visible = false;
 
@@ -209,20 +234,23 @@ void __fastcall TChartThread::StartRedraw(void)
     */
 
 	/*
-	chart->Series[drill->meas_list_idx]->Legend->Text = " ";
+	chart->Series[drill->meas_list_idx]->Legend->Text = L" ";
 	chart->Series[drill->meas_list_idx]->Color = clWhite;
 	chart->Series[drill->meas_list_idx]->Legend->Visible = false;
 	*/
 
-	chart->Series[10]->Legend->Text = " ";
-	chart->Series[10]->Color = clWhite;
-	chart->Series[10]->Legend->Visible = false;
+
+	/*
+	chart->Series[100]->Legend->Text = L" ";
+	chart->Series[100]->Color = clWhite;
+	chart->Series[100]->Legend->Visible = false;
 
 	if (drill->meas_list_idx<2) {
 
-			chart->Series[10]->Legend->Visible = true;
+			chart->Series[100]->Legend->Visible = true;
 
 	}
+    */
 
 //------
 	if (drill == NULL)
@@ -267,9 +295,9 @@ void __fastcall TChartThread::StartRedraw(void)
 
 	if (drill != NULL)
 	{
-		//Сколько измерений находится в базе для данной скважины
+		//РЎРєРѕР»СЊРєРѕ РёР·РјРµСЂРµРЅРёР№ РЅР°С…РѕРґРёС‚СЃСЏ РІ Р±Р°Р·Рµ РґР»СЏ РґР°РЅРЅРѕР№ СЃРєРІР°Р¶РёРЅС‹
 		int cnum = drill->meas_list_idx;
-		//Сколько уровней (отсчетов по оси X) задано для данной скважины
+		//РЎРєРѕР»СЊРєРѕ СѓСЂРѕРІРЅРµР№ (РѕС‚СЃС‡РµС‚РѕРІ РїРѕ РѕСЃРё X) Р·Р°РґР°РЅРѕ РґР»СЏ РґР°РЅРЅРѕР№ СЃРєРІР°Р¶РёРЅС‹
 		int tnum = drill->records_cnt;
 
 
@@ -285,22 +313,22 @@ void __fastcall TChartThread::StartRedraw(void)
 
 			for (int j = 0; j < tnum; j++) {
 
-				//Максимальная глубина и макс по оси X
+				//РњР°РєСЃРёРјР°Р»СЊРЅР°СЏ РіР»СѓР±РёРЅР° Рё РјР°РєСЃ РїРѕ РѕСЃРё X
 				d = m->records[j].depth;
 
 				if (d > xmax) xmax = d;
 
-				//Максимальное значение смещения
-				//Если отрисовываем X
+				//РњР°РєСЃРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ СЃРјРµС‰РµРЅРёСЏ
+				//Р•СЃР»Рё РѕС‚СЂРёСЃРѕРІС‹РІР°РµРј X
 				if (data_source == DATA_SOURCE_X) d = m->records[j].LX;
-				//Если отрисовываем Y
+				//Р•СЃР»Рё РѕС‚СЂРёСЃРѕРІС‹РІР°РµРј Y
 				if (data_source == DATA_SOURCE_Y) d = m->records[j].LY;
-				//Если отрисовываем Res
-				if (data_source == DATA_SOURCE_R) d = sqrt(((m->records[j].LY)*(m->records[j].LY))+((m->records[j].LX)*(m->records[j].LX)));
+				//Р•СЃР»Рё РѕС‚СЂРёСЃРѕРІС‹РІР°РµРј Res
+				if (data_source == DATA_SOURCE_R) d = m->records[j].LR;//!!!sqrt(((m->records[j].LY)*(m->records[j].LY))+((m->records[j].LX)*(m->records[j].LX)));
 
-				//Макс по оси Y
+				//РњР°РєСЃ РїРѕ РѕСЃРё Y
 				if (d>ymax) ymax = d;
-				//Мин по оси Y
+				//РњРёРЅ РїРѕ РѕСЃРё Y
 				if (d<ymin) ymin = d;
 
 			}
@@ -349,7 +377,7 @@ void __fastcall TChartThread::StartRedraw(void)
 
 		for (int i = 0; i < drill->meas_list_idx; i++)
 		{
-			if (i>9)
+			if (i>99)
 			{
 				break;
 			}
@@ -381,33 +409,32 @@ void __fastcall TChartThread::StartRedraw(void)
 
 							if (j>0)
 							{
-								if (m->records_sort[j].depth<m->records_sort[j-1].depth)
-								{
-									break;
-								}
+								//if (m->records_sort[j].depth<m->records_sort[j-1].depth)
+								//{
+								//	break;
+								//}
 							}
 
 				datax = m->records_sort[j].depth;
 
-				//Если отрисовываем X
+				//Р•СЃР»Рё РѕС‚СЂРёСЃРѕРІС‹РІР°РµРј X
 				if (data_source == DATA_SOURCE_X)
 				{
 					//m->records[j].LX = i+1;//dtmp; dtmp+=i;
 					datay = m->records_sort[j].LX;
 
 				}
-				//Если отрисовываем Y
+				//Р•СЃР»Рё РѕС‚СЂРёСЃРѕРІС‹РІР°РµРј Y
 				if (data_source == DATA_SOURCE_Y)
 				{
 					datay = m->records_sort[j].LY;
 				}
 
-				//Если отрисовываем Res
+				//Р•СЃР»Рё РѕС‚СЂРёСЃРѕРІС‹РІР°РµРј Res
 				if (data_source == DATA_SOURCE_R)
 				{
-					datay = sqrt(((m->records_sort[j].LY)*(m->records_sort[j].LY))+((m->records_sort[j].LX)*(m->records_sort[j].LX)));
+					datay = m->records_sort[j].LR;//!!!sqrt(((m->records_sort[j].LY)*(m->records_sort[j].LY))+((m->records_sort[j].LX)*(m->records_sort[j].LX)));
 				}
-
 
 				if (drill -> drill_orient == DRILL_ORIENT_HORIZONT)
 				{
@@ -427,7 +454,6 @@ void __fastcall TChartThread::StartRedraw(void)
 
 //---------
 
-
 	chart->Refresh();
 	chart->Update();
 
@@ -438,7 +464,6 @@ void __fastcall TChartThread::StartRedraw(void)
 	   g_ymax = ymax;
 	   g_ymin = ymin;
 	}
-
 
 	//redraw_flag = true;
 }
@@ -460,7 +485,7 @@ void TChartThread::SetDrill(TDrill* d)
 
 typedef struct tagTHREADNAME_INFO
 {
-    DWORD dwType; // Must be 0x1000.
+	DWORD dwType; // Must be 0x1000.
 	LPCSTR szName; // Pointer to name (in user addr space).
 	DWORD dwThreadID; // Thread ID (-1=caller thread).
 	DWORD dwFlags; // Reserved for future use, must be zero.
@@ -471,15 +496,15 @@ void TChartThread::SetName()
 
 		//SetThreadDescription(::GetCurrentThread(),"ThisIsMyThreadName!");
 
-		AnsiString s("");
-		s.printf("Thread_%d",thread_num);
+		WideString s(L"");
+		s.printf(L"Thread_%d",thread_num);
 
 		THREADNAME_INFO info;
 
 		info.dwType = 0x1000;
-//		info.szName = "TChartThread"+thread_num;
+//		info.szName = L"TChartThread"+thread_num;
 
-		info.szName = s.c_str();
+		info.szName = s.c_bstr();
 
 		info.dwThreadID = -1;
 		info.dwFlags = 0;
@@ -494,4 +519,5 @@ void TChartThread::SetName()
 		}
 
 }
+
 

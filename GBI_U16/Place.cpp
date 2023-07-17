@@ -120,6 +120,15 @@ int TPlace::AddDrill(WideString n, int cnt)
 int TPlace::AddDrill(TDrill* drill)
 {
 
+	for (int i = 0; i < drill_list_idx; i++) {
+
+		if (drill_list[i]->name == drill->name) {
+
+			ShowMessage(L"Данное имя скважины уже существует!");
+			return -2;
+		}
+	}
+
 	TDrill* d = new TDrill();
 
 	d->name = drill->name;
@@ -129,7 +138,8 @@ int TPlace::AddDrill(TDrill* drill)
 	d->i_first_request_point = drill->i_first_request_point;
 	d->start_point = drill->start_point;
 	d->single_way = drill->single_way;
-
+	d->drill_orient = drill->drill_orient;
+	d->drill_asimut = drill->drill_asimut;
 
 	drill_list[drill_list_idx] = d;
 	drill_list_idx++;
@@ -146,6 +156,8 @@ int TPlace::UpdateDrill(TDrill* d, TDrill* drill)
 	d->i_first_request_point = drill->i_first_request_point;
 	d->start_point = drill->start_point;
 	d->single_way = drill->single_way;
+	d->drill_orient = drill->drill_orient;
+    d->drill_asimut = drill->drill_asimut;
 
 	return 0;
 

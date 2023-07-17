@@ -56,7 +56,7 @@ __fastcall TChartThread::TChartThread(bool CreateSuspended, TChart* c, int ds, i
 
 	unsigned char r,g,b = 0;
 
-	r = 255;
+	r = 85;
 
 	for (int i = 0; i < 100; i++) {
 
@@ -64,34 +64,58 @@ __fastcall TChartThread::TChartThread(bool CreateSuspended, TChart* c, int ds, i
 
 		Ser->Pointer->Style = psRectangle;
 
-		Ser->Legend->Clipbox;
+		Ser->DrawStyle = dsSegments;
+		Ser->Active = true;
+
+		//Ser->SortByLabels(0);
+		//Ser->
+
+		Ser->Pointer->Visible = true;
 
 		Ser->Legend->Text = " ";
 		Ser->Legend->Visible = false;
 		Ser->Pen->Width = 1;
 
-		Ser->Color =  (TColor)(RGB(r,g,b));
+		//Ser->YValues->Order = loAscending;
+		//Ser->YValues->Order = loDescending;
+		//Ser->XValues->Order = loNone;
+
+		Ser->YValues->Order = loDescending;
+		Ser->XValues->Order = loNone;
+
+		//Ser->Color =  (TColor)(RGB(r,g,b));
+
+		Ser->Color = ChartColorsTable[i%20];
 
 		chart->AddSeries(Ser);
 
+
+
 		if (r == 255) {
 
-			b = 255;
+			//b = 255;
+			b+=85;
 			r = 0;
 			g = 0;
 		}
 		else if (b == 255) {
 
 				b = 0;
-				g = 255;
+				//g = 255;
+				g+=85;
 				r  = 0;
 
 			 }
 			 else if (g == 255) {
 					  g = 0;
-					  r = 255;
+					  //r = 255;
+					  r+=85;
 					  b = 0;
 				  }
+				  else
+				  {
+					 r+=85;
+                  }
 
 	}
 
@@ -180,6 +204,7 @@ void __fastcall TChartThread::StartRedraw(void)
 				}
 
 				chart->Series[i]->Legend->Text = s;
+				chart->Series[i]->Visible = true;
 				//chart->Series[i+1]->Legend->Text = " ";
 				//chart->Series[i+1]->Color = clWhite;
 			}
@@ -214,15 +239,18 @@ void __fastcall TChartThread::StartRedraw(void)
 	chart->Series[drill->meas_list_idx]->Legend->Visible = false;
 	*/
 
-	chart->Series[10]->Legend->Text = " ";
-	chart->Series[10]->Color = clWhite;
-	chart->Series[10]->Legend->Visible = false;
+
+	/*
+	chart->Series[100]->Legend->Text = " ";
+	chart->Series[100]->Color = clWhite;
+	chart->Series[100]->Legend->Visible = false;
 
 	if (drill->meas_list_idx<2) {
 
-			chart->Series[10]->Legend->Visible = true;
+			chart->Series[100]->Legend->Visible = true;
 
 	}
+    */
 
 //------
 	if (drill == NULL)
@@ -296,7 +324,7 @@ void __fastcall TChartThread::StartRedraw(void)
 				//Если отрисовываем Y
 				if (data_source == DATA_SOURCE_Y) d = m->records[j].LY;
 				//Если отрисовываем Res
-				if (data_source == DATA_SOURCE_R) d = sqrt(((m->records[j].LY)*(m->records[j].LY))+((m->records[j].LX)*(m->records[j].LX)));
+				if (data_source == DATA_SOURCE_R) d = m->records[j].LR;//!!!sqrt(((m->records[j].LY)*(m->records[j].LY))+((m->records[j].LX)*(m->records[j].LX)));
 
 				//Макс по оси Y
 				if (d>ymax) ymax = d;
@@ -349,7 +377,7 @@ void __fastcall TChartThread::StartRedraw(void)
 
 		for (int i = 0; i < drill->meas_list_idx; i++)
 		{
-			if (i>9)
+			if (i>99)
 			{
 				break;
 			}
@@ -381,10 +409,10 @@ void __fastcall TChartThread::StartRedraw(void)
 
 							if (j>0)
 							{
-								if (m->records_sort[j].depth<m->records_sort[j-1].depth)
-								{
-									break;
-								}
+								//if (m->records_sort[j].depth<m->records_sort[j-1].depth)
+								//{
+								//	break;
+								//}
 							}
 
 				datax = m->records_sort[j].depth;
@@ -405,9 +433,8 @@ void __fastcall TChartThread::StartRedraw(void)
 				//Если отрисовываем Res
 				if (data_source == DATA_SOURCE_R)
 				{
-					datay = sqrt(((m->records_sort[j].LY)*(m->records_sort[j].LY))+((m->records_sort[j].LX)*(m->records_sort[j].LX)));
+					datay = m->records_sort[j].LR;//!!!sqrt(((m->records_sort[j].LY)*(m->records_sort[j].LY))+((m->records_sort[j].LX)*(m->records_sort[j].LX)));
 				}
-
 
 				if (drill -> drill_orient == DRILL_ORIENT_HORIZONT)
 				{
@@ -427,7 +454,6 @@ void __fastcall TChartThread::StartRedraw(void)
 
 //---------
 
-
 	chart->Refresh();
 	chart->Update();
 
@@ -438,7 +464,6 @@ void __fastcall TChartThread::StartRedraw(void)
 	   g_ymax = ymax;
 	   g_ymin = ymin;
 	}
-
 
 	//redraw_flag = true;
 }

@@ -1497,7 +1497,7 @@ void TFMain::ViewSelectedMeas(void)
 
 		if (d->drill_orient == DRILL_ORIENT_VERTICAL)
 		{
-			s.printf(L"%s [вертикальная][%.1f]",d->name.c_bstr(), d->drill_orient);
+			s.printf(L"%s [вертикальная][%.1f]",d->name.c_bstr(), d->drill_asimut);
 		}
 		else
 		{

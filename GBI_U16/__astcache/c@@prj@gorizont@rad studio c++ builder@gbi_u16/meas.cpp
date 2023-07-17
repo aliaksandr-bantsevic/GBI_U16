@@ -66,7 +66,7 @@ TMeas::TMeas (TStringGrid* t, WideString n)
 	drill_start_point = 0;
 	type_drill = 0;
 
-    mark = "Ìàðêèðîâêà èçìåðåíèÿ";
+    mark = "Маркировка измерения";
 }
 
 
@@ -81,7 +81,7 @@ int PutIntCell(TStringGrid* table, int col, int row, int d)
 {
 	if (table == NULL) {
 
-		return -1; //Íåò óêàçàòåëÿ íà òàáëèöó
+		return -1; //Нет указателя на таблицу
 	}
 
 		WideString s;
@@ -102,7 +102,7 @@ int PutDblCell(TStringGrid* table, int col, int row, double d)
 {
 	if (table == NULL) {
 
-		return -1; //Íåò óêàçàòåëÿ íà òàáëèöó
+		return -1; //Нет указателя на таблицу
 	}
 
 		WideString s;
@@ -127,13 +127,13 @@ int TMeas::DataToTable(void)
 {
 	if (table == NULL) {
 
-		return -1; //Íåò óêàçàòåëÿ íà òàáëèöó
+		return -1; //Нет указателя на таблицу
 	}
 
 
 
 /*
-Èèöèàëèçàöèÿ òàáëèöû
+Иициализация таблицы
 */
 
 
@@ -207,7 +207,7 @@ int GetIntCell(TStringGrid* table, int col, int row, int* d)
 {
 	if (table == NULL) {
 
-		return -1; //Íåò óêàçàòåëÿ íà òàáëèöó
+		return -1; //Нет указателя на таблицу
 	}
 
 	WideString s;
@@ -238,7 +238,7 @@ int GetDblCell(TStringGrid* table, int col, int row, double* d)
 {
 	if (table == NULL) {
 
-		return -1; //Íåò óêàçàòåëÿ íà òàáëèöó
+		return -1; //Нет указателя на таблицу
 	}
 
 	WideString s;
@@ -271,7 +271,7 @@ int TMeas::TableToData(void)
 {
 	if (table == NULL) {
 
-		return -1; //Íåò óêàçàòåëÿ íà òàáëèöó
+		return -1; //Нет указателя на таблицу
 	}
 
 
@@ -354,16 +354,16 @@ int TMeas::Calculate(void)
 
 		d  = records[i].depth;
 
-		//Ãîðèçîíòàëüíàÿ
+		//Горизонтальная
 		if (type_drill == 0)
 		{
-			//Äâóõïðîõîäíàÿ
+			//Двухпроходная
 			if (single_way == 0)
 			{
 				xres = (x1-x2)/2;
 				yres = (y1-y2)/2;
 			}
-			//Îäíîïðîõîäíàÿ
+			//Однопроходная
 			else
 			{
 				if (i == 0) {
@@ -399,12 +399,12 @@ int TMeas::Calculate(void)
 			records[i].LX = lx;
 			records[i].LY = ly;
 
-			//Äâóõïðîõîäíàÿ
+			//Двухпроходная
 			if (single_way == 0)
 			{
 				records[i].LR = sqrt((lx*lx)+(ly*ly));
 			}
-			//Îäíîïðîõîäíàÿ
+			//Однопроходная
 			else
 			{
 				records[i].LR = lx;
@@ -413,7 +413,7 @@ int TMeas::Calculate(void)
 		}
 
 
-		//Âåðòèêàëüíàÿ
+		//Вертикальная
 		if (type_drill == 1)
 		{
 
@@ -455,10 +455,10 @@ int TMeas::Calculate(void)
 				if (abs(records[i].LX) > 0.0001) {
 
 					records[i].AR = atan(records[i].LY/records[i].LX);
-					//Ïåðåâîäèì â ãðàäóñû
+					//Переводим в градусы
 					records[i].AR *= PI;
 					records[i].AR /= 180;
-					//ïåðåâîäèì â ñåêóíäû
+					//переводим в секунды
 					records[i].AR *= 3600;
 
 				  }
@@ -500,7 +500,7 @@ int TMeas::Calculate(void)
 					//gthtcxbnsdftv hflbfys d uhflecs
 					records[ii].AR *= PI;
 					records[ii].AR /= 180;
-					//ïåðåâîäèì â ñåêóíäû
+					//переводим в секунды
 					records[ii].AR *= 3600;
 
 				  }
@@ -590,7 +590,7 @@ int TMeas::SaveData(int par)
 	if (!DirectoryExists(dir))  CreateDirectory(dir,0);
 
 	WideString s(L"");
-	s.printf(L"Èçìåðåíèå_%d", this->num);
+	s.printf(L"Измерение_%d", this->num);
 
 	/*
 	if (finalized == true) {
@@ -614,7 +614,7 @@ int TMeas::SaveData(int par)
 	FILE* f = _wfopen(dir,L"wb");
 	if (f == NULL) {
 
-		ShowMessage(L"Íå óäàëîñü îòêðûòü ôàéë äëÿ ñîõðàíåíèÿ äàííûõ èçìåðåíèÿ!");
+		ShowMessage(L"Не удалось открыть файл для сохранения данных измерения!");
 		return -1;
 	}
 
@@ -629,10 +629,11 @@ int TMeas::SaveData(int par)
 	fclose(f);
 
 	wcscat(tdir,L".txt");
+	CreateTextFile_UTF16LEBOM (tdir);
 	FILE* ft = _wfopen(tdir,L"wb");
 	if (ft == NULL) {
 
-		ShowMessage(L"Íå óäàëîñü îòêðûòü ôàéë äëÿ ñîõðàíåíèÿ äàííûõ èçìåðåíèÿ!");
+		ShowMessage(L"Не удалось открыть файл для сохранения данных измерения!");
 		return -1;
 	}
 
@@ -640,58 +641,58 @@ int TMeas::SaveData(int par)
 	WideString spar(L"");
 	TCHAR cpar[1024];
 
-	spar.printf(L"Ìåñòî:\t\t%s\r\n", name_place.c_bstr());
+	spar.printf(L"Место:\t\t%s\r\n", name_place.c_bstr());
 	wcscpy(cpar,spar.c_bstr());
 	fwrite(cpar,wcslen(cpar),1,ft);
 
-	spar.printf(L"Ñêâàæèíà:\t%s\r\n", name_drill.c_bstr());
+	spar.printf(L"Скважина:\t%s\r\n", name_drill.c_bstr());
 	wcscpy(cpar,spar.c_bstr());
 	fwrite(cpar,wcslen(cpar),1,ft);
 
 	if (type_drill == 0)
 	{
-		spar.printf(L"Íàïðàâëåíèå:\tÃÎÐÈÇÎÍÒÀËÜÍÀß\r\n");
+		spar.printf(L"Направление:\tГОРИЗОНТАЛЬНАЯ\r\n");
 	}
 	else
 	{
-		spar.printf(L"Íàïðàâëåíèå:\tÂÅÐÒÈÊÀËÜÍÀß\r\n");
+		spar.printf(L"Направление:\tВЕРТИКАЛЬНАЯ\r\n");
 	}
 	wcscpy(cpar,spar.c_bstr());
 	fwrite(cpar,wcslen(cpar),1,ft);
 
 	if (single_way == 0)
 	{
-		spar.printf(L"Îäèí ïðîõîä:\tÍÅÒ\r\n");
+		spar.printf(L"Один проход:\tНЕТ\r\n");
 	}
 	else
 	{
-		spar.printf(L"Îäèí ïðîõîä:\tÄÀ\r\n");
+		spar.printf(L"Один проход:\tДА\r\n");
 	}
 	wcscpy(cpar,spar.c_bstr());
 	fwrite(cpar,wcslen(cpar),1,ft);
 
-	spar.printf(L"Èçìåðåíèå:\t%d\r\n", this->num);
+	spar.printf(L"Измерение:\t%d\r\n", this->num);
 	wcscpy(cpar,spar.c_bstr());
 	fwrite(cpar,wcslen(cpar),1,ft);
 
-	spar = FormatDateTime(L"Ñîçäàíî:\tdd-mm-yyyy hh:nn:ss\r\n",create_time);
+	spar = FormatDateTime(L"Создано:\tdd-mm-yyyy hh:nn:ss\r\n",create_time);
 	wcscpy(cpar,spar.c_bstr());
 	fwrite(cpar,wcslen(cpar),1,ft);
 
 	if (finalized == true) {
 
-		spar = FormatDateTime(L"Çàâåðøåíî:\tdd-mm-yyyy hh:nn:ss\r\n\r\n",finalize_time);
+		spar = FormatDateTime(L"Завершено:\tdd-mm-yyyy hh:nn:ss\r\n\r\n",finalize_time);
 		wcscpy(cpar,spar.c_bstr());
 	}
 	else
 	{
-		spar = "Çàâåðøåíî:\tÍÅÒ\r\n\r\n";
+		spar = "Завершено:\tНЕТ\r\n\r\n";
 	}
 
 	wcscpy(cpar,spar.c_bstr());
 	fwrite(cpar,wcslen(cpar),1,ft);
 
-	spar = "Íîìåð\tÃëóáèíà\t\tÎøèáêà\t\tX1\t\tY1\t\tX2\t\tY2\t\tLX\t\tLY\t\tLR\t\tAR\r\n";
+	spar = "Номер\tГлубина\t\tОшибка\t\tX1\t\tY1\t\tX2\t\tY2\t\tLX\t\tLY\t\tLR\t\tAR\r\n";
 	wcscpy(cpar,spar.c_bstr());
 	fwrite(cpar,wcslen(cpar),1,ft);
 
@@ -747,7 +748,7 @@ int TMeas::LoadData()
 	if (!DirectoryExists(dir))  CreateDirectory(dir,0);
 
 	WideString s(L"");
-	s.printf(L"Èçìåðåíèå_%d", this->num);
+	s.printf(L"Измерение_%d", this->num);
 
 	/*
 	if (finalized == true) {
@@ -819,22 +820,22 @@ bool TMeas::DeleteDir(WideString DirName)
 			 do
 			  {
 				  if (!(sr.Name=="." || sr.Name==".."))
-				  {// ýòî óäàëÿòü íå íàäî
-				   if (((sr.Attr & faDirectory) == faDirectory ) || (sr.Attr == faDirectory))// íàéäåíà ïàïêà
+				  {// это удалять не надо
+				   if (((sr.Attr & faDirectory) == faDirectory ) || (sr.Attr == faDirectory))// найдена папка
 					{
-						FileSetAttr(DirName+""+sr.Name, faDirectory );// ñáðîñ âñÿêèõ read-only
-						DeleteDir(DirName+""+sr.Name);//ðåêóðñèâíî óäàëÿåì ñîäåðæèìîå
-						RemoveDir(DirName + ""+sr.Name);// óäàëÿåì òåïåðü óæå ïóñòóþ ïàïêó
+						FileSetAttr(DirName+""+sr.Name, faDirectory );// сброс всяких read-only
+						DeleteDir(DirName+""+sr.Name);//рекурсивно удаляем содержимое
+						RemoveDir(DirName + ""+sr.Name);// удаляем теперь уже пустую папку
 					}
-					else// èíà÷å íàéäåí ôàéë
+					else// иначе найден файл
 					{
-						FileSetAttr(DirName+""+sr.Name, 0);// ñáðîñ âñÿêèõ read-only
-						DeleteFile(DirName+""+sr.Name);// óäàëÿåì ôàéë
+						FileSetAttr(DirName+""+sr.Name, 0);// сброс всяких read-only
+						DeleteFile(DirName+""+sr.Name);// удаляем файл
 					}
 				  }
 			  }
 
-			 while (!FindNext(sr));// èùåì îïÿòü, ïîêà íå íàéäåì âñå
+			 while (!FindNext(sr));// ищем опять, пока не найдем все
 		 }
 		 FindClose(sr);
 	 }
@@ -862,7 +863,7 @@ int TMeas::Excel (int par)
 	if (!DirectoryExists(tdir))  CreateDirectory(tdir,0);
 
 	WideString s(L"");
-	s.printf(L"Èçìåðåíèå_%d", this->num);
+	s.printf(L"Измерение_%d", this->num);
 
 	wcscat(tdir,L"\\");
 	wcscat(tdir,s.c_bstr());
@@ -885,13 +886,13 @@ int TMeas::Excel (int par)
 	}
 
 
-//Ñîçäàåì ýêçåìïëÿð òàáëèöû
+//Создаем экземпляр таблицы
 
 		if (par)
 		{
 			if (OpenExcelReportTable(1) == false)
 			{
-				MessageBox(NULL,L"Íå óäàëîñü ñîçäàòü òàáëèöó!",L"ÎØÈÁÊÀ",0);
+				MessageBox(NULL,L"Не удалось создать таблицу!",L"ОШИБКА",0);
 				return -1;
 			}
 		}
@@ -900,7 +901,7 @@ int TMeas::Excel (int par)
 		{
 			if (OpenExcelReportSheet(name, 1) == false)
 			{
-				MessageBox(NULL,L"Íå óäàëîñü ñîçäàòü ëèñò òàáëèöû!",L"ÎØÈÁÊÀ",0);
+				MessageBox(NULL,L"Не удалось создать лист таблицы!",L"ОШИБКА",0);
 				return -1;
 			}
 		}
@@ -908,7 +909,7 @@ int TMeas::Excel (int par)
 		{
 			if (OpenExcelReportSheet(name, num) == false)
 			{
-				MessageBox(NULL,L"Íå óäàëîñü ñîçäàòü ëèñò òàáëèöû!",L"ÎØÈÁÊÀ",0);
+				MessageBox(NULL,L"Не удалось создать лист таблицы!",L"ОШИБКА",0);
 				return -1;
 			}
 		}
@@ -925,31 +926,31 @@ int TMeas::Excel (int par)
 
 	//if (par)
 
-	WriteExcelReportCell(irow,1,L"Ïëîùàäêà:"); WriteExcelReportCell(irow,2,this->name_place); irow++;
-	WriteExcelReportCell(irow,1,L"Ñêâàæèíà:"); WriteExcelReportCell(irow,2,name_drill); irow++;
+	WriteExcelReportCell(irow,1,L"Площадка:"); WriteExcelReportCell(irow,2,this->name_place); irow++;
+	WriteExcelReportCell(irow,1,L"Скважина:"); WriteExcelReportCell(irow,2,name_drill); irow++;
 
 	if (type_drill == 0)
 	{
-		WriteExcelReportCell(irow,1,L"Íàïðàâëåíèå:"); WriteExcelReportCell(irow,2,L"ÃÎÐÈÇÎÍÒÀËÜÍÀß"); irow++;
+		WriteExcelReportCell(irow,1,L"Направление:"); WriteExcelReportCell(irow,2,L"ГОРИЗОНТАЛЬНАЯ"); irow++;
 	}
 	else
 	{
-		WriteExcelReportCell(irow,1,L"Íàïðàâëåíèå:"); WriteExcelReportCell(irow,2,L"ÂÅÐÒÈÊÀËÜÍÀß"); irow++;
+		WriteExcelReportCell(irow,1,L"Направление:"); WriteExcelReportCell(irow,2,L"ВЕРТИКАЛЬНАЯ"); irow++;
 	}
 
 	if (single_way == 0)
 	{
-		WriteExcelReportCell(irow,1,L"Îäèí ïðîõîä:"); WriteExcelReportCell(irow,2,L"ÍÅÒ"); irow++;
+		WriteExcelReportCell(irow,1,L"Один проход:"); WriteExcelReportCell(irow,2,L"НЕТ"); irow++;
 	}
 	else
 	{
-		WriteExcelReportCell(irow,1,L"Îäèí ïðîõîä:"); WriteExcelReportCell(irow,2,L"ÄÀ"); irow++;
+		WriteExcelReportCell(irow,1,L"Один проход:"); WriteExcelReportCell(irow,2,L"ДА"); irow++;
 	}
 
-	WriteExcelReportCell(irow,1,L"Èçìåðåíèå:"); WriteExcelReportCell(irow,2,name); irow++;
+	WriteExcelReportCell(irow,1,L"Измерение:"); WriteExcelReportCell(irow,2,name); irow++;
 
 	s = FormatDateTime(L"dd-mm-yyyy hh:nn:ss",create_time);
-	WriteExcelReportCell(irow,1,L"Ñîçäàíî:"); WriteExcelReportCell(irow,2,s); irow++;
+	WriteExcelReportCell(irow,1,L"Создано:"); WriteExcelReportCell(irow,2,s); irow++;
 
 	if ((double) finalize_time > 0.0)
 	{
@@ -957,15 +958,15 @@ int TMeas::Excel (int par)
 	}
 	else
 	{
-		s = "ÍÅÒ";
+		s = "НЕТ";
 	}
 
-	WriteExcelReportCell(irow,1,L"Çàâåðøåíî:"); WriteExcelReportCell(irow,2,s); irow++;
+	WriteExcelReportCell(irow,1,L"Завершено:"); WriteExcelReportCell(irow,2,s); irow++;
 
 	icol = 1;
 
-	WriteExcelReportCell(irow,icol,L"Ãëóáèíà"); icol++;
-	WriteExcelReportCell(irow,icol,L"Ïîãð. òð."); icol++;
+	WriteExcelReportCell(irow,icol,L"Глубина"); icol++;
+	WriteExcelReportCell(irow,icol,L"Погр. тр."); icol++;
 	WriteExcelReportCell(irow,icol,L"X1"); icol++;
 	WriteExcelReportCell(irow,icol,L"Y1"); icol++;
 	WriteExcelReportCell(irow,icol,L"X2"); icol++;
@@ -1054,3 +1055,4 @@ int TMeas::Sort (int par)
 
 	return 0;
 }
+
