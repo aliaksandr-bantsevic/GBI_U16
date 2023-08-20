@@ -112,6 +112,9 @@ bool geo_on;
 double input_point;
 double output_point;
 
+int ConvertDataUTF16(void);
+int isMeasTxtUTF8(TCHAR* path);
+
 };
 
 #endif

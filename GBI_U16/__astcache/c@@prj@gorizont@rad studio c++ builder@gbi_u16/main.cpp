@@ -1973,6 +1973,21 @@ void __fastcall TFMain::Chart_y_hDblClick(TObject *Sender)
 void __fastcall TFMain::ToolButton_testClick(TObject *Sender)
 {
 
+/*
+::RenameFile(
+
+L"c:\\Prj\\Gorizont\\RAD Studio C++ Builder\\GBI_U16\\Win32\\Debug\\Base\\GBI\\Уренгой\\Скважина #1\\Измерение_1\\Измерение_1.txt",
+L"c:\\Prj\\Gorizont\\RAD Studio C++ Builder\\GBI_U16\\Win32\\Debug\\Base\\GBI\\Уренгой\\Скважина #1\\Измерение_1\\Измерение_1.txt.utf8");
+
+return;
+*/
+
+//this->GBISystem->place_list[0]->drill_list[0]->meas_list[0]->ConvertDataUTF16();
+
+this->GBISystem->place_list[0]->drill_list[0]->meas_list[0]->SaveData(0);
+
+return;
+
  ConvertTextFile_UTF16LEBOM (L"c:\\Prj\\Gorizont\\RAD Studio C++ Builder\\GBI_U16\\Win32\\Debug\\utf8.txt");
 
 return;

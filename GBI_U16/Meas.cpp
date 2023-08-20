@@ -1084,3 +1084,78 @@ int TMeas::Sort (int par)
 	return 0;
 }
 
+int TMeas::ConvertDataUTF16(void)
+{
+
+	TCHAR dir[1024];
+	//TCHAR tdir[1024];
+
+	wcscpy(dir,SysConfMgr->GetCurBase());
+	if (!DirectoryExists(dir))  CreateDirectory(dir,0);
+
+	wcscat(dir,this->name_place.c_bstr());
+	if (!DirectoryExists(dir))  CreateDirectory(dir,0);
+
+	wcscat(dir,L"\\");
+	wcscat(dir,this->name_drill.c_bstr());
+	if (!DirectoryExists(dir))  CreateDirectory(dir,0);
+
+	WideString s(L"");
+	s.printf(L"\\Измерение_%d", this->num);
+
+	wcscat(dir,s.c_bstr());
+    wcscat(dir,s.c_bstr());
+
+	wcscat(dir,L".txt");
+
+	/*
+	if (isMeasTxtUTF8(dir) != 0) {
+
+		return -1;
+
+	}
+	*/
+
+	/*
+	FILE* ft = _wfopen(dir,L"wb");
+
+	if (ft == NULL) {
+
+		ShowMessage(L"Не удалось открыть файл для конвертации текстовых данных измерения!");
+		return -2;
+	}
+
+	fclose (ft);
+	*/
+
+
+	ConvertTextFile_UTF16LEBOM (dir);
+
+	return 0;
+}
+
+int TMeas::isMeasTxtUTF8(TCHAR* path)
+{
+	FILE* f = _wfopen (path, L"rb");
+
+	char buf[10];
+	int res = 0;
+
+	if (fread(buf,10,1,f))
+	{
+		 //if (strstr(buf, "Место:") == 0 )
+		 if (buf[0]!=0xCC) {
+
+			res = -1;
+
+		 }
+	}
+	else
+	{
+		res = -2;
+	}
+
+	fclose(f);
+
+	return res;
+}

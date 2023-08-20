@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------------
 
 #include "defs.h"
+#include "utils.h"
 
 class TSysConfMgr {
 
@@ -40,7 +41,8 @@ public:
 
    bool auto_backup_flag;
    bool auto_backup_flag_completed;
-
+   int isGcfTxtUTF8(TCHAR* path);
+   int isIniTxtUTF8(TCHAR* path);
 };
 
 

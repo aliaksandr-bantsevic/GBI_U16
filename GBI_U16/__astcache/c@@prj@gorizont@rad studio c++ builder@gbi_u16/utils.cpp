@@ -171,13 +171,14 @@ int CreateTextFile_UTF16LEBOM (TCHAR* pszFilePath)
 int ConvertTextFile_UTF16LEBOM (TCHAR* pszFilePath)
 {
 
-	int isutf8 = CheckTextFile_UTF16LEBOM (pszFilePath); //check if it is already utf16
+	//int isutf8 = CheckTextFile_UTF16LEBOM (pszFilePath); //check if it is already utf16
 
+	/*
 	if (isutf8 != -1) {
 
 		return -2; //file is not exist or not utf8
 	}
-
+    */
 
 	TCHAR oldpath [1024];
 	wcscpy(oldpath, pszFilePath);
@@ -186,7 +187,6 @@ int ConvertTextFile_UTF16LEBOM (TCHAR* pszFilePath)
 
 	BYTE smb;
 	TCHAR SMB;
-
 
 	FILE* fold = _wfopen(oldpath, L"rb");
 
@@ -270,11 +270,13 @@ int CheckTextFile_UTF16LEBOM (TCHAR* pszFilePath)
 		 {
 			 res = -3; //Файл не открывается
 		 }
+
+
 	}
 	else
 	{
 		res = -2; //Файл не существует
     }
 
-    return res;
+	return res;
 }
