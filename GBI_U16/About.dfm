@@ -2,7 +2,7 @@ object Form_about: TForm_about
   Left = 0
   Top = 0
   BorderStyle = bsDialog
-  Caption = #1054' '#1087#1088#1086#1075#1088#1072#1084#1084#1077' GBI'
+  Caption = #1054' '#1087#1088#1086#1075#1088#1072#1084#1084#1077' GBI16'
   ClientHeight = 173
   ClientWidth = 332
   Color = clBtnFace
@@ -11,14 +11,12 @@ object Form_about: TForm_about
   Font.Height = -15
   Font.Name = 'Tahoma'
   Font.Style = [fsBold]
-  OldCreateOrder = False
   OnCreate = FormCreate
-  PixelsPerInch = 96
   TextHeight = 18
   object Label_version: TLabel
     Left = 87
     Top = 19
-    Width = 151
+    Width = 107
     Height = 18
     Caption = 'Label_version'
     Layout = tlCenter
@@ -33,7 +31,7 @@ object Form_about: TForm_about
   object Label_year: TLabel
     Left = 87
     Top = 67
-    Width = 151
+    Width = 85
     Height = 18
     Caption = 'Label_year'
     Layout = tlCenter

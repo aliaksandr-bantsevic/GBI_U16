@@ -200,7 +200,7 @@ void TGBISystem::LoadSysConf()
 
 void TGBISystem::Start(TEdit* ex, TEdit* ey)
 {
-	if (this->port.IsOpen() == false) {
+	//if (this->port.IsOpen() == false) {
 
 		/*
 		if (port.Open() != 0) {
@@ -209,7 +209,7 @@ void TGBISystem::Start(TEdit* ex, TEdit* ey)
 			return;
 		}
 		*/
-	}
+	//}
 
 	run = true;
 	edit_meas_X = ex;
@@ -234,16 +234,25 @@ int TGBISystem::RunProc(void)
 
 	if (this->port.IsOpen() == false)
 	{
-		if (this->port.OpenComPort(port.port, port.baud) !=0)
-		{
-			this->edit_meas_X->Font->Color = clGray;
-			this->edit_meas_Y->Font->Color = clGray;
 
-			this->edit_meas_X->Text = L"ОШИБКА ПОРТА";
-			this->edit_meas_Y->Text = L"ОШИБКА ПОРТА";
+		try{
 
-			return  -2;
+
+			if (this->port.OpenComPort(port.port, port.baud) !=0)
+			{
+				this->edit_meas_X->Font->Color = clGray;
+				this->edit_meas_Y->Font->Color = clGray;
+
+				this->edit_meas_X->Text = L"ОШИБКА ПОРТА";
+				this->edit_meas_Y->Text = L"ОШИБКА ПОРТА";
+
+				return  -2;
+			}
 		}
+		catch (...)
+		{
+			utils_ShowMessage(L"Выбранный порт не доступен!");
+        }
 	}
 
 

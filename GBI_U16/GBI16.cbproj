@@ -138,6 +138,10 @@
             <DependentOn>About.h</DependentOn>
             <BuildOrder>16</BuildOrder>
         </CppCompile>
+        <CppCompile Include="CalcTest.cpp">
+            <DependentOn>CalcTest.h</DependentOn>
+            <BuildOrder>28</BuildOrder>
+        </CppCompile>
         <CppCompile Include="ChartThread.cpp">
             <DependentOn>ChartThread.h</DependentOn>
             <BuildOrder>5</BuildOrder>
@@ -263,12 +267,12 @@
         <FormResources Include="MeasAdjust.dfm"/>
         <FormResources Include="SystemAdjust.dfm"/>
         <FormResources Include="SensorAdjust.dfm"/>
+        <FormResources Include="Main.dfm"/>
         <FormResources Include="DataEnter.dfm"/>
         <FormResources Include="DepthAdjust.dfm"/>
-        <FormResources Include="Diagram.dfm"/>
         <FormResources Include="About.dfm"/>
-        <FormResources Include="Main.dfm"/>
         <FormResources Include="ExcelWait.dfm"/>
+        <FormResources Include="Diagram.dfm"/>
         <FormResources Include="DrillAdjust.dfm"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>

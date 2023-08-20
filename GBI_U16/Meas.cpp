@@ -354,6 +354,13 @@ int TMeas::Calculate(void)
 
 		d  = records[i].depth;
 
+
+		if (records[0].X2 == 0) {
+
+			x2 =  (records[0].X1)*(-1.);
+
+		}
+
 		//Горизонтальная
 		if (type_drill == 0)
 		{
@@ -373,8 +380,8 @@ int TMeas::Calculate(void)
 				}
 				else
 				{
-					//xres = x1 - zshift;
-					xres = zshift - x1;
+					xres = x1 - zshift;
+					//xres = zshift - x1;
 				}
 
 				yres = 0;
@@ -391,8 +398,27 @@ int TMeas::Calculate(void)
 			else
 			{
 
-					lx = (records[i].depth - records[i-1].depth) * sin(records[i-1].Xres/3600*PI/180) * 1000 + records[i-1].LX;
-					ly = (records[i].depth - records[i-1].depth) * sin(records[i-1].Yres/3600*PI/180) * 1000 + records[i-1].LY;
+					if (single_way == 1) {
+
+					   //lx = (records[i].depth - records[i-1].depth) * sin(records[i-1].Xres/3600*PI/180) * 1000 + records[i-1].LX;
+					   //ly = (records[i].depth - records[i-1].depth) * sin(records[i-1].Yres/3600*PI/180) * 1000 + records[i-1].LY;
+                        						/* в таблице заказчика расчет делается не по предыдущей точке а по текущей */
+					   lx = (records[i].depth - records[i-1].depth) * sin(records[i].Xres/3600*PI/180) * 1000 + records[i-1].LX;
+					   /* для горизонтальной однопроходной применяется гео поправка */
+					   if (geo_on == true) {
+
+							double geo_delta = (input_point - output_point)/(double)records_cnt;
+							lx = lx + geo_delta*(double)(i+1);
+
+
+					   }
+
+					}
+					else
+					{
+                        lx = (records[i].depth - records[i-1].depth) * sin(records[i-1].Xres/3600*PI/180) * 1000 + records[i-1].LX;
+						ly = (records[i].depth - records[i-1].depth) * sin(records[i-1].Yres/3600*PI/180) * 1000 + records[i-1].LY;
+					}
 
 			}
 
@@ -611,6 +637,8 @@ int TMeas::SaveData(int par)
 	wcscpy(tdir,dir);
 	wcscat(dir,L".gms");
 
+	CreateTextFile_UTF16LEBOM (dir);
+
 	FILE* f = _wfopen(dir,L"wb");
 	if (f == NULL) {
 
@@ -643,11 +671,11 @@ int TMeas::SaveData(int par)
 
 	spar.printf(L"Место:\t\t%s\r\n", name_place.c_bstr());
 	wcscpy(cpar,spar.c_bstr());
-	fwrite(cpar,wcslen(cpar),1,ft);
+	fwrite(cpar,wcslen(cpar)*2,1,ft);
 
 	spar.printf(L"Скважина:\t%s\r\n", name_drill.c_bstr());
 	wcscpy(cpar,spar.c_bstr());
-	fwrite(cpar,wcslen(cpar),1,ft);
+	fwrite(cpar,wcslen(cpar)*2,1,ft);
 
 	if (type_drill == 0)
 	{
@@ -658,7 +686,7 @@ int TMeas::SaveData(int par)
 		spar.printf(L"Направление:\tВЕРТИКАЛЬНАЯ\r\n");
 	}
 	wcscpy(cpar,spar.c_bstr());
-	fwrite(cpar,wcslen(cpar),1,ft);
+	fwrite(cpar,wcslen(cpar)*2,1,ft);
 
 	if (single_way == 0)
 	{
@@ -669,15 +697,15 @@ int TMeas::SaveData(int par)
 		spar.printf(L"Один проход:\tДА\r\n");
 	}
 	wcscpy(cpar,spar.c_bstr());
-	fwrite(cpar,wcslen(cpar),1,ft);
+	fwrite(cpar,wcslen(cpar)*2,1,ft);
 
 	spar.printf(L"Измерение:\t%d\r\n", this->num);
 	wcscpy(cpar,spar.c_bstr());
-	fwrite(cpar,wcslen(cpar),1,ft);
+	fwrite(cpar,wcslen(cpar)*2,1,ft);
 
 	spar = FormatDateTime(L"Создано:\tdd-mm-yyyy hh:nn:ss\r\n",create_time);
 	wcscpy(cpar,spar.c_bstr());
-	fwrite(cpar,wcslen(cpar),1,ft);
+	fwrite(cpar,wcslen(cpar)*2,1,ft);
 
 	if (finalized == true) {
 
@@ -686,15 +714,15 @@ int TMeas::SaveData(int par)
 	}
 	else
 	{
-		spar = "Завершено:\tНЕТ\r\n\r\n";
+		spar = L"Завершено:\tНЕТ\r\n\r\n";
 	}
 
 	wcscpy(cpar,spar.c_bstr());
-	fwrite(cpar,wcslen(cpar),1,ft);
+	fwrite(cpar,wcslen(cpar)*2,1,ft);
 
-	spar = "Номер\tГлубина\t\tОшибка\t\tX1\t\tY1\t\tX2\t\tY2\t\tLX\t\tLY\t\tLR\t\tAR\r\n";
+	spar = L"Номер\tГлубина\t\tОшибка\t\tX1\t\tY1\t\tX2\t\tY2\t\tLX\t\tLY\t\tLR\t\tAR\r\n";
 	wcscpy(cpar,spar.c_bstr());
-	fwrite(cpar,wcslen(cpar),1,ft);
+	fwrite(cpar,wcslen(cpar)*2,1,ft);
 
 	for (int i = 0; i < records_cnt; i++) {
 
@@ -715,7 +743,7 @@ int TMeas::SaveData(int par)
 		);
 
 	wcscpy(cpar,spar.c_bstr());
-	fwrite(cpar,wcslen(cpar),1,ft);
+	fwrite(cpar,wcslen(cpar)*2,1,ft);
 
 	}
 

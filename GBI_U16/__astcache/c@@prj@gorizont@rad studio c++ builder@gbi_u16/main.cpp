@@ -191,6 +191,14 @@ void __fastcall TFMain::ToolButton4Click(TObject *Sender)
 
 void __fastcall TFMain::ToolButton_StartClick(TObject *Sender)
 {
+
+	if (selected_meas == NULL) {
+
+		utils_ShowMessage(L"Выберите измерение в дереве системы!");
+		return;
+	}
+
+
 	if (GBISystem->IsRunning() == false) {
 		this->MToolBar->Buttons[0]->ImageIndex = 10;
 
@@ -199,26 +207,29 @@ void __fastcall TFMain::ToolButton_StartClick(TObject *Sender)
 
 		Button_record->Enabled = true;
 
-		Console(L"Система", "Запуск инклинометра");
-		this->MToolBar->Buttons[0]->Caption = "Стоп";
+		Console(L"Система", L"Запуск инклинометра");
+		this->MToolBar->Buttons[0]->Caption = L"Стоп";
 		MMFile->Enabled = false;
 
 
-		TDrill* d = NULL;
 
-		d = GBISystem->place_list[selected_meas->pnum-1]->drill_list[selected_meas->dnum-1];
+		if (selected_meas != NULL) {
 
-		StringGrid_meas->Col = 3;
+			TDrill* d = NULL;
+			d = GBISystem->place_list[selected_meas->pnum-1]->drill_list[selected_meas->dnum-1];
 
-		if (d->i_first_request_point == 1) {
+			StringGrid_meas->Col = 3;
 
-			StringGrid_meas->Row = selected_meas->records_cnt;
-		 }
-		 else
-		 {
-			StringGrid_meas->Row = 1;
-		 }
+			if (d->i_first_request_point == 1) {
 
+				StringGrid_meas->Row = selected_meas->records_cnt;
+			 }
+			 else
+			 {
+				StringGrid_meas->Row = 1;
+			 }
+
+		}
 
 
 	}
@@ -241,7 +252,7 @@ void __fastcall TFMain::ToolButton_StartClick(TObject *Sender)
 
 void TFMain::SystemInit()
 {
-	Console(L"Приложение","Старт системы ...");
+	Console(L"Приложение",L"Старт системы ...");
 
 	GBISystem = new TGBISystem(this->TreeView_system);
 	scmgr = &GBISystem->SysConfMgr;
@@ -293,14 +304,20 @@ void TFMain::Console(WideString obj, WideString msg)
 	s=t.FormatString(L"dd-mm-yyyy hh:nn:ss ") +L"["+obj+"]" + L" " + msg;
 	this->ListBox_Console->Items->Add(s);
 
-	/*
-	char log[1024];
-	strcpy(log,s.c_bstr());
-	strcat(log,L"\r\n");
-	FILE* fl = fopen(L"gbi.log","ab");
-	fwrite(log,1,strlen(log),fl);
+
+	TCHAR log[1024];
+	wcscpy(log,s.c_bstr());
+	wcscat(log,L"\r\n");
+
+	TCHAR dir[1024];
+	GetCurrentDirectoryW(1024,dir);
+	wcscat(dir,L"\\gbi16.log");
+
+	CreateTextFile_UTF16LEBOM(dir);
+	FILE* fl = _wfopen(dir,L"ab");
+	fwrite(log,1,wcslen(log)*2,fl);
 	fclose(fl);
-	*/
+
 }
 //---------------------------------------------------------------------------
 
@@ -384,14 +401,14 @@ void __fastcall TFMain::FormDestroy(TObject *Sender)
 {
 
 		this->MToolBar->Buttons[0]->ImageIndex = 9;
-		this->MToolBar->Buttons[0]->Caption = "Ñòàðò";
+		this->MToolBar->Buttons[0]->Caption = "Старт";
 
 		this->GBISystem->Stop();
 		this->Timer_system_run->Enabled = false;
 
 		Button_record->Enabled = false;
 
-		Console(L"Ñèñòåìà", "Îñòàíîâ èíêëèíîìåòðà");
+		Console(L"Система", L"Останов инклинометра");
 		MMFile->Enabled = true;
 
 
@@ -420,7 +437,7 @@ void __fastcall TFMain::Timer_system_runTimer(TObject *Sender)
 
 		if (GBISystem->RunProc() != 0)
 		{
-			if (comerr == true) Console(L"Ñèñòåìà", "Íå óäàëîñü îòêðûòü ÑÎÌ-ïîðò");
+			if (comerr == true) Console(L"Система", L"Не удалось открыть СОМ-порт");
 
 			comerr = false;
 			/*
@@ -437,7 +454,7 @@ void __fastcall TFMain::Timer_system_runTimer(TObject *Sender)
 		{
 			if (comerr == false) {
 
-				 Console(L"Ñèñòåìà", "Åñòü îòâåò ÑÎÌ-ïîðòà");
+				 Console(L"Система", L"Есть ответ СОМ-порта");
 			}
 
 			comerr = true;
@@ -613,7 +630,7 @@ void __fastcall TFMain::Button_recordClick(TObject *Sender)
 
 	if (selected_meas == NULL) {
 
-		utils_ShowMessage(L"Âûáåðèòå èçìðåíèå â äåðåâå ñèñòåìû!");
+		utils_ShowMessage(L"Выберите измрение в дереве системы!");
 		return;
 	}
 
@@ -733,7 +750,7 @@ void __fastcall TFMain::StringGrid_measDblClick(TObject *Sender)
 
 	if (selected_meas == NULL) {
 
-		utils_ShowMessage(L"Âûáåðèòå èçìåðåíèå â äåðåâå ñèñòåìû!");
+		utils_ShowMessage(L"Выберите измерение в дереве системы!");
 		return;
 	}
 
@@ -1076,19 +1093,19 @@ void __fastcall TFMain::TreeView_systemDblClick(TObject *Sender)
 void __fastcall TFMain::MMAboutClick(TObject *Sender)
 {
 
-	char cdate[64];
+	TCHAR cdate[64];
 	WideString sd(L"");
 	WideString sdate(L"");
 
-	sprintf(cdate,"%s",__DATE__);
-	strcpy(cdate,&cdate[strlen(cdate)-4]);
-	sd=sd+cdate;
-	sdate="ã. Ìîñêâà, L"+sd;
+	//swprintf(cdate,L"%s",__DATE__);
+	//wcscpy(cdate,&cdate[wcslen(cdate)-4]);
+	//sd=sd+cdate;
+	sdate=L"г. Москва, 2023";
 
 	Form_about->Label_year->Caption = sdate;
 
 	WideString s;
-	s.printf(L"Âåðñèÿ: %d.%d.%d", BUILD, VERSION, SUBVERSION);
+	s.printf(L"Версия: %d.%d.%d", BUILD, VERSION, SUBVERSION);
 	Form_about->Label_version->Caption = s;
 
 	Form_about->ShowModal();
@@ -1211,6 +1228,7 @@ void __fastcall TFMain::N_drill_adjustClick(TObject *Sender)
 			}
 		}
 
+	   current_drill->UpdateMeas();
 	   this->ViewSelectedDrill();
    }
 
@@ -1950,15 +1968,90 @@ void __fastcall TFMain::Chart_y_hDblClick(TObject *Sender)
 //---------------------------------------------------------------------------
 
 
+#include "CalcTest.h"
+
 void __fastcall TFMain::ToolButton_testClick(TObject *Sender)
 {
 
-	//::WritePrivateProfileStringW(L"AppName, L"Keyname", L"Value", L"test.ini");
-
-
+ ConvertTextFile_UTF16LEBOM (L"c:\\Prj\\Gorizont\\RAD Studio C++ Builder\\GBI_U16\\Win32\\Debug\\utf8.txt");
 
 return;
 
+FILE* f = NULL;
+
+f = fopen("utf8.txt", "rb");
+
+char c[8448];
+
+
+int idxu8 = 0;
+
+while (1)  {
+
+if (!fread(&c[idxu8++],1,1,f)) break;
+
+}
+
+
+fclose(f);
+
+WideString sutf16(L"АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюя");
+
+TCHAR  tcutf16[65];
+
+wcscpy(tcutf16, sutf16.c_bstr());
+
+TCHAR tc[8448];
+
+int idx = 0;
+
+for (int i = 0; i < idxu8; i++) {
+
+	BYTE code = 0;
+
+	code = c[i];
+
+
+	if (code>191) {
+
+	   idx = code - 192;
+
+	   tc[i] = (TCHAR)tcutf16[idx];
+	}
+	else
+	{
+		tc[i] = (TCHAR) c[i];
+	}
+
+
+     tc[i+1] = '\0';
+
+}
+
+
+
+	ShowMessage(tc);
+
+return;
+
+	TPlace* p = this->GBISystem->place_list[0];
+	TDrill* d = p->drill_list[0];
+	TMeas* m = d->meas_list[0];
+
+	//m->records[0].X1 = 0;
+
+	for (int i = 0; i < m->records_cnt; i++) {
+
+		m->records[i].X1 = test_dataset_h_s_3 [i];
+		m->records[i].depth = 0.5*(double)(i);
+
+	}
+
+	m->DataToTable();
+
+return;
+
+/*
 	TMeas* tmm = current_meas;
 	double xx = 12.1;
 	double yy = 14.1;
@@ -1976,16 +2069,6 @@ return;
     tmm->DataToTable();
 
 	return;//!!!
-
-/*
-	if (selected_drill) {
-
-		selected_drill->Excel();
-
-	}
-
-	return;
-*/
 
 	typedef struct {
 
@@ -2061,28 +2144,6 @@ return;
 
 	Sleep(1);
 
-/*
-	test_data test_Data1 [] = {
-
-		{0,		1,		6,	  4,		1,	0 },
-		{1,		1,		6,	  0,		1,	0.004848137},
-		{2,		1,		6,	  0,		1,	0.009696274},
-		{3,		2,		7,	  0,		2,	0.01454441},
-		{4,		3,		8,	  0,		3,	0.024240684},
-		{5,		3,		8,	  0,		3,	0.038785094},
-		{6,		3,		8,	  0,		3,	0.053329505},
-		{7,		2,		7,	  0,		2,	0.067873915},
-		{8,		1,		6,	  0,		1,	0.077570189},
-		{9,		1,		6,	  0,		1, 	0.082418326},
-		{10,	0,		5, 	  0,		0,	0.087266463},
-		{11,	-1,		4, 	  0,		-1,	0.087266463},
-		{12,	-1,		4, 	  0,		-1,	0.082418326},
-		{13,	-1,		4, 	  0,		-1,	0.077570189},
-		{14,	-2,		3, 	  0,		-2,	0.072722052},
-
-	};
- */
-
  	test_data test_Data1 [] = {
 
 		{0,		1,		-3132,		-3192,	30,		0},
@@ -2143,14 +2204,6 @@ return;
 
 	return;
 
-	   /*
-	Form_diagram->DrawVector(g_xmax, g_xmin, g_ymax, g_ymin, g_lx, g_ly);
-
-	Form_diagram->Visible = true;
-
-	return;
-         */
-
 	TMeas* m = selected_meas;
 
 	if (m == NULL) {
@@ -2169,6 +2222,7 @@ return;
 	}
 
 	m->DataToTable();
+*/
 
 }
 
@@ -2329,7 +2383,8 @@ void __fastcall TFMain::MManualClick(TObject *Sender)
 
 void __fastcall TFMain::ToolButton7Click(TObject *Sender)
 {
-	MManualClick(NULL);
+	//MManualClick(NULL);
+	MMAboutClick(NULL);
 }
 //---------------------------------------------------------------------------
 

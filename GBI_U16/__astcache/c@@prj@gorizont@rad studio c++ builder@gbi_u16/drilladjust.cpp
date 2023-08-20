@@ -34,6 +34,19 @@ void __fastcall TForm_DrillAdjust::Button_applyClick(TObject *Sender)
 		 drill->drill_asimut = this->Edit_asimut->Text.ToDouble();
 		 drill->own_zero_shift = this->Edit_zshift->Text.ToDouble();
 		 drill->records_cnt = this->ComboBox_meas_cnt->Text.ToDouble()+1;
+
+		 drill->geo_data.geo_on = (CheckBox_GeoOn->Checked)?true:false;
+
+		 try {
+
+			drill->geo_data.input_point = this->Edit_Input_point->Text.ToDouble();
+			drill->geo_data.output_point = this->Edit_Output_point->Text.ToDouble();
+
+		 }
+		 catch (...) {
+
+		 }
+
 	 }
 
 	 OK = true;
@@ -48,6 +61,7 @@ void TForm_DrillAdjust::Start()
 //---------------------------------------------------------------------------
 void __fastcall TForm_DrillAdjust::Timer_startTimer(TObject *Sender)
 {
+	WideString s(L"");
 
 	Timer_start->Enabled = false;
 
@@ -67,7 +81,8 @@ void __fastcall TForm_DrillAdjust::Timer_startTimer(TObject *Sender)
 		this->RadioButton_top->Visible = false;
 		this->RadioButton_bot->Visible = false;
 
-        this->ComboBox_orient->ItemIndex = 0;
+		this->ComboBox_orient->ItemIndex = 0;
+		this->GroupBox_start_collect_data->Visible = false;
 	}
 	else
 	{
@@ -75,6 +90,15 @@ void __fastcall TForm_DrillAdjust::Timer_startTimer(TObject *Sender)
 		this->Button_apply->Caption = L"Применить";
 		Caption = L"Настроить скважину";
 		this->Edit_name->Text = drill->name;
+
+		this->CheckBox_GeoOn->Checked = drill->geo_data.geo_on;
+
+		s.printf(L"%.2f",drill->geo_data.input_point);
+		this->Edit_Input_point->Text = s;
+
+		s.printf(L"%.2f",drill->geo_data.output_point);
+		this->Edit_Output_point->Text = s;
+
 
 		if (drill->i_first_request_point == 0) {
 
@@ -129,9 +153,19 @@ void __fastcall TForm_DrillAdjust::Timer_startTimer(TObject *Sender)
 			}
 		}
 
+		if ((drill->drill_orient == DRILL_ORIENT_HORIZONT)&&(drill->single_way == 1)) {
+
+			this->GroupBox_start_collect_data->Visible = false;
+
+		}
+		else
+		{
+			this->GroupBox_start_collect_data->Visible = true;
+		}
+
 	}
 
-	 WideString s(L"");
+
 
 	 for (int i = 10; i <= MAX_RECORDS_MEAS; i+=10) {
 
@@ -179,7 +213,7 @@ void __fastcall TForm_DrillAdjust::Timer_startTimer(TObject *Sender)
 	else
 	{
 		this->Edit_asimut->Text = L"0.0";
-		this->Edit_zshift->Text = "0.0";
+		this->Edit_zshift->Text = L"0.0";
 		this->ComboBox_orient->ItemIndex = 0;
 	}
 
@@ -201,6 +235,7 @@ void __fastcall TForm_DrillAdjust::FormCreate(TObject *Sender)
 	this->ComboBox_orient->Items->Add(L"Вертикальная");
 
 	this->RadioButton_start_first->Checked = true;
+	this->GroupBox_start_collect_data->Visible = false;
 
 }
 //---------------------------------------------------------------------------
@@ -219,6 +254,7 @@ void __fastcall TForm_DrillAdjust::ComboBox_orientChange(TObject *Sender)
 		this->RadioGroup1->Visible = true;
 		this->RadioButton_top->Visible = true;
 		this->RadioButton_bot->Visible = true;
+		 this->GroupBox_start_collect_data->Visible = true;
 
 	}
 
@@ -231,11 +267,13 @@ void __fastcall TForm_DrillAdjust::ComboBox_orientChange(TObject *Sender)
 		this->RadioGroup1->Visible = false;
 		this->RadioButton_top->Visible = false;
 		this->RadioButton_bot->Visible = false;
-
+		this->GroupBox_start_collect_data->Visible = false;
 	}
 
-}
+ }
 //---------------------------------------------------------------------------
+
+
 
 
 

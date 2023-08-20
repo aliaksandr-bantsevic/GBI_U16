@@ -80,8 +80,12 @@ __fastcall TChartThread::TChartThread(bool CreateSuspended, TChart* c, int ds, i
 		//Ser->YValues->Order = loDescending;
 		//Ser->XValues->Order = loNone;
 
+		//Ser->Sort;
+
 		Ser->YValues->Order = loDescending;
 		Ser->XValues->Order = loNone;
+
+
 
 		//Ser->Color =  (TColor)(RGB(r,g,b));
 

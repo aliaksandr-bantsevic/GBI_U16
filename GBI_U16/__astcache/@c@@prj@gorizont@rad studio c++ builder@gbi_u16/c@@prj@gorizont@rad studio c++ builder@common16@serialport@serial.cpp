@@ -69,16 +69,16 @@ bool TSerial::IsOpen(void)
 
 bool TSerial::Open(DWORD port)
 {
-  char Name[200];
+  TCHAR Name[200];
   //if (IsOpen())
   Close();
   com_number=port;
 
   Sleep(DbgSleep);
 
-  sprintf(Name,"\\\\.\\COM%d",(int)port);
+  wsprintf(Name,L"\\\\.\\COM%d",(int)port);
 
-  m_hFile=CreateFile(Name,GENERIC_READ|GENERIC_WRITE,0,NULL,OPEN_EXISTING,
+  m_hFile=CreateFileW(Name,GENERIC_READ|GENERIC_WRITE,0,NULL,OPEN_EXISTING,
 					  FILE_ATTRIBUTE_NORMAL|FILE_FLAG_NO_BUFFERING,NULL);
 
 	if(m_hFile!=INVALID_HANDLE_VALUE)

@@ -36,7 +36,7 @@ extern int utils_set_tree_node_view(TTreeNode* node, int node_type, int node_sta
 
 extern AnsiString utils_int_to_str(int i, int d);
 extern bool utils_confirm_operation_save_adjust(void);
-extern void utils_ShowMessage(AnsiString s);
+extern void utils_ShowMessage(WideString s);
 
 extern WORD Calc_CRC(WORD start, WORD stop, int n,BYTE *b);
 extern WORD Calc_CRC16(int n,BYTE *b);
@@ -45,3 +45,6 @@ extern WORD Calc_CSum(int n,BYTE *b);
 extern WORD CRC16CCITT(WORD n,BYTE *b);
 
 extern int CreateTextFile_UTF16LEBOM (TCHAR* pszFilePath);
+extern int ConvertTextFile_UTF16LEBOM (TCHAR* pszFilePath);
+extern TCHAR ConvertSmbFrom1251 (char smb);
+extern int CheckTextFile_UTF16LEBOM (TCHAR* pszFilePath);

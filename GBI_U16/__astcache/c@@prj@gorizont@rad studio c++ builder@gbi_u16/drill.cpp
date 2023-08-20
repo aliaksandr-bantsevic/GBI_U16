@@ -12,8 +12,15 @@ TDrill::TDrill()
 {
 //	place = NULL;
 	pnum = 0;
-    num = 0;
+	num = 0;
+
+	geo_data.geo_on = false;
+	geo_data.input_point = 0.;
+	geo_data.output_point = 0.;
+
+	drill_asimut = 0.;
 }
+
 
 
 TDrill::TDrill(WideString n)
@@ -41,7 +48,14 @@ TDrill::TDrill(WideString n)
 	start_point = DRILL_TOP_POINT;
 	own_zero_shift = 0;
 
-    i_first_request_point = DRILL_FIRST_REQUEST_TOP;
+	i_first_request_point = DRILL_FIRST_REQUEST_TOP;
+
+	geo_data.geo_on = false;
+	geo_data.input_point = 0.;
+	geo_data.output_point = 0.;
+
+	drill_asimut = 0.;
+
 }
 
 TDrill::~TDrill()
@@ -106,6 +120,14 @@ int TDrill::SaveConfig (TIniFile* ini)
 	s.printf(L"%.1f",this->own_zero_shift);
 	ini->WriteString(section, L"ZEROSHIFT", s);
 
+	s.printf(L"%.2f",this->geo_data.input_point);
+	ini->WriteString(section, L"GEO_INPUT_POINT", s);
+
+	s.printf(L"%.2f",this->geo_data.output_point);
+	ini->WriteString(section, L"GEO_OUTPUT_POINT", s);
+
+	ini->WriteInteger(section,L"GEO_DATA_ON", geo_data.geo_on);
+
 	ini->WriteInteger(section,L"SINGLEWAY", single_way);
 
 		for (int i = 0; i < meas_list_idx; i++) {
@@ -146,6 +168,10 @@ int TDrill::AddMeas(TStringGrid* t, WideString n)
 	m->own_zero_shift = this->own_zero_shift;
     m->drill_start_point = this->start_point;
 
+	m->geo_on = this->geo_data.geo_on;
+	m->input_point = this->geo_data.input_point;
+    m->output_point = this->geo_data.output_point;
+
 	meas_list[meas_list_idx] = m;
 
 
@@ -163,6 +189,26 @@ int TDrill::AddMeas(TStringGrid* t, WideString n)
 
 	return 0;
 }
+
+
+
+int TDrill::UpdateMeas(void)
+{
+
+	TMeas* m;
+
+	for (int i = 0; i < meas_list_idx; i++) {
+
+		m = meas_list[i];
+		m->geo_on = this->geo_data.geo_on;
+		m->input_point = this->geo_data.input_point;
+		m->output_point = this->geo_data.output_point;
+	}
+
+
+	return 0;
+}
+
 
 int TDrill::LoadMeasConfig(TIniFile* ini)
 {

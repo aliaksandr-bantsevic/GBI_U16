@@ -32,9 +32,15 @@ __published:	// IDE-managed Components
 	TRadioGroup *RadioGroup1;
 	TRadioButton *RadioButton_top;
 	TRadioButton *RadioButton_bot;
-	TGroupBox *GroupBox1;
+	TGroupBox *GroupBox_start_collect_data;
 	TRadioButton *RadioButton_start_first;
 	TRadioButton *RadioButton_start_last;
+	TGroupBox *GroupBox2;
+	TCheckBox *CheckBox_GeoOn;
+	TEdit *Edit_Input_point;
+	TEdit *Edit_Output_point;
+	TLabel *Label3;
+	TLabel *Label5;
 	void __fastcall Button_applyClick(TObject *Sender);
 	void __fastcall Timer_startTimer(TObject *Sender);
 	void __fastcall Button_cancelClick(TObject *Sender);

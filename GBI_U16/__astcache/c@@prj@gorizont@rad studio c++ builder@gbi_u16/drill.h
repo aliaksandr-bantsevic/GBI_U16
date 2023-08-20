@@ -82,6 +82,16 @@ public:
 
 int i_first_request_point;
 
+struct {
+
+	bool geo_on;
+	double input_point;
+    double output_point;
+
+} geo_data;
+
+int UpdateMeas(void);
+
 };
 
 

@@ -1,4 +1,4 @@
-//---------------------------------------------------------------------------
+﻿//---------------------------------------------------------------------------
 
 #pragma hdrstop
 
@@ -7,11 +7,9 @@
 #pragma package(smart_init)
 
 
-void utils_ShowMessage(AnsiString s)
+void utils_ShowMessage(WideString s)
 {
-   WideChar mes[1024];
-   StringToWideChar(s.c_str(),mes,1024);
-   Application->MessageBoxW(mes,L"ВНИМАНИЕ!", 0);
+   Application->MessageBoxW(s.c_bstr(),L"ВНИМАНИЕ!", 0);
 }
 
 AnsiString utils_int_to_str(int i, int d)
@@ -151,7 +149,8 @@ int CreateTextFile_UTF16LEBOM (TCHAR* pszFilePath)
 									 CREATE_NEW,
 									 FILE_ATTRIBUTE_NORMAL,
 									 NULL);
-		 if (hFile != NULL)
+
+		 if (hFile != INVALID_HANDLE_VALUE)
 		 {
 			 ::WriteFile(hFile, &wBOM, sizeof(WORD), &NumberOfBytesWritten, NULL);
 			 ::CloseHandle(hFile);
@@ -166,4 +165,116 @@ int CreateTextFile_UTF16LEBOM (TCHAR* pszFilePath)
 		res = -2; //Файл уже существует
     }
 
+    return res;
+}
+
+int ConvertTextFile_UTF16LEBOM (TCHAR* pszFilePath)
+{
+
+	int isutf8 = CheckTextFile_UTF16LEBOM (pszFilePath); //check if it is already utf16
+
+	if (isutf8 != -1) {
+
+		return -2; //file is not exist or not utf8
+	}
+
+
+	TCHAR oldpath [1024];
+	wcscpy(oldpath, pszFilePath);
+	wcscat(oldpath,L".utf8");
+	::RenameFile(pszFilePath, oldpath);
+
+	BYTE smb;
+	TCHAR SMB;
+
+
+	FILE* fold = _wfopen(oldpath, L"rb");
+
+
+	if (CreateTextFile_UTF16LEBOM (pszFilePath) == 0)
+	{
+
+		FILE* fnew = _wfopen(pszFilePath, L"wb");
+
+		while(fread(&smb,1,1,fold) )
+		{
+				SMB = ConvertSmbFrom1251(smb);
+				fwrite(&SMB,2,1,fnew);
+		}
+
+        fclose(fold);
+		fclose(fnew);
+		return 0;
+	}
+	else
+	{
+		fclose(fold);
+		return -1;
+    }
+}
+
+
+WideString sutf16(L"АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюя");
+TCHAR  tcutf16[65];
+
+TCHAR ConvertSmbFrom1251 (char smb)
+{
+	TCHAR SMB = 0;
+
+	wcscpy(tcutf16, sutf16.c_bstr());
+	BYTE code = smb;
+
+	if (code >191) {
+
+		SMB = (TCHAR)tcutf16[code - 192];
+	}
+	else
+	{
+		SMB = (TCHAR)(smb);
+    }
+
+	return SMB;
+}
+
+int CheckTextFile_UTF16LEBOM (TCHAR* pszFilePath)
+{
+
+	int res = 0;
+	TCHAR* sign = L"[SYSTEM]";
+	TCHAR  tcread [8];
+
+	if (::PathFileExists(pszFilePath))
+	{
+		 WORD wBOM = 0;//0xFEFF;
+		 DWORD NumberOfBytesWritten;
+
+		 HANDLE hFile = ::CreateFile(pszFilePath,
+									 GENERIC_READ,
+									 0,
+									 NULL,
+									 OPEN_EXISTING,
+									 FILE_ATTRIBUTE_NORMAL,
+									 NULL);
+
+		 if (hFile != INVALID_HANDLE_VALUE)
+		 {
+			 ::ReadFile(hFile, &tcread, wcslen(sign)*2, &NumberOfBytesWritten, NULL);
+			 ::CloseHandle(hFile);
+
+			 if (wcsstr(tcread, sign) == 0) {
+
+				res = -1; //Не UTF16
+			 }
+		 }
+		 else
+		 {
+			 res = -3; //Файл не открывается
+		 }
+	}
+	else
+	{
+		res = -2; //Файл не существует
+    }
+
+    return res;
 }

@@ -158,6 +158,7 @@ int TPlace::UpdateDrill(TDrill* d, TDrill* drill)
 	d->single_way = drill->single_way;
 	d->drill_orient = drill->drill_orient;
     d->drill_asimut = drill->drill_asimut;
+    d->geo_data = drill->geo_data;
 
 	return 0;
 
@@ -189,6 +190,14 @@ int TPlace::LoadDrillConfig(TIniFile* ini)
 				ipar = ini->ReadInteger(section, L"STARTREQUEST", 0);
 				drill_list[drill_list_idx-1]->i_first_request_point = ipar;
 
+
+				spar = ini->ReadString(section, L"GEO_INPUT_POINT", L"0.0");
+				drill_list[drill_list_idx-1]->geo_data.input_point = spar.ToDouble();
+
+				spar = ini->ReadString(section, L"GEO_OUTPUT_POINT", L"0.0");
+				drill_list[drill_list_idx-1]->geo_data.output_point = spar.ToDouble();
+
+				drill_list[drill_list_idx-1]->geo_data.geo_on = ini->ReadInteger(section,L"GEO_DATA_ON", 0);
 
 				spar =  ini->ReadString(section, L"ASIMUT", L"0.0");
 

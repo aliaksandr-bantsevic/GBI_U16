@@ -108,6 +108,10 @@ double own_zero_shift;
 
 WideString mark;
 
+bool geo_on;
+double input_point;
+double output_point;
+
 };
 
 #endif

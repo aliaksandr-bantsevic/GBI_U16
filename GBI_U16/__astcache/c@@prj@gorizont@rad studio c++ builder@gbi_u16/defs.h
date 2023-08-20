@@ -39,6 +39,6 @@ extern bool b_MessageConfirmParamsetShow;
 	For debuf development mode
 */
 
-//#define DEBUG_DEVELOPMENT_MODE
+#define DEBUG_DEVELOPMENT_MODE
 
 
