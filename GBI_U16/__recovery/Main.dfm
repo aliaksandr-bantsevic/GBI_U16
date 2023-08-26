@@ -1294,8 +1294,8 @@ object FMain: TFMain
           object ListBox_Console: TListBox
             Left = 0
             Top = 0
-            Width = 1158
-            Height = 236
+            Width = 1150
+            Height = 234
             Align = alClient
             Color = clInfoBk
             ItemHeight = 18
