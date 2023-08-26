@@ -210,6 +210,8 @@ int TDrill::UpdateMeas(void)
 }
 
 
+extern bool global_base_convert;
+
 int TDrill::LoadMeasConfig(TIniFile* ini)
 {
 	WideString section(L"");
@@ -223,7 +225,7 @@ int TDrill::LoadMeasConfig(TIniFile* ini)
 
 			if (spar!="endoflist") {
 
-				AddMeas(global_meas_table, L"Èçìåðåíèå");
+				AddMeas(global_meas_table, L"Измерение");
 				meas_list[meas_list_idx-1]->type_drill = this->drill_orient;
 				meas_list[meas_list_idx-1]->drill_start_point = this->start_point;
 				meas_list[meas_list_idx-1]->single_way = this->single_way;
@@ -232,6 +234,11 @@ int TDrill::LoadMeasConfig(TIniFile* ini)
 				mmark = meas_list[meas_list_idx-1]->mark;
 				spar = ini->ReadString(section, L"MARK", mmark);
 				meas_list[meas_list_idx-1]->mark = spar;
+
+				if (global_base_convert)
+				{
+				  meas_list[meas_list_idx-1]->SaveData(0);
+				}
 			}
 			else
 			{

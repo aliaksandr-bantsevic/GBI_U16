@@ -191,6 +191,14 @@ void __fastcall TFMain::ToolButton4Click(TObject *Sender)
 
 void __fastcall TFMain::ToolButton_StartClick(TObject *Sender)
 {
+
+	if (selected_meas == NULL) {
+
+		utils_ShowMessage(L"Выберите измерение в дереве системы!");
+		return;
+	}
+
+
 	if (GBISystem->IsRunning() == false) {
 		this->MToolBar->Buttons[0]->ImageIndex = 10;
 
@@ -204,21 +212,24 @@ void __fastcall TFMain::ToolButton_StartClick(TObject *Sender)
 		MMFile->Enabled = false;
 
 
-		TDrill* d = NULL;
 
-		d = GBISystem->place_list[selected_meas->pnum-1]->drill_list[selected_meas->dnum-1];
+		if (selected_meas != NULL) {
 
-		StringGrid_meas->Col = 3;
+			TDrill* d = NULL;
+			d = GBISystem->place_list[selected_meas->pnum-1]->drill_list[selected_meas->dnum-1];
 
-		if (d->i_first_request_point == 1) {
+			StringGrid_meas->Col = 3;
 
-			StringGrid_meas->Row = selected_meas->records_cnt;
-		 }
-		 else
-		 {
-			StringGrid_meas->Row = 1;
-		 }
+			if (d->i_first_request_point == 1) {
 
+				StringGrid_meas->Row = selected_meas->records_cnt;
+			 }
+			 else
+			 {
+				StringGrid_meas->Row = 1;
+			 }
+
+		}
 
 
 	}
@@ -1083,13 +1094,13 @@ void __fastcall TFMain::MMAboutClick(TObject *Sender)
 {
 
 	TCHAR cdate[64];
-	WideString sd("");
-	WideString sdate("");
+	WideString sd(L"");
+	WideString sdate(L"");
 
-	swprintf(cdate,L"%s",__DATE__);
-	wcscpy(cdate,&cdate[wcslen(cdate)-4]);
-	sd=sd+cdate;
-	sdate=L"г. Москва, "+sd;
+	//swprintf(cdate,L"%s",__DATE__);
+	//wcscpy(cdate,&cdate[wcslen(cdate)-4]);
+	//sd=sd+cdate;
+	sdate=L"г. Москва, 2023";
 
 	Form_about->Label_year->Caption = sdate;
 
@@ -1962,6 +1973,82 @@ void __fastcall TFMain::Chart_y_hDblClick(TObject *Sender)
 void __fastcall TFMain::ToolButton_testClick(TObject *Sender)
 {
 
+/*
+::RenameFile(
+
+L"c:\\Prj\\Gorizont\\RAD Studio C++ Builder\\GBI_U16\\Win32\\Debug\\Base\\GBI\\Уренгой\\Скважина #1\\Измерение_1\\Измерение_1.txt",
+L"c:\\Prj\\Gorizont\\RAD Studio C++ Builder\\GBI_U16\\Win32\\Debug\\Base\\GBI\\Уренгой\\Скважина #1\\Измерение_1\\Измерение_1.txt.utf8");
+
+return;
+*/
+
+//this->GBISystem->place_list[0]->drill_list[0]->meas_list[0]->ConvertDataUTF16();
+
+this->GBISystem->place_list[0]->drill_list[0]->meas_list[0]->SaveData(0);
+
+return;
+
+ ConvertTextFile_UTF16LEBOM (L"c:\\Prj\\Gorizont\\RAD Studio C++ Builder\\GBI_U16\\Win32\\Debug\\utf8.txt");
+
+return;
+
+FILE* f = NULL;
+
+f = fopen("utf8.txt", "rb");
+
+char c[8448];
+
+
+int idxu8 = 0;
+
+while (1)  {
+
+if (!fread(&c[idxu8++],1,1,f)) break;
+
+}
+
+
+fclose(f);
+
+WideString sutf16(L"АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюя");
+
+TCHAR  tcutf16[65];
+
+wcscpy(tcutf16, sutf16.c_bstr());
+
+TCHAR tc[8448];
+
+int idx = 0;
+
+for (int i = 0; i < idxu8; i++) {
+
+	BYTE code = 0;
+
+	code = c[i];
+
+
+	if (code>191) {
+
+	   idx = code - 192;
+
+	   tc[i] = (TCHAR)tcutf16[idx];
+	}
+	else
+	{
+		tc[i] = (TCHAR) c[i];
+	}
+
+
+     tc[i+1] = '\0';
+
+}
+
+
+
+	ShowMessage(tc);
+
+return;
+
 	TPlace* p = this->GBISystem->place_list[0];
 	TDrill* d = p->drill_list[0];
 	TMeas* m = d->meas_list[0];
@@ -2311,7 +2398,8 @@ void __fastcall TFMain::MManualClick(TObject *Sender)
 
 void __fastcall TFMain::ToolButton7Click(TObject *Sender)
 {
-	MManualClick(NULL);
+	//MManualClick(NULL);
+	MMAboutClick(NULL);
 }
 //---------------------------------------------------------------------------
 

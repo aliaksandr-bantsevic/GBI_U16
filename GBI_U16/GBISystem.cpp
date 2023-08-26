@@ -127,6 +127,8 @@ void TGBISystem::SaveSysConf()
 
 }
 
+extern bool global_base_convert;
+
 void TGBISystem::LoadSysConf()
 {
 	SysConfMgr.GetCurConf();
@@ -196,6 +198,8 @@ void TGBISystem::LoadSysConf()
 	}
 
 	Redraw();
+
+	global_base_convert = false;
 }
 
 void TGBISystem::Start(TEdit* ex, TEdit* ey)

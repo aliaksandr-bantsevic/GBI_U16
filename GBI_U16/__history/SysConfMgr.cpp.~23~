@@ -9,8 +9,7 @@
 
    TSysConfMgr::TSysConfMgr()
    {
-
-
+		 /*
 		TCHAR dirini [1024];
 
 		::GetCurrentDirectoryW(1024,dirini);
@@ -43,7 +42,7 @@
 
 		backup_limit = 1.0;
 		auto_backup_flag = false;
-		auto_backup_flag_completed = false;
+		auto_backup_flag_completed = false;   */
    }
 
    TSysConfMgr::~TSysConfMgr()
@@ -60,15 +59,35 @@
    void TSysConfMgr::GetCurConf(void)
    {
 
+        AutoBackup();
+
 		wcscpy(cur_conf_path,L"");
 		wcscpy(cur_base_path,L"");
 		wcscpy(cur_conf_fold_path,L"");
 
 
 		TCHAR dirgcf [1024];
-		::GetCurrentDirectoryW(1024, dirgcf);
-		wcscat(dirgcf,L"\\gbi16.gcf");
+		TCHAR dirgcfold [1024];
+		TCHAR dirgcfutf8 [1024];
 
+		::GetCurrentDirectoryW(1024, dirgcf);
+		::GetCurrentDirectoryW(1024, dirgcfold);
+		::GetCurrentDirectoryW(1024, dirgcfutf8);
+
+		wcscat(dirgcf,L"\\gbi16.gcf");
+		wcscat(dirgcfold,L"\\gbi.gcf");
+		wcscat(dirgcfutf8,L"\\gbi16.gcf.utf8");
+
+
+		if (isGcfTxtUTF8(dirgcfold) ==0)
+		{
+			 utils_ShowMessage(L"Файлы конфигурации системы будут преобразованы к новому формату UTF16!");
+			 ::RenameFile(dirgcfold,dirgcf);
+			 ::DeleteFile(dirgcfutf8);
+			 ConvertTextFile_UTF16LEBOM (dirgcf);
+		}
+
+		/*
 		FILE* ftmp = NULL;
 		ftmp = _wfopen(dirgcf,L"rb");
 
@@ -80,7 +99,9 @@
 		}
 
 		fclose (ftmp);
+		*/
 
+		CreateTextFile_UTF16LEBOM (dirgcf);
 		TIniFile *inigcf = new TIniFile(dirgcf);
 
 		WideString sname(L"");
@@ -113,6 +134,8 @@
 
 		if (ini != NULL) delete ini;
 
+
+		/*
 		ftmp = _wfopen(cur_conf_path, L"rb");
 
 		if (ftmp == NULL)
@@ -122,10 +145,21 @@
 		}
 
 		fclose (ftmp);
+		*/
+
+
+
+
+		if (isIniTxtUTF8(cur_conf_path) ==0 )
+		{
+		   ConvertTextFile_UTF16LEBOM (cur_conf_path);
+		}
+
+		CreateTextFile_UTF16LEBOM (cur_conf_path);
 
 		ini = new TIniFile (cur_conf_path);
 
-		AutoBackup();
+
    }
 
    TCHAR* TSysConfMgr::GetCurBase(void)
@@ -155,20 +189,6 @@
 
    void TSysConfMgr::SaveCurConf(void)
    {
-
-		TCHAR tdir[1024];
-
-		::GetCurrentDirectoryW(1024, tdir);
-		wcscat(tdir, L"\\gbi16.gcf");
-
-		CreateTextFile_UTF16LEBOM (tdir);
-
-		if (isGcfTxtUTF8(tdir))
-
-			 utils_ShowMessage(L"Файлы конфигурации системы будут преобразованы к новому формату UTF16!");
-			 ConvertTextFile_UTF16LEBOM (tdir);
-		}
-
 
 		TIniFile *inigcf = new TIniFile(ChangeFileExt(Application->ExeName,".gcf"));
 		inigcf ->WriteString("GENERAL","CONFNAME",cur_conf_name);
@@ -388,6 +408,11 @@ int TSysConfMgr::isGcfTxtUTF8(TCHAR* path)
 {
 	FILE* f = _wfopen (path, L"rb");
 
+	if (f == NULL) {
+
+		return -3;
+	}
+
 	char buf[10];
 	int res = 0;
 
@@ -411,6 +436,11 @@ int TSysConfMgr::isGcfTxtUTF8(TCHAR* path)
 int TSysConfMgr::isIniTxtUTF8(TCHAR* path)
 {
 	FILE* f = _wfopen (path, L"rb");
+
+	if (f == NULL) {
+
+		return -3;
+	}
 
 	char buf[10];
 	int res = 0;

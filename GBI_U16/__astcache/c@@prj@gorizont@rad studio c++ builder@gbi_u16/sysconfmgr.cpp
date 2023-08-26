@@ -1,4 +1,4 @@
-﻿//---------------------------------------------------------------------------
+//---------------------------------------------------------------------------
 
 #pragma hdrstop
 
@@ -55,6 +55,8 @@
 		GetCurConf();
 		return ini;
    }
+
+   extern bool global_base_convert;
 
    void TSysConfMgr::GetCurConf(void)
    {
@@ -153,6 +155,7 @@
 		if (isIniTxtUTF8(cur_conf_path) ==0 )
 		{
 		   ConvertTextFile_UTF16LEBOM (cur_conf_path);
+		   global_base_convert = true;
 		}
 
 		CreateTextFile_UTF16LEBOM (cur_conf_path);

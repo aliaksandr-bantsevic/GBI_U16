@@ -109,10 +109,10 @@ void TGBISystem::SaveSysConf()
 
 	ini->WriteInteger(L"PORT",L"BaudRate",GetPort()->baud);
 	ini->WriteInteger(L"PORT",L"Port",GetPort()->port);
-	ini->WriteString(L"LPORT",L"Mark",GetPort()->mark);
+	ini->WriteString(L"PORT",L"Mark",L"Порт инклинометра");
 
 	ini->WriteInteger(L"SENSOR",L"Addr",GetSensor()->addr);
-	ini->WriteString(L"LSENSOR",L"Mark",GetSensor()->mark);
+	ini->WriteString(L"SENSOR",L"Mark",GetSensor()->mark);
 	ini->WriteInteger(L"SENSOR",L"Protocol",GetSensor()->used_protocol);
 
 	ini->WriteInteger(L"SYSTEM",L"SideVirtKbd",i_use_side_keyboard);
@@ -200,7 +200,7 @@ void TGBISystem::LoadSysConf()
 
 void TGBISystem::Start(TEdit* ex, TEdit* ey)
 {
-	if (this->port.IsOpen() == false) {
+	//if (this->port.IsOpen() == false) {
 
 		/*
 		if (port.Open() != 0) {
@@ -209,7 +209,7 @@ void TGBISystem::Start(TEdit* ex, TEdit* ey)
 			return;
 		}
 		*/
-	}
+	//}
 
 	run = true;
 	edit_meas_X = ex;
@@ -234,16 +234,25 @@ int TGBISystem::RunProc(void)
 
 	if (this->port.IsOpen() == false)
 	{
-		if (this->port.OpenComPort(port.port, port.baud) !=0)
-		{
-			this->edit_meas_X->Font->Color = clGray;
-			this->edit_meas_Y->Font->Color = clGray;
 
-			this->edit_meas_X->Text = L"ОШИБКА ПОРТА";
-			this->edit_meas_Y->Text = L"ОШИБКА ПОРТА";
+		try{
 
-			return  -2;
+
+			if (this->port.OpenComPort(port.port, port.baud) !=0)
+			{
+				this->edit_meas_X->Font->Color = clGray;
+				this->edit_meas_Y->Font->Color = clGray;
+
+				this->edit_meas_X->Text = L"ОШИБКА ПОРТА";
+				this->edit_meas_Y->Text = L"ОШИБКА ПОРТА";
+
+				return  -2;
+			}
 		}
+		catch (...)
+		{
+			utils_ShowMessage(L"Выбранный порт не доступен!");
+        }
 	}
 
 
@@ -641,61 +650,38 @@ int TGBISystem::ResaveData()
 
 int TGBISystem::KillBase()
 {
-	 /*
-	TCHAR* dir[1024];
-	::GetCurrentDirectory(1024,dir);
-
-	TCHAR* ndir[1024];
-	wcscpy(ndir,SysConfMgr.GetCurBaseFoldPath());
-
-	::SetCurrentDirectory(ndir);
-	*/
-
-	/*
-	TCHAR* cmd[1024];
-	wcscpy(cmd,L"rmdir //s //q \"");
-	wcscat(cmd,SysConfMgr.GetCurBase());
-	wcscat(cmd,L"\"");
-	  */
-
-//	wcscat(cmd,L"\"");
-//	system(cmd);
-
-	/*
-	::SetCurrentDirectory(dir);
-	*/
-
 
 	TPlace* p = NULL;
 	TDrill* d = NULL;
 	TMeas* m = NULL;
 
-	TCHAR* dir[1024];
+	TCHAR dir[1024];
+
 	wcscpy(dir, SysConfMgr.GetCurBase());
 
-	TCHAR* pdir[1024];
-	TCHAR* ddir[1024];
-	TCHAR* mdir[1024];
+	TCHAR pdir[1024];
+	TCHAR ddir[1024];
+	TCHAR mdir[1024];
 
 	for (int i = 0; i < place_list_idx; i++) {
 
 		p = place_list[i];
 		wcscpy(pdir,dir);
-		wcscat(pdir,p->GetName().c_str());
+		wcscat(pdir,p->GetName().c_bstr());
 		wcscat(pdir,L"\\");
 
 		for (int j = 0; j < p->drill_list_idx; j++) {
 
 			d = p->drill_list[j];
 			wcscpy(ddir,pdir);
-			wcscat(ddir,d->name.c_str());
+			wcscat(ddir,d->name.c_bstr());
 			wcscat(ddir,L"\\");
 
 			for (int k = 0; k < d->meas_list_idx; k++) {
 
 				m = d->meas_list[k];
 				wcscpy(mdir,ddir);
-				wcscat(mdir,m->name.c_str());
+				wcscat(mdir,m->name.c_bstr());
 				wcscat(mdir,L"\\");
 				this->DeleteDir(mdir);
 			}
@@ -748,31 +734,34 @@ int TGBISystem::CreateConf (TSaveDialog* dlg)
 	this->edit_meas_X->Text = L"";
 	this->edit_meas_Y->Text = L"";
 
-	 WideString fres(L"");
-
+	wchar_t fres[1024];
+	wchar_t cres[1024];
+	
 	 dlg->InitialDir = SysConfMgr.GetCurConfFoldPath();
 	 dlg->Filter = L"*.ini|*.ini";
 	 dlg->FileName = L"NewSystemGBI";
 	 dlg->Title = L"Cоздать новую систему";
 	 if (dlg->Execute()!=IDOK) return -1;
+	 
+	 wcscpy(fres, (wchar_t*)dlg->FileName.c_str());
 
-	 fres = dlg->FileName;
-	 TCHAR* cres[1024];
-	 wcscpy(cres,fres.c_str());
+	 
+
+	 wcscpy(cres, (wchar_t*)dlg->FileName.c_str());
 
 	 int i = 0;
 
-	 for (i = strlen(cres); i >=0 ; i--) {
+	 for (i = wcslen(cres); i >=0 ; i--) {
 
 		if (cres[i] == '\\') break;
 	 }
 
-	 TCHAR* cnew [1024];
+	 TCHAR cnew [1024];
 	 wcscpy(cnew, &cres[i+1]);
 
 	 i = 0;
 
-	 for (i = strlen(cnew); i >=0 ; i--) {
+	 for (i = wcslen(cnew); i >=0 ; i--) {
 
 		if (cnew[i] == '.')
 		{
@@ -798,28 +787,32 @@ int TGBISystem::OpenConf (TOpenDialog* dlg)
 
 	 dlg->InitialDir = SysConfMgr.GetCurConfFoldPath();
 	 dlg->Filter = L"*.ini|*.ini";
-	 dlg->FileName = SysConfMgr.cur_conf_name;
-     dlg->Title = L"Открыть конфигурацию";
+	 
+	 wcscpy((TCHAR*)dlg->FileName.data(), SysConfMgr.cur_conf_name);
+
+	 dlg->FileName = L"Пока не работает!";
+
+	 dlg->Title = L"Открыть конфигурацию";
 	 if (dlg->Execute()!=IDOK) return -1;
 
 	 fres = dlg->FileName;
 
-	 TCHAR* cres[1024];
-	 wcscpy(cres,fres.c_str());
+	 TCHAR cres[1024];
+	 wcscpy(cres,fres.c_bstr());
 
 	 int i = 0;
 
-	 for (i = strlen(cres); i >=0 ; i--) {
+	 for (i = wcslen(cres); i >=0 ; i--) {
 
 		if (cres[i] == '\\') break;
 	 }
 
-	 TCHAR* cnew [1024];
+	 TCHAR cnew [1024];
 	 wcscpy(cnew, &cres[i+1]);
 
 	 i = 0;
 
-	 for (i = strlen(cnew); i >=0 ; i--) {
+	 for (i = wcslen(cnew); i >=0 ; i--) {
 
 		if (cnew[i] == '.')
 		{
@@ -847,15 +840,20 @@ int TGBISystem::SaveConf (TSaveDialog* dlg)
 
 	 dlg->InitialDir = SysConfMgr.GetCurConfFoldPath();
 	 dlg->Filter = L"*.ini|*.ini";
-	 dlg->FileName = SysConfMgr.cur_conf_name;
+	 
+	 wcscpy((TCHAR*)dlg->FileName.data(), SysConfMgr.cur_conf_name);
+
+	 dlg->FileName = L"Пока не работает!";
+	 
 	 dlg->Title = L"Сохранить конфигурацию как ...";
 	 if (dlg->Execute()!=IDOK) return -1;
 
 	 fres = dlg->FileName;
-	 TCHAR* cftmp[1024];
-	 wcscpy(cftmp,fres.c_str());
+	 TCHAR cftmp[1024];
+	 
+	 wcscpy(cftmp,fres.c_bstr());
 
-	 for (i = strlen(cftmp); i>=0; i--)
+	 for (i = wcslen(cftmp); i>=0; i--)
 	 {
 		 if (cftmp[i] == '.')
 		 {
@@ -868,7 +866,7 @@ int TGBISystem::SaveConf (TSaveDialog* dlg)
 
 	 FILE* ftmp = NULL;
 
-	 ftmp = fopen(cftmp,L"rb");
+	 ftmp = _wfopen(cftmp,L"rb");
 
 	 if (ftmp != NULL) {
 
@@ -878,22 +876,23 @@ int TGBISystem::SaveConf (TSaveDialog* dlg)
 	 }
 
 
-	 TCHAR* cres[1024];
-	 wcscpy(cres,fres.c_str());
+	 TCHAR cres[1024];
+	 
+	 wcscpy(cres,fres.c_bstr());
 
 
 
-	 for (i = strlen(cres); i >=0 ; i--) {
+	 for (i = wcslen(cres); i >=0 ; i--) {
 
 		if (cres[i] == '\\') break;
 	 }
 
-	 TCHAR* cnew [1024];
+	 TCHAR cnew [1024];
 	 wcscpy(cnew, &cres[i+1]);
 
 	 i = 0;
 
-	 for (i = strlen(cnew); i >=0 ; i--) {
+	 for (i = wcslen(cnew); i >=0 ; i--) {
 
 		if (cnew[i] == '.')
 		{
@@ -903,19 +902,19 @@ int TGBISystem::SaveConf (TSaveDialog* dlg)
 	 }
 
 
-	 TCHAR* cmd[1024];
+	 TCHAR cmd[1024];
 
-	 wcscpy (cmd, "copy \"");
+	 wcscpy (cmd, L"copy \"");
 
 	 wcscat(cmd,SysConfMgr.GetCurIniPath());
 
 	 wcscat(cmd,L"\" ");
 
-	 TCHAR* cpar[1024];
+	 TCHAR cpar[1024];
 	 wcscpy(cpar,L"\"");
 	 wcscat(cpar,SysConfMgr.GetCurIniPath());
 
-	 for (i = strlen(cpar); i >=0 ; i--) {
+	 for (i = wcslen(cpar); i >=0 ; i--) {
 
 		if (cpar[i] == '\\')
 		{
@@ -929,18 +928,21 @@ int TGBISystem::SaveConf (TSaveDialog* dlg)
 	 wcscat(cmd,cpar);
 	 wcscat(cmd,L"\"");
 
-	 system(cmd);
+	 system((char*)cmd);
 
 
-	 wcscpy (cmd, "xcopy /s /i \"");
-	 wcscat(cmd,SysConfMgr.cur_base_path);
-	 cmd[strlen(cmd)-1] = '\0';
+	 wcscpy (cmd, L"xcopy /s /i \"");
+	 
+	 wcscat(cmd, SysConfMgr.cur_base_path);
+	 
+	 cmd[wcslen(cmd)-1] = '\0';
+	 
 	 wcscat (cmd,L"\" ");
 
 	 wcscpy(cpar,L"\"");
 	 wcscat(cpar,SysConfMgr.GetCurBaseFoldPath());
 
-	 for (i = strlen(cpar)-1; i >=0 ; i--) {
+	 for (i = wcslen(cpar)-1; i >=0 ; i--) {
 
 		if (cpar[i] == '\\')
 		{
@@ -952,9 +954,9 @@ int TGBISystem::SaveConf (TSaveDialog* dlg)
 	 wcscat(cpar,cnew);
 	 wcscat(cpar,L"\"");
 	 wcscat(cmd,cpar);
-
-	 system(cmd);
-
+	 
+	 system((char*)cmd);
+	 
 	 SysConfMgr.Accept(cnew);
 
 	return 0;
@@ -1063,3 +1065,5 @@ TMeas* TGBISystem::GetMeasByNode(TTreeNode *node)
 
 	return res;
 }
+
+
