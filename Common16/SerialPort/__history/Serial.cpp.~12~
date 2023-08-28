@@ -1,0 +1,263 @@
+//---------------------------------------------------------------------------
+
+#pragma hdrstop
+
+#include "Serial.h"
+//---------------------------------------------------------------------------
+#pragma package(smart_init)
+
+TSerial::TSerial()
+{
+	lRTS = false;
+	lDTR = false;
+	bool m_MsgShow = false;
+	baudrate = EBaud115200;
+	m_hFile = INVALID_HANDLE_VALUE;
+
+	timeouts.ReadIntervalTimeout=0;
+	timeouts.ReadTotalTimeoutMultiplier=0;
+	timeouts.ReadTotalTimeoutConstant=500;
+	timeouts.WriteTotalTimeoutMultiplier=0;
+	timeouts.WriteTotalTimeoutConstant=500;
+
+	InitDCB(&dcb);
+
+	com_number = 0;
+	isopen = false;
+}
+
+TSerial::~TSerial()
+{
+
+
+}
+
+bool TSerial::Close(void)
+{
+
+  CloseHandle(m_hFile);
+  m_hFile=INVALID_HANDLE_VALUE;
+  com_number = 0;
+  isopen = false;
+
+}
+
+void TSerial::PurgeCom()
+{
+  PurgeComm(m_hFile,PURGE_TXCLEAR|PURGE_RXCLEAR);
+}
+
+bool TSerial::SetTimeouts(DWORD rtime,DWORD wtime)
+{
+  Sleep(DbgSleep);
+  timeouts.ReadIntervalTimeout=0;
+  timeouts.ReadTotalTimeoutMultiplier=0;
+  timeouts.ReadTotalTimeoutConstant=rtime;
+  timeouts.WriteTotalTimeoutMultiplier=0;
+  timeouts.WriteTotalTimeoutConstant=wtime;
+
+}
+
+bool TSerial::IsOpen(void)
+{
+	return isopen;
+}
+
+bool TSerial::Open(DWORD port)
+{
+  char Name[200];
+  if (IsOpen()) Close();
+  com_number=port;
+
+  Sleep(DbgSleep);
+
+  sprintf(Name,"\\\\.\\COM%d",port);
+
+  m_hFile=CreateFile(Name,GENERIC_READ|GENERIC_WRITE,0,NULL,OPEN_EXISTING,
+					  FILE_ATTRIBUTE_NORMAL|FILE_FLAG_NO_BUFFERING,NULL);
+
+	if(m_hFile!=INVALID_HANDLE_VALUE)
+	{
+		SetCommState(m_hFile,&dcb);
+		SetCommTimeouts(m_hFile,&timeouts);
+		isopen = true;
+		return true;
+	}
+	else
+	{
+		Close();
+		return false;
+    }
+
+}
+
+bool TSerial::Setup(EBaudrate baud)
+{
+	//this->dcb.BaudRate = baud;
+	return true;
+}
+
+
+bool TSerial::NRead(DWORD n,BYTE *rbuf)
+{
+	unsigned long Nr;
+	ReadFile(m_hFile,rbuf,n,&Nr,0);
+	return (Nr == n);
+}
+
+
+bool TSerial::NWrite(DWORD n,BYTE *wbuf)
+{
+	unsigned long Nw;
+	WriteFile(m_hFile,wbuf,n,&Nw,NULL);
+	return (Nw == n);
+}
+
+bool TSerial::BytesAvilable()
+{
+
+ if (IsOpen()==false)	return false;
+ COMSTAT comstat;
+ DWORD dummy;
+
+ ClearCommError(m_hFile, &dummy, &comstat);
+ return comstat.cbInQue;
+}
+
+
+void TSerial::InitDCB(DCB* dcb)
+{
+  dcb->DCBlength=sizeof(DCB);
+  // Specifies the length, in bytes, of the DCB structure.
+  //dcb->BaudRate=19200;
+  //dcb->BaudRate=38400;
+  //dcb->BaudRate=57600;
+  dcb->BaudRate=115200;
+  //dcb->BaudRate=230400;
+  //dcb->BaudRate=460800;
+  //dcb->BaudRate=921600;
+  // Specifies the baud rate at which the communications device operates.
+  // This member can be an actual baud rate value
+  dcb->fBinary=1;
+  // Specifies whether binary mode is enabled. The Win32 API does not support
+  // nonbinary mode transfers, so this member should be TRUE. Trying to use
+  // FALSE will not work.
+  // Under Windows 3.1, if this member is FALSE, nonbinary mode is enabled,
+  // and the character specified by the EofChar member is recognized on input
+  // and remembered as the end of data.
+  dcb->fParity=0;
+  // Specifies whether parity checking is enabled. If this member is TRUE,
+  // parity checking is performed and errors are reported.
+
+  //dcb->fOutxCtsFlow=1;
+  dcb->fOutxCtsFlow=0;
+  // Specifies whether the CTS (clear-to-send) signal is monitored for output
+  // flow control. If this member is TRUE and CTS is turned off, output is
+  // suspended until CTS is sent again.
+  dcb->fOutxDsrFlow=0;
+  // Specifies whether the DSR (data-set-ready) signal is monitored for output
+  // flow control. If this member is TRUE and DSR is turned off, output is
+  // suspended until DSR is sent again.
+  dcb->fDtrControl=0;
+  // Specifies the DTR (data-terminal-ready) flow control. This member can
+  // be one of the following values:
+  // DTR_CONTROL_DISABLE   0x00	Disables the DTR line when the device is opened and
+  //                            leaves it disabled.
+  // DTR_CONTROL_ENABLE	   0x01 Enables the DTR line when the device is opened
+  //                            and leaves it on.
+  // DTR_CONTROL_HANDSHAKE 0x02	Enables DTR handshaking. If handshaking is
+  //                            enabled, it is an error for the application
+  //                            to adjust the line by using the
+  //                            EscapeCommFunction function.
+  dcb->fDsrSensitivity=0;
+  // Specifies whether the communications driver is sensitive to the state of
+  // the DSR signal. If this member is TRUE, the driver ignores any bytes
+  // received, unless the DSR modem input line is high.
+  dcb->fTXContinueOnXoff=0;
+  // Specifies whether transmission stops when the input buffer is full and
+  // the driver has transmitted the XoffChar character. If this member is TRUE, transmission
+  // continues after the input buffer has come within XoffLim bytes of being full and
+  // the driver has transmitted the XoffChar character to stop receiving bytes. If this
+  // member is FALSE, transmission does not continue until the input buffer is within
+  // XonLim bytes of being empty and the driver has transmitted the XonChar character to
+  // resume reception.
+  dcb->fOutX=0;
+  // Specifies whether XON/XOFF flow control is used during transmission. If this
+  // member is TRUE, transmission stops when the XoffChar character is received and
+  // starts again when the XonChar character is received.
+  dcb->fInX=0;
+  // Specifies whether XON/XOFF flow control is used during reception. If this member is
+  // TRUE, the XoffChar character is sent when the input buffer comes within XoffLim bytes
+  // of being full, and the XonChar character is sent when the input buffer comes within
+  // XonLim bytes of being empty.
+  dcb->fErrorChar=0;
+  // Specifies whether bytes received with parity errors are replaced with the character
+  // specified by the ErrorChar member. If this member is TRUE and the fParity member is TRUE,
+  // replacement occurs.
+  dcb->fNull=0;
+  // Specifies whether null bytes are discarded. If this member is TRUE, null bytes
+  // are discarded when received.
+  //dcb->fRtsControl=0x02;
+  dcb->fRtsControl=0x0;
+  // Specifies the RTS (request-to-send) flow control. If this value is zero,
+  // the default is RTS_CONTROL_HANDSHAKE. This member can be one of the following values:
+  // RTS_CONTROL_DISABLE	0x00   Disables the RTS line when the device is opened and
+  //                               leaves it disabled.
+  // RTS_CONTROL_ENABLE	    0x01   Enables the RTS line when the device is opened and
+  //                               leaves it on.
+  // RTS_CONTROL_HANDSHAKE	0x02   Enables RTS handshaking. The driver raises the RTS line
+  //                               when the "type-ahead" (input) buffer is less
+  //                               than one-half full and lowers the RTS line when the
+  //                               buffer is more than three-quarters full. If handshaking
+  //                               is enabled, it is an error for the application to adjust
+  //                               the line by using the EscapeCommFunction function.
+  // RTS_CONTROL_TOGGLE	    0x03   Specifies that the RTS line will be high if bytes are
+  //                               available for transmission. After all buffered bytes
+  //                               have been sent, the RTS line will be low.
+  dcb->fAbortOnError=0;
+  // Specifies whether read and write operations are terminated if an error occurs.
+  // If this member is TRUE, the driver terminates all read and write operations with
+  // an error status if an error occurs. The driver will not accept any further
+  // communications operations until the application has acknowledged the error by
+  // calling the ClearCommError function.
+  dcb->fDummy2=0;
+  // Reserved; do not use.
+  //dcb->wReserved=0;
+  // Not used; must be set to zero.
+  dcb->XonLim=0;
+  // Specifies the minimum number of bytes allowed in the input buffer before the XON
+  // character is sent.
+  dcb->XoffLim=0;
+  // Specifies the maximum number of bytes allowed in the input buffer before the XOFF
+  // character is sent. The maximum number of bytes allowed is calculated by subtracting
+  // this value from the size, in bytes, of the input buffer.
+  dcb->ByteSize=8;
+  // Specifies the number of bits in the bytes transmitted and received.
+  dcb->Parity=0;
+  // Specifies the parity scheme to be used. This member can be one of the following values:
+  // EVENPARITY	 2  Even
+  // MARKPARITY	 3  Mark
+  // NOPARITY	 0  No parity
+  // ODDPARITY	 1  Odd
+  // SPACEPARITY 4  Space
+  dcb->StopBits=0;
+  //Specifies the number of stop bits to be used. This member can be one of the following
+  // values:
+  // ONESTOPBIT	        0  1 stop bit
+  // ONE5STOPBITS	1  1.5 stop bits
+  // TWOSTOPBITS	2  2 stop bits
+  dcb->XonChar=0;
+  // Specifies the value of the XON character for both transmission and reception.
+  dcb->XoffChar=0;
+  // Specifies the value of the XOFF character for both transmission and reception.
+  dcb->ErrorChar=0;
+  // Specifies the value of the character used to replace bytes received with a
+  // parity error.
+  dcb->EofChar=0;
+  // Specifies the value of the character used to signal the end of data.
+  dcb->EvtChar=0;
+  // Specifies the value of the character used to signal an event.
+  dcb->wReserved1=0;
+  //Reserved; do not use.
+}
+

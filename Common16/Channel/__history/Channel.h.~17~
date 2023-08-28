@@ -1,0 +1,76 @@
+//---------------------------------------------------------------------------
+
+#ifndef ChannelH
+#define ChannelH
+//---------------------------------------------------------------------------
+
+#include "defs.h"
+#include "Serial.h"
+#include <System.Win.ScktComp.hpp>
+
+typedef enum {
+
+CHAN_TYPE_UNDEF,
+CHAN_TYPE_COM_PORT,
+CHAN_TYPE_TCP_SERVER,
+CHAN_TYPE_TCP_CLIENT,
+CHAN_TYPE_UDP_SERVER,
+CHAN_TYPE_UDP_CLIENT
+
+} channel_type;
+
+typedef struct
+{
+
+  bool on;     //Порт включен в опрос
+  bool run;    //Процесс опроса на данном порту запущен
+  bool res;    //Результат текущей операции
+  int cmd;     //Тип команды на порту
+
+} channel_state;
+
+class TChannel {
+
+public:
+
+	TChannel();
+	~TChannel();
+
+	int OpenComPort(DWORD com_number, EBaudrate baud);
+	int Transact(BYTE* tx, BYTE* rx, int* lentx,  int* lenrx);
+	int Setup(channel_type t, DWORD c, EBaudrate b);
+
+	int Open();
+
+	DWORD port;
+	EBaudrate baud;
+
+    AnsiString mark;
+
+private:
+
+	channel_type type;
+
+	DWORD   pause_transact;
+	DWORD   tout_tx;
+	DWORD   tout_rx;
+
+	bool Close();
+	TSerial* com;
+	TServerSocket* server;
+	double TmOpen,TmClose;
+	channel_state state;
+
+	bool isopen;
+
+public:
+
+   int SetTouts(DWORD rx, DWORD tx);
+   int SetPause(DWORD p);
+
+
+
+};
+
+
+#endif
