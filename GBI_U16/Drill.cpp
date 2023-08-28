@@ -237,7 +237,8 @@ int TDrill::LoadMeasConfig(TIniFile* ini)
 
 				if (global_base_convert)
 				{
-				  meas_list[meas_list_idx-1]->SaveData(0);
+				  //meas_list[meas_list_idx-1]->LoadData();
+				  //meas_list[meas_list_idx-1]->SaveData(0);
 				}
 			}
 			else

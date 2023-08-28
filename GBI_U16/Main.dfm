@@ -146,9 +146,11 @@ object FMain: TFMain
     0000000000000000000000000000000000000000000000000000000000000000
     0000000000000000000000000000000000000000000000000000000000000000
     000000000000000000000000000000000000000000000000000000000000}
+  OldCreateOrder = True
   Visible = True
   WindowState = wsMaximized
   OnDestroy = FormDestroy
+  PixelsPerInch = 96
   TextHeight = 18
   object Splitter1: TSplitter
     Left = 401
@@ -372,6 +374,10 @@ object FMain: TFMain
           Caption = #1044#1072#1085#1085#1099#1077
           ImageIndex = 1
           OnShow = TabSheet_meas_tableShow
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object Panel_meas_table: TPanel
             Left = 0
             Top = 0
@@ -402,6 +408,10 @@ object FMain: TFMain
           Caption = #1043#1088#1072#1092#1080#1082#1080
           ImageIndex = 2
           OnShow = TabSheet_charts_vShow
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object Panel_charts_v: TPanel
             Left = 0
             Top = 0
@@ -647,7 +657,6 @@ object FMain: TFMain
                   42)
                 ColorPaletteIndex = 13
                 object Series1: THorizLineSeries
-                  HoverElement = [heCurrent]
                   ColorEachLine = False
                   Brush.BackColor = clDefault
                   DrawStyle = dsCurve
@@ -663,7 +672,6 @@ object FMain: TFMain
                   YValues.Order = loNone
                 end
                 object Series2: TLineSeries
-                  HoverElement = [heCurrent]
                   Brush.BackColor = clDefault
                   Pointer.InflateMargins = True
                   Pointer.Style = psRectangle
@@ -675,7 +683,6 @@ object FMain: TFMain
                   YValues.Order = loNone
                 end
                 object Series3: TLineSeries
-                  HoverElement = [heCurrent]
                   Brush.BackColor = clDefault
                   Pointer.InflateMargins = True
                   Pointer.Style = psRectangle
@@ -687,7 +694,6 @@ object FMain: TFMain
                   YValues.Order = loNone
                 end
                 object Series4: TLineSeries
-                  HoverElement = [heCurrent]
                   Brush.BackColor = clDefault
                   Pointer.InflateMargins = True
                   Pointer.Style = psRectangle
@@ -698,7 +704,6 @@ object FMain: TFMain
                   YValues.Order = loNone
                 end
                 object Series5: TLineSeries
-                  HoverElement = [heCurrent]
                   Brush.BackColor = clDefault
                   Pointer.InflateMargins = True
                   Pointer.Style = psRectangle
@@ -709,7 +714,6 @@ object FMain: TFMain
                   YValues.Order = loNone
                 end
                 object Series6: TLineSeries
-                  HoverElement = [heCurrent]
                   Brush.BackColor = clDefault
                   Pointer.InflateMargins = True
                   Pointer.Style = psRectangle
@@ -720,7 +724,6 @@ object FMain: TFMain
                   YValues.Order = loNone
                 end
                 object Series7: TLineSeries
-                  HoverElement = [heCurrent]
                   Brush.BackColor = clDefault
                   Pointer.InflateMargins = True
                   Pointer.Style = psRectangle
@@ -731,7 +734,6 @@ object FMain: TFMain
                   YValues.Order = loNone
                 end
                 object Series8: TLineSeries
-                  HoverElement = [heCurrent]
                   Brush.BackColor = clDefault
                   Pointer.InflateMargins = True
                   Pointer.Style = psRectangle
@@ -742,7 +744,6 @@ object FMain: TFMain
                   YValues.Order = loNone
                 end
                 object Series9: TLineSeries
-                  HoverElement = [heCurrent]
                   Brush.BackColor = clDefault
                   Pointer.InflateMargins = True
                   Pointer.Style = psRectangle
@@ -753,7 +754,6 @@ object FMain: TFMain
                   YValues.Order = loNone
                 end
                 object Series10: TLineSeries
-                  HoverElement = [heCurrent]
                   Brush.BackColor = clDefault
                   Pointer.InflateMargins = True
                   Pointer.Style = psRectangle
@@ -764,7 +764,6 @@ object FMain: TFMain
                   YValues.Order = loNone
                 end
                 object Series21: TLineSeries
-                  HoverElement = [heCurrent]
                   Selected.Hover.Visible = False
                   Brush.BackColor = clDefault
                   LinePen.Color = 9300723
@@ -836,7 +835,6 @@ object FMain: TFMain
                   40)
                 ColorPaletteIndex = 13
                 object Series11: TLineSeries
-                  HoverElement = [heCurrent]
                   Selected.Hover.Visible = False
                   Brush.BackColor = clDefault
                   LinePen.Color = 10708548
@@ -850,7 +848,6 @@ object FMain: TFMain
                   YValues.Order = loNone
                 end
                 object Series12: TLineSeries
-                  HoverElement = [heCurrent]
                   Selected.Hover.Visible = False
                   Brush.BackColor = clDefault
                   LinePen.Color = 3513587
@@ -864,7 +861,6 @@ object FMain: TFMain
                   YValues.Order = loNone
                 end
                 object Series13: TLineSeries
-                  HoverElement = [heCurrent]
                   Selected.Hover.Visible = False
                   Brush.BackColor = clDefault
                   LinePen.Color = 1330417
@@ -878,7 +874,6 @@ object FMain: TFMain
                   YValues.Order = loNone
                 end
                 object Series14: TLineSeries
-                  HoverElement = [heCurrent]
                   Selected.Hover.Visible = False
                   Brush.BackColor = clDefault
                   LinePen.Color = 11048782
@@ -892,7 +887,6 @@ object FMain: TFMain
                   YValues.Order = loNone
                 end
                 object Series15: TLineSeries
-                  HoverElement = [heCurrent]
                   Selected.Hover.Visible = False
                   Brush.BackColor = clDefault
                   LinePen.Color = 7028779
@@ -906,7 +900,6 @@ object FMain: TFMain
                   YValues.Order = loNone
                 end
                 object Series16: TLineSeries
-                  HoverElement = [heCurrent]
                   Selected.Hover.Visible = False
                   Brush.BackColor = clDefault
                   LinePen.Color = 6519581
@@ -920,7 +913,6 @@ object FMain: TFMain
                   YValues.Order = loNone
                 end
                 object Series17: TLineSeries
-                  HoverElement = [heCurrent]
                   Selected.Hover.Visible = False
                   Brush.BackColor = clDefault
                   LinePen.Color = 919731
@@ -934,7 +926,6 @@ object FMain: TFMain
                   YValues.Order = loNone
                 end
                 object Series18: TLineSeries
-                  HoverElement = [heCurrent]
                   Selected.Hover.Visible = False
                   Brush.BackColor = clDefault
                   LinePen.Color = 6144242
@@ -948,7 +939,6 @@ object FMain: TFMain
                   YValues.Order = loNone
                 end
                 object Series19: TLineSeries
-                  HoverElement = [heCurrent]
                   Selected.Hover.Visible = False
                   Brush.BackColor = clDefault
                   LinePen.Color = 10401629
@@ -962,7 +952,6 @@ object FMain: TFMain
                   YValues.Order = loNone
                 end
                 object Series20: TLineSeries
-                  HoverElement = [heCurrent]
                   Selected.Hover.Visible = False
                   Brush.BackColor = clDefault
                   LinePen.Color = 7368816
@@ -976,7 +965,6 @@ object FMain: TFMain
                   YValues.Order = loNone
                 end
                 object Series22: TLineSeries
-                  HoverElement = [heCurrent]
                   Selected.Hover.Visible = False
                   Brush.BackColor = clDefault
                   LinePen.Color = 9300723
@@ -1294,8 +1282,8 @@ object FMain: TFMain
           object ListBox_Console: TListBox
             Left = 0
             Top = 0
-            Width = 1158
-            Height = 236
+            Width = 1154
+            Height = 235
             Align = alClient
             Color = clInfoBk
             ItemHeight = 18
